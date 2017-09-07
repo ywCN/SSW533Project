@@ -19,32 +19,28 @@ class OpenAndPrint:
         opened = self.open_file()
 
         for line in opened:
-            print("-->", line)
+            print("-->", line, end="")
 
-            words = line.split(" ")
+            words = line.split()
             if words[1] in match:
+                print("<-- ", end="")
                 for word in words:
-                    if words.index(word) == 0:
-                        print("<--", word, "|", end="")
-                        continue
                     if words.index(word) == 1:
-                        print(word, "|Y|", end="")
-                        continue
-                    print(word, "|", end="")
-                print("")
+                        print("|" + word + "|Y|", end="")
+                    else:
+                        print(word, end="")
+                print()
             elif words[-1] in match:  # two special cases
-                print(words[0], "|", words[-1], "|Y|", words[1], end="")
+                print("<-- " + words[0] + "|" + words[-1] + "|Y|" + words[1], end="")
                 print("")
             else:
+                print("<-- ", end="")
                 for word in words:
-                    if words.index(word) == 0:
-                        print("<--", word, "|", end="")
-                        continue
                     if words.index(word) == 1:
-                        print(word, "|N|", end="")
-                        continue
-                    print(word, "|", end="")
-                print("")
+                        print("|" + word + "|N|", end="")
+                    else:
+                        print(word, end="")
+                print()
 
 
 
