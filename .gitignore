@@ -1,3 +1,4 @@
+*.txt
 *.ged
 .idea/
 # Byte-compiled / optimized / DLL files
