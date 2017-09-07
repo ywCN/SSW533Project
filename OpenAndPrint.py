@@ -1,45 +1,34 @@
-import sys
 class OpenAndPrint:
-
     def open_file(self):
         while True:
             file_name = input('Enter the file name: ')  # MyFamily.ged
             try:
                 opened_file = open(file_name)  # use with?
                 break
-            except:  # FileNotFoundError or OSError
+            except (FileNotFoundError, OSError):
                 print('File', file_name, 'cannot be opened. Please enter again.')
                 continue
         return opened_file
 
     def print_lines(self):
-        dict = ["INDI", "NAME", "SEX", "BIRT", "DEAT", "FAMC",
-                "FAMS", "FAM", "MARR", "HUSB", "WIFE", "CHIL",
-                "DIV", "DATE", "HEAD", "TRLR", "NOTE"]
-        opened = self.open_file()
+        tags = {"0": ["HEAD", "NOTE", "INDI", "FAM", "TRLR"],
+                "1": ["NAME", "SEX", "BIRT", "DEAT", "FAMC", "FAMS", "MARR", "HUSB", "WIFE", "CHIL", "DIV"],
+                "2": ["DATE"]}
 
-        for line in opened:
-            print("-->", line, end="")
+        lines = self.open_file()
+
+        for line in lines:
+            print("-->", line.strip())
 
             words = line.split()
-            if words[1] in dict:  # normal matched cases
-                print("<-- ", end="")
-                for word in words:
-                    if words.index(word) == 1:
-                        print("|" + word + "|Y|", end="")
-                    else:
-                        print(word, end="")
-                print()
-            elif words[-1] in dict:  # two special matched cases for INDI and FAM
+            if words[0] in tags and words[1] in tags[words[0]]:
+                print("<-- " + words[0] + "|" + words[1] + "|Y|" + " ".join(words[2:]))
+            elif words[0] in tags and words[-1] in tags[words[0]]:  # two special cases for INDI and FAM
                 print("<-- " + words[0] + "|" + words[-1] + "|Y|" + words[1])
             else:
-                print("<-- ", end="")
-                for word in words:
-                    if words.index(word) == 1:
-                        print("|" + word + "|N|", end="")
-                    else:
-                        print(word, end="")
-                print()
+                print("<-- " + words[0] + "|" + words[1] + "|N|" + " ".join(words[2:]))
+
+
 
 def main():
     test = OpenAndPrint()
