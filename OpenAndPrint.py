@@ -1,3 +1,4 @@
+import sys
 class OpenAndPrint:
 
     def open_file(self):
@@ -6,7 +7,7 @@ class OpenAndPrint:
             try:
                 opened_file = open(file_name)  # use with?
                 break
-            except FileNotFoundError:
+            except:  # FileNotFoundError or OSError
                 print('File', file_name, 'cannot be opened. Please enter again.')
                 continue
         return opened_file
@@ -21,13 +22,29 @@ class OpenAndPrint:
             print("-->", line)
 
             words = line.split(" ")
-            len = words.__sizeof__()
             if words[1] in match:
-                print(words[0], "|", words[1], "|Y|", words[2])
-            elif words[-1] in match:
-                print(words[0], "|", words[-1], "|Y|", words[1])
+                for word in words:
+                    if words.index(word) == 0:
+                        print("<--", word, "|", end="")
+                        continue
+                    if words.index(word) == 1:
+                        print(word, "|Y|", end="")
+                        continue
+                    print(word, "|", end="")
+                print("")
+            elif words[-1] in match:  # two special cases
+                print(words[0], "|", words[-1], "|Y|", words[1], end="")
+                print("")
             else:
-                print(words[0], "|", words[1], "|N|", words[2])
+                for word in words:
+                    if words.index(word) == 0:
+                        print("<--", word, "|", end="")
+                        continue
+                    if words.index(word) == 1:
+                        print(word, "|N|", end="")
+                        continue
+                    print(word, "|", end="")
+                print("")
 
 
 
