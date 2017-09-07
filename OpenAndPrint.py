@@ -3,7 +3,7 @@ class OpenAndPrint:
         while True:
             file_name = input('Enter the file name: ')  # MyFamily.ged
             try:
-                opened_file = open(file_name)  # use with?
+                opened_file = open(file_name)  # use with is better
                 break
             except (FileNotFoundError, OSError):
                 print('File', file_name, 'cannot be opened. Please enter again.')
@@ -18,7 +18,7 @@ class OpenAndPrint:
         lines = self.open_file()
 
         for line in lines:
-            print("-->", line.strip())
+            print("-->", line.strip())  # .strip() removes \r \n in the end of line
 
             words = line.split()
             if words[0] in tags and words[1] in tags[words[0]]:
