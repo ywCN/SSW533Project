@@ -3,7 +3,7 @@ class OpenAndPrint:
 
     def open_file(self):
         while True:
-            file_name = input('Enter the file name: ')
+            file_name = input('Enter the file name: ')  # MyFamily.ged
             try:
                 opened_file = open(file_name)  # use with?
                 break
@@ -13,16 +13,16 @@ class OpenAndPrint:
         return opened_file
 
     def print_lines(self):
-        match = ["INDI", "NAME", "SEX", "BIRT", "DEAT", "FAMC",
-                 "FAMS", "FAM", "MARR", "HUSB", "WIFE", "CHIL",
-                 "DIV", "DATE", "HEAD", "TRLR", "NOTE"]
+        dict = ["INDI", "NAME", "SEX", "BIRT", "DEAT", "FAMC",
+                "FAMS", "FAM", "MARR", "HUSB", "WIFE", "CHIL",
+                "DIV", "DATE", "HEAD", "TRLR", "NOTE"]
         opened = self.open_file()
 
         for line in opened:
             print("-->", line, end="")
 
             words = line.split()
-            if words[1] in match:
+            if words[1] in dict:  # normal matched cases
                 print("<-- ", end="")
                 for word in words:
                     if words.index(word) == 1:
@@ -30,9 +30,8 @@ class OpenAndPrint:
                     else:
                         print(word, end="")
                 print()
-            elif words[-1] in match:  # two special cases
-                print("<-- " + words[0] + "|" + words[-1] + "|Y|" + words[1], end="")
-                print("")
+            elif words[-1] in dict:  # two special matched cases for INDI and FAM
+                print("<-- " + words[0] + "|" + words[-1] + "|Y|" + words[1])
             else:
                 print("<-- ", end="")
                 for word in words:
@@ -41,8 +40,6 @@ class OpenAndPrint:
                     else:
                         print(word, end="")
                 print()
-
-
 
 def main():
     test = OpenAndPrint()
