@@ -32,10 +32,10 @@ class OpenSavePrint:
             words = line.strip().split()
             if words[0] == "0":  # "INDI", "FAM"
                 if words[-1] == "INDI":
-                    indi_id = words[1]  # remove @@ from source file?
+                    indi_id = words[1]  # [1:-1] remove @@ from source file?
                     individuals[indi_id] = {}
                 if words[-1] == "FAM":
-                    fam_id = words[1][1:-1]
+                    fam_id = words[1]  # [1:-1]
                     families[fam_id] = {}
             elif words[0] == "1":  # other valid cases
                 if words[1] in indi_non_date_keys:
@@ -58,11 +58,11 @@ class OpenSavePrint:
         print(families)  # for testing
 
     def print_table(self):
-        individual = PrettyTable(['File Name', 'Functions', 'Lines', 'Characters'])
-        family = PrettyTable(['File Name', 'Functions', 'Lines', 'Characters'])
+        individual = PrettyTable(["ID", "Name", "Gender", "Birthday", "Age", "Alive", "Death", "Child", "Spouse"])
+        family = PrettyTable(["ID", "Married", "Divorced", "Husband ID", "Husband Name", "Wife ID", "Wife Name", "Children"])
 
-        # TODO: Transfer data from two dictionaries into two tables.
-        # Also take care of "age","alive", "Husband Name","Wife Name"
+        # TODO: Populate two tables by using data from two dictionaries
+        # Take care of "age","alive", "Husband Name","Wife Name"
 
 
 
