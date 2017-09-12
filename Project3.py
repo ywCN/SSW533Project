@@ -21,31 +21,30 @@ class OpenSavePrint:
         fam_non_date_keys = ["HUSB", "WIFE", "CHIL"]  # 1
         fam_date_keys = ["MARR", "DIV"]  # 1
         individuals = {}
-        # {"": {"NAME": "", "SEX": "", "BIRT": "", "DEAT": "", "FAMC": "", "FAMS": ""}}
+        # {"indi_id": {"NAME": "", "SEX": "", "BIRT": "", "DEAT": "", "FAMC": "", "FAMS": ""}}
         families = {}
-        # {"": {"MARR": "", "DIV": "", "HUSB": "", "WIFE": "", "CHIL": []}}
+        # {"fam_id": {"MARR": "", "DIV": "", "HUSB": "", "WIFE": "", "CHIL": []}}
         lines = self.open_file()
         date_name_cache = ""
+        indi_id = ""
+        fam_id = ""
         for line in lines:
-            indi_id = ""
-            fam_id = ""
             words = line.strip().split()
             if words[0] == "0":  # "INDI", "FAM"
                 if words[-1] == "INDI":
-                    indi_id = words[1][1:-2]
+                    indi_id = words[1]  # remove @@ from source file?
                     individuals[indi_id] = {}
-                    print(indi_id)
                 if words[-1] == "FAM":
-                    fam_id = words[1][1:-2]
+                    fam_id = words[1][1:-1]
                     families[fam_id] = {}
-            elif words[0] == "1":
+            elif words[0] == "1":  # other valid cases
                 if words[1] in indi_non_date_keys:
                     individuals[indi_id][words[1]] = " ".join(words[2:])
                 elif words[1] in fam_non_date_keys:
                     families[fam_id][words[1]] = " ".join(words[2:])
                 else:
-                    date_name_cache = words[1]
-            elif words[0] == "2" and words[0] == "DATE":
+                    date_name_cache = words[1]  # cache it for "DATE"
+            elif words[0] == "2" and words[0] == "DATE":  # "DATE"
                 if date_name_cache in indi_date_keys:
                     individuals[indi_id][date_name_cache] = " ".join(words[2:])
                 elif date_name_cache in fam_date_keys:
