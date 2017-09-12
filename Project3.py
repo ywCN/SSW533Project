@@ -21,22 +21,21 @@ class OpenSavePrint:
         fam_non_date_keys = ["HUSB", "WIFE", "CHIL"]  # 1
         fam_date_keys = ["MARR", "DIV"]  # 1
         individuals = {}
-        #  {"": {"NAME": "", "SEX": "", "BIRT": "", "DEAT": "", "FAMC": "", "FAMS": ""}}
+        # {"": {"NAME": "", "SEX": "", "BIRT": "", "DEAT": "", "FAMC": "", "FAMS": ""}}
         families = {}
-        #  {"": {"MARR": "", "DIV": "", "HUSB": "", "WIFE": "", "CHIL": []}}
-        lines = open("test.txt")
+        # {"": {"MARR": "", "DIV": "", "HUSB": "", "WIFE": "", "CHIL": []}}
+        lines = self.open_file()
         date_name_cache = ""
         for line in lines:
-            # print("-->", line.strip())  # .strip() removes \r \n in the end of line
             indi_id = ""
             fam_id = ""
             words = line.strip().split()
             if words[0] == "0":  # "INDI", "FAM"
-                if words[2] == "INDI":
+                if words[-1] == "INDI":
                     indi_id = words[1][1:-2]
                     individuals[indi_id] = {}
                     print(indi_id)
-                if words[2] == "FAM":
+                if words[-1] == "FAM":
                     fam_id = words[1][1:-2]
                     families[fam_id] = {}
             elif words[0] == "1":
@@ -56,16 +55,22 @@ class OpenSavePrint:
             else:
                 pass
 
-        print(individuals)
-        print(families)
+        print(individuals)  # for testing
+        print(families)  # for testing
 
     def print_table(self):
+        individual = PrettyTable(['File Name', 'Functions', 'Lines', 'Characters'])
+        family = PrettyTable(['File Name', 'Functions', 'Lines', 'Characters'])
+
+        # TODO: Transfer data from two dictionaries into two tables.
+        # Also take care of "age","alive", "Husband Name","Wife Name"
+
 
 
 
 def main():
     test = OpenSavePrint()
-    test.print_lines()
+    test.parse_lines()  # for testing
 
 
 if __name__ == '__main__':
