@@ -78,7 +78,26 @@ def graph_data():
     plt.plot_date(dates, values, '-')
     plt.show()
 
+def del_and_update():
+    # c.execute("SELECT * FROM stuffToPlot")
+    # [print(row) for row in c.fetchall()]
 
-graph_data()
+    # c.execute("UPDATE stuffToPlot SET value = 99 WHERE value='2'")
+    # conn.commit()  # we need to save it
+    #
+    # c.execute("SELECT * FROM stuffToPlot")
+    # [print(row) for row in c.fetchall()]
+
+    # c.execute("DELETE FROM stuffToPlot WHERE value = 99")  # DELETE FROM stuffToPlot deletes everything
+    # conn.commit()
+    # print(50*"#")  # just for separate displayed lines
+
+    c.execute("SELECT * FROM stuffToPlot WHERE value = 9")
+    [print(row) for row in c.fetchall()]
+
+    c.execute("SELECT * FROM stuffToPlot WHERE value = 9")
+    print(len(c.fetchall()))
+
+del_and_update()
 c.close
 conn.close()
