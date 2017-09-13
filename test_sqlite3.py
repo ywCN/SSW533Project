@@ -24,11 +24,18 @@ def dynamic_data_entry():
               (unix, date, keyword, value))
     conn.commit()
 
+def read_from_db():
+    c.execute("SELECT * FROM stuffToPlot")
+    # data = c.fetchall()
+    # print(data)
+    for row in c.fetchall():
+        print(row)
 
-create_table()
-#data_entry()
-for i in range(10):
-    dynamic_data_entry()
-    time.sleep(1)
+# create_table()
+# #data_entry()
+# for i in range(10):
+#     dynamic_data_entry()
+#     time.sleep(1)
+read_from_db()
 c.close()
 conn.close()
