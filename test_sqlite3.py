@@ -25,7 +25,7 @@ def dynamic_data_entry():
     conn.commit()
 
 def read_from_db():
-    c.execute("SELECT * FROM stuffToPlot WHERE value=2 AND keyword='Python'")  # sqlite is case sensitive?
+    c.execute("SELECT * FROM stuffToPlot WHERE unix > 14526187")  # sqlite is case sensitive?
     # data = c.fetchall()
     # print(data)
     for row in c.fetchall():
