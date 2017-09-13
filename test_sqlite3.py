@@ -16,7 +16,7 @@ def data_entry():
     conn.close()
 
 def dynamic_data_entry():
-    unix = time.time()
+    unix = time.time()  # will use a lot of space in DB
     date = str(datetime.datetime.fromtimestamp(unix).strftime("%Y-%m-%d %H:%M:%S"))
     keyword = "Python"
     value = random.randrange(0, 10)
@@ -25,7 +25,7 @@ def dynamic_data_entry():
     conn.commit()
 
 def read_from_db():
-    c.execute("SELECT * FROM stuffToPlot")
+    c.execute("SELECT * FROM stuffToPlot WHERE value=2 AND keyword='Python'")  # sqlite is case sensitive?
     # data = c.fetchall()
     # print(data)
     for row in c.fetchall():
