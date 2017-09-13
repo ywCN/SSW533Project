@@ -25,11 +25,12 @@ def dynamic_data_entry():
     conn.commit()
 
 def read_from_db():
-    c.execute("SELECT * FROM stuffToPlot WHERE unix > 14526187")  # sqlite is case sensitive?
+    c.execute("SELECT keyword, unix, value, datestamp FROM stuffToPlot WHERE unix > 14526187")
+    # keyword, unix, value, datestamp changes the output order of rows
     # data = c.fetchall()
     # print(data)
     for row in c.fetchall():
-        print(row)
+        print(row)  # row[0] to display only 1st col
 
 # create_table()
 # #data_entry()
