@@ -6,8 +6,8 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 from dateutil import parser
 from matplotlib import style
-style.use('fivethirtyeight')
 
+style.use('fivethirtyeight')
 
 conn = sqlite3.connect('tutorial.db')
 c = conn.cursor()
@@ -78,6 +78,7 @@ def graph_data():
     plt.plot_date(dates, values, '-')
     plt.show()
 
+
 def del_and_update():
     # c.execute("SELECT * FROM stuffToPlot")
     # [print(row) for row in c.fetchall()]
@@ -98,6 +99,7 @@ def del_and_update():
     c.execute("SELECT * FROM stuffToPlot WHERE value = 9")
     print(len(c.fetchall()))
 
+
 del_and_update()
-c.close
+c.close()
 conn.close()
