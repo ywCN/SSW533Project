@@ -1,5 +1,5 @@
 import sqlite3
-import datetime  # should be used later
+from datetime import datetime
 from prettytable import PrettyTable
 
 
@@ -91,12 +91,12 @@ class Project3:
                     pass
             elif words[0] == "2":
                 if date_name_cache in indi_tab:
-                    indi_tab[date_name_cache] = " ".join(words[2:])
-                    date_name_cache = "NA"  # optional
+                    indi_tab[date_name_cache] = str(datetime.strptime(" ".join(words[2:]), '%d %b %Y').date())
+                    date_name_cache = "NA"  # optional ?
                 elif date_name_cache in fam_tab:
-                    fam_tab[date_name_cache] = " ".join(words[2:])
+                    fam_tab[date_name_cache] = str(datetime.strptime(" ".join(words[2:]), '%d %b %Y').date())
                     date_name_cache = "NA"
-                elif date_name_cache == "NA" or date_name_cache == "":  # I do not know why need == ""
+                elif date_name_cache == "NA" or date_name_cache == "":  # I do not know why need == "", but it fixed a bug
                     pass
                 else:
                     print("Something is wrong with the date_name_cache!")
@@ -126,7 +126,7 @@ class Project3:
 
 
 def main():
-    demo = Project3()  # for testing
+    demo = Project3()
 
     conn = sqlite3.connect('project.db')
     c = conn.cursor()
