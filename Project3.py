@@ -62,8 +62,10 @@ class Project3:
                     indi_tab[words[-1]] = words[1]
 
                 if words[-1] in fam_tab:
-                    if fam_tab[words[-1]] == "NA":
+                    if words[1]== "F1":
+                        self.insert_entry(indi_tab, c, conn)
                         fam_tab[words[-1]] = words[1]
+                        continue
                     self.insert_entry(fam_tab, c, conn)
                     for key in fam_tab:
                         fam_tab[key] = "NA"
