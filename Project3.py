@@ -29,13 +29,14 @@ class Project3:
         indi_tab = {"INDI": "NA", "NAME": "NA", "SEX": "NA", "BIRT": "NA", "DEAT": "NA", "FAMC": "NA", "FAMS": "NA"}
 
         fam_tab = {"FAM": "NA", "MARR": "NA", "DIV": "NA", "HUSB": "NA", "WIFE": "NA",
-                   "CHIL": "NA"}  # use list instead of []
+                   "CHIL": "NA"}  # use list instead of [], but I do not know why
         date_tags = ["BIRT", "DEAT", "MARR", "DIV"]
         date_name_cache = ""
 
         lines = self.open_file()
         for line in lines:
             words = line.strip().split()
+            # print(words)  # debug
             if words[0] == "0":
                 if words[-1] in indi_tab:
                     if indi_tab[words[-1]] != "NA":
@@ -84,11 +85,14 @@ class Project3:
             elif words[0] == "2":
                 if date_name_cache in indi_tab:
                     indi_tab[date_name_cache] = " ".join(words[2:])
-                    date_name_cache = ""  # optional
+                    date_name_cache = "NA"  # optional
                 elif date_name_cache in fam_tab:
                     fam_tab[date_name_cache] = " ".join(words[2:])
-                    date_name_cache = ""
+                    date_name_cache = "NA"
+                elif date_name_cache == "NA":
+                    pass
                 else:
+                    print(date_name_cache)
                     print("Something is wrong with the date_name_cache!")
 
     def get_indi_info(self, c):
