@@ -8,9 +8,9 @@ from dateutil import parser
 from matplotlib import style
 
 style.use('fivethirtyeight')
-
 conn = sqlite3.connect('tutorial.db')
 c = conn.cursor()
+
 
 
 def create_table():
