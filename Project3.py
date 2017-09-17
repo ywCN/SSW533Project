@@ -70,6 +70,7 @@ class Project3:
             elif words[0] == "1":
                 if words[1] in date_tags:
                     date_name_cache = words[1]
+                    continue
                 elif words[1] in indi_tab:
                     indi_tab[words[1]] = " ".join(words[2:])
                 elif words[1] in fam_tab:
