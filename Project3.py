@@ -19,7 +19,7 @@ class Project3:
 
         c.execute("CREATE TABLE IF NOT EXISTS indi(INDI TEXT, NAME TEXT, SEX TEXT, BIRT TEXT, DEAT TEXT, FAMC TEXT, "
                   "FAMS TEXT)")
-        # c.execute("CREATE TABLE IF NOT EXISTS indi_fam(INDI TEXT, FAM TEXT)")  # will be used in future projects
+        # c.execute("CREATE TABLE IF NOT EXISTS indi_fam(INDI TEXT, FAM TEXT)")  # may be used in future projects
         c.execute(
             "CREATE TABLE IF NOT EXISTS fam(FAM TEXT, MARR TEXT, DIV TEXT, HUSB TEXT, WIFE TEXT, CHIL TEXT)")
 
@@ -124,10 +124,11 @@ class Project3:
             return today.year - birt.year - 1
 
     def print_selected(self, c):
-        t_indi = PrettyTable(["ID", "Name", "Gender", "Birthday", "Death", "Child", "Spouse", "Age", "Alive"])
+        t_indi = PrettyTable(["ID", "Name", "Gender", "Birthday", "Age", "Alive", "Death", "Child", "Spouse"])
         t_fam = PrettyTable(["ID", "Married", "Divorced", "Husband ID", "Husband Name", "Wife ID", "Wife Name",
                              "Children"])
         name_map = {}
+
         for row in self.get_indi_info(c):
             age = self.get_age(row[3])
 
@@ -135,11 +136,13 @@ class Project3:
                 alive = True
             else:
                 alive = False
+
             name_map[row[0]] = row[1]
             lst = list(row)
-            lst.append(age)
-            lst.append(alive)
+            lst.insert(4, age)
+            lst.insert(5, alive)
             t_indi.add_row(lst)
+
         for row in self.get_fam_info(c):
             lst = list(row)
             lst.insert(4, name_map[row[3]])
