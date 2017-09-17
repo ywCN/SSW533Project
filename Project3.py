@@ -35,9 +35,11 @@ class OpenSavePrint:
         # {"indi_id": {"NAME": "", "SEX": "", "BIRT": "", "DEAT": "", "FAMC": "", "FAMS": ""}}
         # families = {}
         # {"fam_id": {"MARR": "", "DIV": "", "HUSB": "", "WIFE": ""}}
+        date_tags = ["BIRT", "DEAT", "MARR", "DIV"]
         lines = self.open_file()
         date_name_cache = indi_id = fam_id = ""
-        INDI = NAME = SEX = FAMC = FAMS = BIRT = DEAT = ""
+        indi_tab = {"INDI": "", "NAME": "", "SEX": "", "FAMC": "", "FAMS": "", "BIRT": "", "DEAT": ""}
+        # INDI = NAME = SEX = FAMC = FAMS = BIRT = DEAT = ""
         FAM = MARR = HUSB = WIFE = CHIL = DIV = ""
 
         for line in lines:
@@ -46,7 +48,7 @@ class OpenSavePrint:
                 if words[-1] == "INDI":
                     if indi_id != "":
                         c.execute("INSERT INTO indi (NAME, SEX, BIRT, DEAT, FAMC, FAMS) VALUES (?, ?, ?, ?, ?, ?)",
-                                  (NAME, SEX, BIRT, DEAT, FAMC, FAMS))
+                                  (indi_tab["INDI"], indi_tab["NAME"], indi_tab["SEX"], indi_tab["FAMC"], indi_tab["FAMS"], indi_tab["BIRT"], indi_tab["DEAT"]))
                         conn.commit()
                         INDI = NAME = SEX = FAMC = FAMS = BIRT = DEAT = ""
                     else:
@@ -60,54 +62,45 @@ class OpenSavePrint:
                     else:
                         FAM = words[1]
             elif words[0] == "1":
-                if words[1] == NAME:
-                    NAME = " ".join(words[2:])
-                elif words[1] == SEX:
-                    SEX = " ".join(words[2:])
-                elif words[1] == FAMC:
-                    FAMC = " ".join(words[2:])
-                elif words[1] == FAMS:
-                    FAMS = " ".join(words[2:])
-                # elif words[1] == BIRT:
-                #     BIRT = " ".join(words[2:])
-                # elif words[1] == DEAT:
-                #     DEAT = " ".join(words[2:])
-                # elif words[1] == MARR:
-                #     MARR = " ".join(words[2:])
-                elif words[1] == HUSB:
-                    HUSB = " ".join(words[2:])
-                elif words[1] == WIFE:
-                    WIFE = " ".join(words[2:])
-                elif words[1] == CHIL:
-                    CHIL = " ".join(words[2:])
-                # elif words[1] == DIV:
-                #     DIV = " ".join(words[2:])
-                else:
+                # if words[1] in indi_tab:
+                #     NAME = " ".join(words[2:])
+                # elif words[1] == "SEX":
+                #     SEX = " ".join(words[2:])
+                # elif words[1] == "FAMC":
+                #     FAMC = " ".join(words[2:])
+                # elif words[1] == "FAMS":
+                #     FAMS = " ".join(words[2:])
+                # elif words[1] == "HUSB":
+                #     HUSB = " ".join(words[2:])
+                # elif words[1] == "WIFE":
+                #     WIFE = " ".join(words[2:])
+                # elif words[1] == "CHIL":
+                #     CHIL = " ".join(words[2:])
+                if words[1] in date_tags:
                     date_name_cache = words[1]  # cache it for "DATE"
-            elif words[0] == "2" and words[0] == "DATE":  # "DATE"
-                if date_name_cache == BIRT:
-                    BIRT = " ".join(words[2:])
-                elif date_name_cache == DEAT:
-                    DEAT = " ".join(words[2:])
-                elif date_name_cache == MARR:
-                    MARR = " ".join(words[2:])
-                elif date_name_cache == DIV:
-                    DIV = " ".join(words[2:])
+                elif words[1] in indi_tab:
+                    indi_tab[words[1]] = " ".join(words[2:])
+                elif words[1] in fam_tab:
+                    fam_tab[words[1]] = " ".join(words[2:])
 
-                if date_name_cache in indi_date_keys:
-                    individuals[indi_id][date_name_cache] = " ".join(words[2:])
-                    date_name_cache = ""
-                elif date_name_cache in fam_date_keys:
-                    families[fam_id][date_name_cache] = " ".join(words[2:])
-                    date_name_cache = ""
+                else:
+                    pass
+
+                date_tags.index()
+            elif words[0] == "2" and words[0] == "DATE":
+                if date_name_cache == "BIRT":
+                    BIRT = " ".join(words[2:])
+                elif date_name_cache == "DEAT":
+                    DEAT = " ".join(words[2:])
+                elif date_name_cache == "MARR":
+                    MARR = " ".join(words[2:])
+                elif date_name_cache == "DIV":
+                    DIV = " ".join(words[2:])
                 else:
                     print("Something is wrong with the date_name_cache!")
-            else:
-                pass
-
-            if date_name_cache != "":
         c.close()
         conn.close()
+
     def get_info(self):
 
 
