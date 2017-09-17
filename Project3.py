@@ -55,28 +55,20 @@ class Project3:
                 if words[-1] in indi_tab:
                     if indi_tab[words[-1]] == "NA":
                         indi_tab[words[-1]] = words[1]
-
-                    if indi_tab[words[-1]] != "NA":
-                        self.insert_entry(indi_tab, c, conn)
-                        for key in indi_tab:
-                            indi_tab[key] = "NA"
-
-                        indi_tab[words[-1]] = words[1]
-
-                if words[-1] in fam_tab:
                     self.insert_entry(indi_tab, c, conn)
-                    fam_tab[words[-1]] = words[1]
+                    for key in indi_tab:
+                        indi_tab[key] = "NA"
+
+                    indi_tab[words[-1]] = words[1]
 
                 if words[-1] in fam_tab:
                     if fam_tab[words[-1]] == "NA":
                         fam_tab[words[-1]] = words[1]
+                    self.insert_entry(fam_tab, c, conn)
+                    for key in fam_tab:
+                        fam_tab[key] = "NA"
 
-                    if fam_tab[words[-1]] != "NA":
-                        self.insert_entry(fam_tab, c, conn)
-                        for key in fam_tab:
-                            fam_tab[key] = "NA"
-
-                        fam_tab[words[-1]] = words[1]
+                    fam_tab[words[-1]] = words[1]
 
                 if words[1] == "TRLR":
                     self.insert_entry(fam_tab, c, conn)
