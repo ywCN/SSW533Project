@@ -129,11 +129,16 @@ class Project3:
 
         for row in self.get_indi_info(c):
             age = self.get_age(row[3])
-            alive = True
+
             if row[4] == "NA":
+                alive = True
+            else:
                 alive = False
-            row.extend([age, alive])
-            t_indi.add_row(row)
+
+            lst = list(row)
+            lst.append(age)
+            lst.append(alive)
+            t_indi.add_row(lst)
         for row in self.get_fam_info(c):
             t_fam.add_row(row)
 
