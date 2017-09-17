@@ -81,7 +81,7 @@ class Project3:
                         fam_tab[words[1]] = " ".join(words[2:])
                 else:
                     pass
-            elif words[0] == "2" and words[0] == "DATE":
+            elif words[0] == "2":
                 if date_name_cache in indi_tab:
                     indi_tab[date_name_cache] = " ".join(words[2:])
                     date_name_cache = ""  # optional
