@@ -125,8 +125,9 @@ class Project3:
 
     def print_selected(self, c):
         t_indi = PrettyTable(["ID", "Name", "Gender", "Birthday", "Death", "Child", "Spouse", "Age", "Alive"])
-        t_fam = PrettyTable(["ID", "Married", "Divorced", "Husband ID", "Wife ID", "Children"])
-
+        t_fam = PrettyTable(["ID", "Married", "Divorced", "Husband ID", "Wife ID", "Children",
+                             "Husband Name", "Wife Name"])
+        name_map = {}
         for row in self.get_indi_info(c):
             age = self.get_age(row[3])
 
@@ -134,12 +135,15 @@ class Project3:
                 alive = True
             else:
                 alive = False
-
+            name_map[row[0]] = row[1]
             lst = list(row)
             lst.append(age)
             lst.append(alive)
             t_indi.add_row(lst)
         for row in self.get_fam_info(c):
+            lst = list(row)
+            lst.append(name_map[row[3]])
+            lst.append(name_map[row[4]])
             t_fam.add_row(row)
 
         print(t_indi)
