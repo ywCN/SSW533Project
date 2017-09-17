@@ -19,8 +19,8 @@ class OpenSavePrint:
         conn = sqlite3.connect('project.db')
         c = conn.cursor()
         c.execute("CREATE TABLE IF NOT EXISTS indi(NAME TEXT, SEX TEXT, BIRT TEXT, DEAT TEXT, FAMC TEXT, FAMS TEXT)")
-        c.execute("CREATE TABLE IF NOT EXISTS fam(INDI TEXT, FAM TEXT)")
-        c.execute("CREATE TABLE IF NOT EXISTS indi_fam(unix REAL, datestamp TEXT, keyword TEXT, value REAL)")
+        c.execute("CREATE TABLE IF NOT EXISTS indi_fam(INDI TEXT, FAM TEXT)")
+        c.execute("CREATE TABLE IF NOT EXISTS fam(MARR TEXT, HUSB TEXT, WIFE TEXT, CHIL TEXT, DIV TEXT)")
         c.close()
         conn.close()
     def parse_lines(self):
@@ -45,14 +45,17 @@ class OpenSavePrint:
             if words[0] == "0":
                 if words[-1] == "INDI":
                     if indi_id != "":
-
+                        c.execute("INSERT INTO indi (NAME, SEX, BIRT, DEAT, FAMC, FAMS) VALUES (?, ?, ?, ?, ?, ?)",
+                                  (NAME, SEX, BIRT, DEAT, FAMC, FAMS))
+                        conn.commit()
                         #  add to database
                         NAME = SEX = FAMC = FAMS = BIRT = DEAT = ""
                     else:
                         indi_id = words[1]
                 if words[-1] == "FAM":
                     if indi_id != "":
-
+                        c.execute("INSERT INTO fam (MARR, HUSB, WIFE, CHIL, DIV) VALUES (?, ?, ?, ?, ?)",
+                            (MARR, HUSB, WIFE, CHIL, DIV))
                         # add to database
                         MARR = HUSB = WIFE = CHIL = DIV = ""
                     else:
