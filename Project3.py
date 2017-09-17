@@ -18,27 +18,27 @@ class OpenSavePrint:
     def create_table(self):
         conn = sqlite3.connect('project.db')
         c = conn.cursor()
-        c.execute("CREATE TABLE IF NOT EXISTS indi(NAME TEXT, SEX TEXT, BIRT TEXT, DEAT TEXT, FAMC TEXT, FAMS TEXT)")
+        c.execute("CREATE TABLE IF NOT EXISTS indi(INDI TEXT, NAME TEXT, SEX TEXT, BIRT TEXT, DEAT TEXT, FAMC TEXT, FAMS TEXT)")
         c.execute("CREATE TABLE IF NOT EXISTS indi_fam(INDI TEXT, FAM TEXT)")
-        c.execute("CREATE TABLE IF NOT EXISTS fam(MARR TEXT, HUSB TEXT, WIFE TEXT, CHIL TEXT, DIV TEXT)")
+        c.execute("CREATE TABLE IF NOT EXISTS fam(FAM TEXT, MARR TEXT, HUSB TEXT, WIFE TEXT, CHIL TEXT, DIV TEXT)")
         c.close()
         conn.close()
     def parse_lines(self):
         conn = sqlite3.connect('project.db')
         c = conn.cursor()
 
-        indi_non_date_keys = ["NAME", "SEX", "FAMC", "FAMS"]  # 1
-        indi_date_keys = ["BIRT", "DEAT"]  # 1
-        fam_non_date_keys = ["HUSB", "WIFE", "CHIL"]  # 1
-        fam_date_keys = ["MARR", "DIV"]  # 1
+        # indi_non_date_keys = ["NAME", "SEX", "FAMC", "FAMS"]  # 1
+        # indi_date_keys = ["BIRT", "DEAT"]  # 1
+        # fam_non_date_keys = ["HUSB", "WIFE", "CHIL"]  # 1
+        # fam_date_keys = ["MARR", "DIV"]  # 1
         # individuals = {}
         # {"indi_id": {"NAME": "", "SEX": "", "BIRT": "", "DEAT": "", "FAMC": "", "FAMS": ""}}
         # families = {}
         # {"fam_id": {"MARR": "", "DIV": "", "HUSB": "", "WIFE": ""}}
         lines = self.open_file()
         date_name_cache = indi_id = fam_id = ""
-        NAME = SEX = FAMC = FAMS = BIRT = DEAT = ""
-        MARR = HUSB = WIFE = CHIL = DIV = ""
+        INDI = NAME = SEX = FAMC = FAMS = BIRT = DEAT = ""
+        FAM = MARR = HUSB = WIFE = CHIL = DIV = ""
 
         for line in lines:
             words = line.strip().split()
@@ -48,26 +48,52 @@ class OpenSavePrint:
                         c.execute("INSERT INTO indi (NAME, SEX, BIRT, DEAT, FAMC, FAMS) VALUES (?, ?, ?, ?, ?, ?)",
                                   (NAME, SEX, BIRT, DEAT, FAMC, FAMS))
                         conn.commit()
-                        #  add to database
-                        NAME = SEX = FAMC = FAMS = BIRT = DEAT = ""
+                        INDI = NAME = SEX = FAMC = FAMS = BIRT = DEAT = ""
                     else:
-                        indi_id = words[1]
+                        INDI = words[1]
                 if words[-1] == "FAM":
                     if indi_id != "":
                         c.execute("INSERT INTO fam (MARR, HUSB, WIFE, CHIL, DIV) VALUES (?, ?, ?, ?, ?)",
                             (MARR, HUSB, WIFE, CHIL, DIV))
-                        # add to database
-                        MARR = HUSB = WIFE = CHIL = DIV = ""
+                        conn.commit()
+                        FAM = MARR = HUSB = WIFE = CHIL = DIV = ""
                     else:
-                        fam_id = words[1]
-            elif words[0] == "1":  # other valid cases
-                if words[1] in indi_non_date_keys:
-                    individuals[indi_id][words[1]] = " ".join(words[2:])
-                elif words[1] in fam_non_date_keys:
-                    families[fam_id][words[1]] = " ".join(words[2:])
+                        FAM = words[1]
+            elif words[0] == "1":
+                if words[1] == NAME:
+                    NAME = " ".join(words[2:])
+                elif words[1] == SEX:
+                    SEX = " ".join(words[2:])
+                elif words[1] == FAMC:
+                    FAMC = " ".join(words[2:])
+                elif words[1] == FAMS:
+                    FAMS = " ".join(words[2:])
+                # elif words[1] == BIRT:
+                #     BIRT = " ".join(words[2:])
+                # elif words[1] == DEAT:
+                #     DEAT = " ".join(words[2:])
+                # elif words[1] == MARR:
+                #     MARR = " ".join(words[2:])
+                elif words[1] == HUSB:
+                    HUSB = " ".join(words[2:])
+                elif words[1] == WIFE:
+                    WIFE = " ".join(words[2:])
+                elif words[1] == CHIL:
+                    CHIL = " ".join(words[2:])
+                # elif words[1] == DIV:
+                #     DIV = " ".join(words[2:])
                 else:
                     date_name_cache = words[1]  # cache it for "DATE"
             elif words[0] == "2" and words[0] == "DATE":  # "DATE"
+                if date_name_cache == BIRT:
+                    BIRT = " ".join(words[2:])
+                elif date_name_cache == DEAT:
+                    DEAT = " ".join(words[2:])
+                elif date_name_cache == MARR:
+                    MARR = " ".join(words[2:])
+                elif date_name_cache == DIV:
+                    DIV = " ".join(words[2:])
+
                 if date_name_cache in indi_date_keys:
                     individuals[indi_id][date_name_cache] = " ".join(words[2:])
                     date_name_cache = ""
