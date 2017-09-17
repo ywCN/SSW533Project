@@ -18,7 +18,7 @@ class Project3:
     def create_table(self, c):
 
         c.execute("CREATE TABLE IF NOT EXISTS indi(INDI TEXT, NAME TEXT, SEX TEXT, BIRT TEXT, DEAT TEXT, FAMC TEXT, FAMS TEXT)")
-        c.execute("CREATE TABLE IF NOT EXISTS indi_fam(INDI TEXT, FAM TEXT)")
+        # c.execute("CREATE TABLE IF NOT EXISTS indi_fam(INDI TEXT, FAM TEXT)")  # will be used in future projects
         c.execute("CREATE TABLE IF NOT EXISTS fam(FAM TEXT, MARR TEXT, DIV TEXT, HUSB TEXT, WIFE TEXT, CHIL TEXT)")  # CHIL's type may be wrong
         # commit?
 
@@ -81,40 +81,40 @@ class Project3:
                     print("Something is wrong with the date_name_cache!")
 
     def get_indi_info(self, c):
-        c.execute('SELECT value, datestamp FROM stuffToPlot WHERE')
-        raw = c.fetchall()
-        data = []
-        for row in raw:
-            row_data = []
-            for item in row:
-                row_data.append(item)
-
-            data.append(row_data)
-        return data
+        c.execute('SELECT INDI, NAME, SEX, BIRT, DEAT, FAMC, FAMS FROM indi')
+        return c.fetchall()
 
     def get_fam_info(self, c):
-        c.execute('SELECT value, datestamp FROM stuffToPlot WHERE')
-        data = c.fetchall()
+        c.execute('SELECT FAM, MARR, DIV, HUSB, WIFE, CHIL FROM fam')
         return c.fetchall()
 
     def print_table(self, c):
-        fam_data = self.get_indi_info(c)
-        fam_data = self.get_fam_info(c)
-        indi = PrettyTable(["ID", "Name", "Gender", "Birthday", "Age", "Alive", "Death", "Child", "Spouse"])
-        fam = PrettyTable(["ID", "Married", "Divorced", "Husband ID", "Husband Name", "Wife ID", "Wife Name", "Children"])
+        # indi = PrettyTable(["ID", "Name", "Gender", "Birthday", "Age", "Alive", "Death", "Child", "Spouse"])
+        # fam = PrettyTable(
+        #     ["ID", "Married", "Divorced", "Husband ID", "Husband Name", "Wife ID", "Wife Name", "Children"])
+        #  "age","alive", "Husband Name","Wife Name" optional for project3?
+        t_indi = PrettyTable(["ID", "Name", "Gender", "Birthday", "Death", "Child", "Spouse"])
+        t_fam = PrettyTable(
+            ["ID", "Married", "Divorced", "Husband ID" , "Wife ID", "Children"])
+        for row in self.get_indi_info(c):
+            t_indi.add_row(row)
+        for row in self.get_fam_info(c):
+            t_fam.add_row(row)
 
-        # TODO: Populate two tables by using data from two tables
-        # Take care of "age","alive", "Husband Name","Wife Name" optional for project3?
-
-
+        print(t_indi)
+        print(t_fam)
 
 
 def main():
+    demo = Project3()  # for testing
+
     conn = sqlite3.connect('project.db')
     c = conn.cursor()
-    demo = Project3()  # for testing
+
     demo.create_table(c)
-    demo.parse_lines(c)
+    demo.parse_lines(c, conn)
+    demo.print_table(c)
+
     c.close()
     conn.close()
 
