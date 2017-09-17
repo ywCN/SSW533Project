@@ -41,7 +41,7 @@ class Project3:
                 if words[-1] in indi_tab:
                     if indi_tab[words[-1]] != "NA":
                         data = list(indi_tab.values())
-                        print(data)  # debug
+                        # print(data)  # debug
                         c.execute(
                             "INSERT INTO indi (INDI, NAME, SEX, BIRT, DEAT, FAMC, FAMS) VALUES (?, ?, ?, ?, ?, ?, ?)",
                             (data[0], data[1], data[2], data[3], data[4], data[5], data[6]))
@@ -50,11 +50,12 @@ class Project3:
                         for key in indi_tab:
                             indi_tab[key] = "NA"
                     else:
+                        print(words[-1] == "")  # debug
                         indi_tab[words[-1]] = words[1]
                 if words[-1] in fam_tab:
                     if fam_tab[words[-1]] != "NA":
                         data = list(fam_tab.values())
-                        print(data)  # debug
+                        # print(data)  # debug
                         if isinstance(data[5], list):
                             c.execute("INSERT INTO fam (FAM, MARR, DIV, HUSB, WIFE, CHIL) VALUES (?, ?, ?, ?, ?, ?)",
                                       (data[0], data[1], data[2], data[3], data[4], ' '.join(data[5])))
@@ -66,11 +67,11 @@ class Project3:
                         for key in fam_tab:
                             fam_tab[key] = "NA"
                     else:
+                        print(words[-1] == "")  # debug
                         fam_tab[words[-1]] = words[1]
             elif words[0] == "1":
                 if words[1] in date_tags:
                     date_name_cache = words[1]
-                    continue
                 elif words[1] in indi_tab:
                     indi_tab[words[1]] = " ".join(words[2:])
                 elif words[1] in fam_tab:
