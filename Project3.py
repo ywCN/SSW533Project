@@ -52,8 +52,6 @@ class Project3:
         for line in lines:
             words = line.strip().split()
             if words[0] == "0":
-                print(indi_tab)
-                print(fam_tab)
                 if words[-1] in indi_tab:
                     if indi_tab[words[-1]] == "NA":
                         indi_tab[words[-1]] = words[1]
@@ -65,9 +63,9 @@ class Project3:
 
                         indi_tab[words[-1]] = words[1]
 
-                    if words[-1] in fam_tab:
-                        self.insert_entry(indi_tab, c, conn)
-                        fam_tab[words[-1]] = words[1]
+                if words[-1] in fam_tab:
+                    self.insert_entry(indi_tab, c, conn)
+                    fam_tab[words[-1]] = words[1]
 
                 if words[-1] in fam_tab:
                     if fam_tab[words[-1]] == "NA":
@@ -80,8 +78,8 @@ class Project3:
 
                         fam_tab[words[-1]] = words[1]
 
-                    if words[1] == "TRLR":
-                        self.insert_entry(fam_tab, c, conn)
+                if words[1] == "TRLR":
+                    self.insert_entry(fam_tab, c, conn)
 
             elif words[0] == "1":
                 if words[1] in date_tags:
