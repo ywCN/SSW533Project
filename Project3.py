@@ -17,9 +17,12 @@ class Project3:
 
     def create_table(self, c):
 
-        c.execute("CREATE TABLE IF NOT EXISTS indi(INDI TEXT, NAME TEXT, SEX TEXT, BIRT TEXT, DEAT TEXT, FAMC TEXT, FAMS TEXT)")
+        c.execute(
+            "CREATE TABLE IF NOT EXISTS indi(INDI TEXT, NAME TEXT, SEX TEXT, BIRT TEXT, DEAT TEXT, FAMC TEXT, "
+            "FAMS TEXT)")
         # c.execute("CREATE TABLE IF NOT EXISTS indi_fam(INDI TEXT, FAM TEXT)")  # will be used in future projects
-        c.execute("CREATE TABLE IF NOT EXISTS fam(FAM TEXT, MARR TEXT, DIV TEXT, HUSB TEXT, WIFE TEXT, CHIL TEXT)")  # CHIL's type may be wrong
+        c.execute(
+            "CREATE TABLE IF NOT EXISTS fam(FAM TEXT, MARR TEXT, DIV TEXT, HUSB TEXT, WIFE TEXT, CHIL TEXT)")  # CHIL's type may be wrong
         # commit?
 
     def parse_lines(self, c, conn):
@@ -36,8 +39,9 @@ class Project3:
                 if words[-1] in indi_tab:
                     if indi_tab[words[-1]] != "":
                         data = list(fam_tab.values())
-                        c.execute("INSERT INTO indi (INDI, NAME, SEX, BIRT, DEAT, FAMC, FAMS) VALUES (?, ?, ?, ?, ?, ?)",
-                                  (data[0], data[1], data[2], data[3], data[4], data[5], data[6]))
+                        c.execute(
+                            "INSERT INTO indi (INDI, NAME, SEX, BIRT, DEAT, FAMC, FAMS) VALUES (?, ?, ?, ?, ?, ?)",
+                            (data[0], data[1], data[2], data[3], data[4], data[5], data[6]))
                         conn.commit()
 
                         for key in indi_tab:
@@ -94,8 +98,7 @@ class Project3:
         #     ["ID", "Married", "Divorced", "Husband ID", "Husband Name", "Wife ID", "Wife Name", "Children"])
         #  "age","alive", "Husband Name","Wife Name" optional for project3?
         t_indi = PrettyTable(["ID", "Name", "Gender", "Birthday", "Death", "Child", "Spouse"])
-        t_fam = PrettyTable(
-            ["ID", "Married", "Divorced", "Husband ID" , "Wife ID", "Children"])
+        t_fam = PrettyTable(["ID", "Married", "Divorced", "Husband ID", "Wife ID", "Children"])
         for row in self.get_indi_info(c):
             t_indi.add_row(row)
         for row in self.get_fam_info(c):
