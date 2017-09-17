@@ -111,7 +111,15 @@ class Project3:
 
     def get_age(self, birthday):
         today = date.today()
-        return today - birthday
+        if today.month > birthday.month:
+            return today.year - birthday.year
+        elif today.month == birthday.month:
+            if today.day >= birthday.day:
+                return today.year - birthday.year
+            else:
+                return today.year - birthday.year - 1
+        else:
+            return today.year - birthday.year - 1
 
     def print_selected(self, c):
         t_indi = PrettyTable(["ID", "Name", "Gender", "Birthday", "Death", "Child", "Spouse"])
