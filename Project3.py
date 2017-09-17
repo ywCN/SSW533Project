@@ -112,7 +112,7 @@ class Project3:
 
     def get_age(self, birthday):
         today = datetime.today().date()
-        birt =''
+        birt = datetime.strptime(birthday, '%Y-%m-%d').date()
         if today.month > birt.month:
             return today.year - birt.year
         elif today.month == birt.month:
@@ -124,16 +124,15 @@ class Project3:
             return today.year - birt.year - 1
 
     def print_selected(self, c):
-        t_indi = PrettyTable(["ID", "Name", "Gender", "Birthday", "Death", "Child", "Spouse"])
+        t_indi = PrettyTable(["ID", "Name", "Gender", "Birthday", "Death", "Child", "Spouse", "Age", "Alive"])
         t_fam = PrettyTable(["ID", "Married", "Divorced", "Husband ID", "Wife ID", "Children"])
 
         for row in self.get_indi_info(c):
-            print(row[3])
-            # print(self.get_age(row[3]))
-            # age =
-            # alive = False
-            # row.extend([age, alive])
-
+            age = self.get_age(row[3])
+            alive = True
+            if row[4] == "NA":
+                alive = False
+            row.extend([age, alive])
             t_indi.add_row(row)
         for row in self.get_fam_info(c):
             t_fam.add_row(row)
