@@ -27,8 +27,9 @@ class Project3:
     def parse_lines(self, c, conn):
 
         indi_tab = {"INDI": "NA", "NAME": "NA", "SEX": "NA", "BIRT": "NA", "DEAT": "NA", "FAMC": "NA", "FAMS": "NA"}
+
         fam_tab = {"FAM": "NA", "MARR": "NA", "DIV": "NA", "HUSB": "NA", "WIFE": "NA",
-                   "CHIL": list}  # probably use a [] for CHIL, but do not know
+                   "CHIL": "NA"}  # use list instead of []
         date_tags = ["BIRT", "DEAT", "MARR", "DIV"]
         date_name_cache = ""
 
@@ -39,6 +40,7 @@ class Project3:
                 if words[-1] in indi_tab:
                     if indi_tab[words[-1]] != "":
                         data = list(indi_tab.values())
+                        print(data)
                         c.execute(
                             "INSERT INTO indi (INDI, NAME, SEX, BIRT, DEAT, FAMC, FAMS) VALUES (?, ?, ?, ?, ?, ?, ?)",
                             (data[0], data[1], data[2], data[3], data[4], data[5], data[6]))
@@ -51,15 +53,17 @@ class Project3:
                 if words[-1] in fam_tab:
                     if fam_tab[words[-1]] != "":
                         data = list(fam_tab.values())
-                        c.execute("INSERT INTO fam (FAM, MARR, DIV, HUSB, WIFE, CHIL) VALUES (?, ?, ?, ?, ?, ?)",
-                                  (data[0], data[1], data[2], data[3], data[4], ' '.join(data[5])))
+                        print(data)
+                        if isinstance(data[5], list):
+                            c.execute("INSERT INTO fam (FAM, MARR, DIV, HUSB, WIFE, CHIL) VALUES (?, ?, ?, ?, ?, ?)",
+                                      (data[0], data[1], data[2], data[3], data[4], ' '.join(data[5])))
+                        else:
+                            c.execute("INSERT INTO fam (FAM, MARR, DIV, HUSB, WIFE, CHIL) VALUES (?, ?, ?, ?, ?, ?)",
+                                      (data[0], data[1], data[2], data[3], data[4], data[5]))
                         conn.commit()
 
                         for key in fam_tab:
-                            if isinstance(key, list):
-                                fam_tab[key][:] = []
-                            else:
-                                fam_tab[key] = "NA"
+                            fam_tab[key] = "NA"
                     else:
                         fam_tab[words[-1]] = words[1]
             elif words[0] == "1":
@@ -69,7 +73,10 @@ class Project3:
                     indi_tab[words[1]] = " ".join(words[2:])
                 elif words[1] in fam_tab:
                     if words[1] == "CHIL":
-                        print(type(fam_tab[words[1]]))  # test
+                        # print(type(fam_tab[words[1]]))  # test
+                        # print(type(fam_tab[words[1]]))  # test
+                        if not isinstance(fam_tab[words[1]], list):
+                            fam_tab[words[1]] = []
                         fam_tab[words[1]].append(" ".join(words[2:]))
                     else:
                         fam_tab[words[1]] = " ".join(words[2:])
