@@ -1,5 +1,5 @@
 import sqlite3
-import datetime
+import datetime  # should be used later
 from prettytable import PrettyTable
 
 
@@ -15,20 +15,17 @@ class Project3:
                 continue
         return opened_file
 
-    def create_table(self):
-        conn = sqlite3.connect('project.db')
-        c = conn.cursor()
+    def create_table(self, c):
+
         c.execute("CREATE TABLE IF NOT EXISTS indi(INDI TEXT, NAME TEXT, SEX TEXT, BIRT TEXT, DEAT TEXT, FAMC TEXT, FAMS TEXT)")
         c.execute("CREATE TABLE IF NOT EXISTS indi_fam(INDI TEXT, FAM TEXT)")
         c.execute("CREATE TABLE IF NOT EXISTS fam(FAM TEXT, MARR TEXT, DIV TEXT, HUSB TEXT, WIFE TEXT, CHIL TEXT)")  # CHIL's type may be wrong
-        c.close()
-        conn.close()
-    def parse_lines(self):
-        conn = sqlite3.connect('project.db')
-        c = conn.cursor()
+        # commit?
 
-        indi_tab = {"INDI": "", "NAME": "", "SEX": "", "BIRT": "", "DEAT": "", "FAMC": "", "FAMS": ""}
-        fam_tab = {"FAM": "", "MARR": "", "DIV": "", "HUSB": "", "WIFE": "", "CHIL": []}
+    def parse_lines(self, c, conn):
+
+        indi_tab = {"INDI": "NA", "NAME": "NA", "SEX": "NA", "BIRT": "NA", "DEAT": "NA", "FAMC": "NA", "FAMS": "NA"}
+        fam_tab = {"FAM": "NA", "MARR": "NA", "DIV": "NA", "HUSB": "NA", "WIFE": "NA", "CHIL": []}
         date_tags = ["BIRT", "DEAT", "MARR", "DIV"]
         date_name_cache = ""
 
@@ -43,8 +40,8 @@ class Project3:
                                   (data[0], data[1], data[2], data[3], data[4], data[5], data[6]))
                         conn.commit()
 
-                        for key in indi_tab.keys():
-                            indi_tab[key] = ""
+                        for key in indi_tab:
+                            indi_tab[key] = "NA"
                     else:
                         indi_tab[words[-1]] = words[1]
                 if words[-1] in fam_tab:
@@ -54,24 +51,25 @@ class Project3:
                             (data[0], data[1], data[2], data[3], data[4], data[5]))
                         conn.commit()
 
-                        for key in fam_tab.keys():
+                        for key in fam_tab:
                             if isinstance(key, list):
                                 fam_tab[key][:] = []
                             else:
-                                fam_tab[key] = ""
+                                fam_tab[key] = "NA"
                     else:
                         fam_tab[words[-1]] = words[1]
-
             elif words[0] == "1":
                 if words[1] in date_tags:
                     date_name_cache = words[1]
                 elif words[1] in indi_tab:
                     indi_tab[words[1]] = " ".join(words[2:])
                 elif words[1] in fam_tab:
-                    fam_tab[words[1]] = " ".join(words[2:])
+                    if words[1] == "CHIL":
+                        fam_tab[words[1]].append(" ".join(words[2:]))
+                    else:
+                        fam_tab[words[1]] = " ".join(words[2:])
                 else:
                     pass
-
             elif words[0] == "2" and words[0] == "DATE":
                 if date_name_cache in indi_tab:
                     indi_tab[date_name_cache] = " ".join(words[2:])
@@ -81,13 +79,27 @@ class Project3:
                     date_name_cache = ""
                 else:
                     print("Something is wrong with the date_name_cache!")
-        c.close()
-        conn.close()
 
-    def get_info(self):
+    def get_indi_info(self, c):
+        c.execute('SELECT value, datestamp FROM stuffToPlot WHERE')
+        raw = c.fetchall()
+        data = []
+        for row in raw:
+            row_data = []
+            for item in row:
+                row_data.append(item)
 
+            data.append(row_data)
+        return data
 
-    def print_table(self):
+    def get_fam_info(self, c):
+        c.execute('SELECT value, datestamp FROM stuffToPlot WHERE')
+        data = c.fetchall()
+        return c.fetchall()
+
+    def print_table(self, c):
+        fam_data = self.get_indi_info(c)
+        fam_data = self.get_fam_info(c)
         indi = PrettyTable(["ID", "Name", "Gender", "Birthday", "Age", "Alive", "Death", "Child", "Spouse"])
         fam = PrettyTable(["ID", "Married", "Divorced", "Husband ID", "Husband Name", "Wife ID", "Wife Name", "Children"])
 
@@ -98,8 +110,13 @@ class Project3:
 
 
 def main():
+    conn = sqlite3.connect('project.db')
+    c = conn.cursor()
     demo = Project3()  # for testing
-    demo.parse_lines()
+    demo.create_table(c)
+    demo.parse_lines(c)
+    c.close()
+    conn.close()
 
 
 if __name__ == '__main__':
