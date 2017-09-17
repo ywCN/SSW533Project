@@ -1,5 +1,5 @@
 import sqlite3
-from datetime import datetime, date
+from datetime import datetime
 from prettytable import PrettyTable
 
 
@@ -109,17 +109,18 @@ class Project3:
         c.execute('SELECT FAM, MARR, DIV, HUSB, WIFE, CHIL FROM fam')
         return c.fetchall()
 
-    def get_age(self, birt):
-        today = date.today()
-        if today.month > int(birt[5:7]):
+    def get_age(self, birthday):
+        today = datetime.today().date()
+        birt = datetime.strptime(birthday, '%Y-%m-%d').date()
+        if today.month > birt.month:
             return today.year - birt.year
-        elif today.month == int(birt[5:7]):
-            if today.day >= int(birt[8:]):
-                return today.year - int(birt[0:4])
+        elif today.month == birt.month:
+            if today.day >= birt.day:
+                return today.year - birt.year
             else:
-                return today.year - int(birt[0:4]) - 1
+                return today.year - birt.year - 1
         else:
-            return today.year - int(birt[0:4]) - 1
+            return today.year - birt.year - 1
 
     def print_selected(self, c):
         t_indi = PrettyTable(["ID", "Name", "Gender", "Birthday", "Death", "Child", "Spouse"])
