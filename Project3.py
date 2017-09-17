@@ -62,7 +62,7 @@ class Project3:
                     indi_tab[words[-1]] = words[1]
 
                 if words[-1] in fam_tab:
-                    if words[1]== "F1":
+                    if words[1] == "F1":
                         self.insert_entry(indi_tab, c, conn)
                         fam_tab[words[-1]] = words[1]
                         continue
