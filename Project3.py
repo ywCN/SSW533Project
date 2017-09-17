@@ -55,6 +55,7 @@ class Project3:
                 if words[-1] in indi_tab:
                     if indi_tab[words[-1]] == "NA":
                         indi_tab[words[-1]] = words[1]
+                        continue
                     self.insert_entry(indi_tab, c, conn)
                     for key in indi_tab:
                         indi_tab[key] = "NA"
@@ -111,7 +112,7 @@ class Project3:
 
     def get_age(self, birthday):
         today = datetime.today().date()
-        birt = datetime.strptime(birthday, '%Y-%m-%d').date()
+        birt =''
         if today.month > birt.month:
             return today.year - birt.year
         elif today.month == birt.month:
@@ -127,10 +128,12 @@ class Project3:
         t_fam = PrettyTable(["ID", "Married", "Divorced", "Husband ID", "Wife ID", "Children"])
 
         for row in self.get_indi_info(c):
+            print(row[3])
+            # print(self.get_age(row[3]))
             # age =
             # alive = False
             # row.extend([age, alive])
-            print(self.get_age(row[3]))
+
             t_indi.add_row(row)
         for row in self.get_fam_info(c):
             t_fam.add_row(row)
