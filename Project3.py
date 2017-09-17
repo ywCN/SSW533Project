@@ -21,8 +21,7 @@ class Project3:
                   "FAMS TEXT)")
         # c.execute("CREATE TABLE IF NOT EXISTS indi_fam(INDI TEXT, FAM TEXT)")  # will be used in future projects
         c.execute(
-            "CREATE TABLE IF NOT EXISTS fam(FAM TEXT, MARR TEXT, DIV TEXT, HUSB TEXT, WIFE TEXT, CHIL TEXT)")  # CHIL's type may be wrong
-        # commit?
+            "CREATE TABLE IF NOT EXISTS fam(FAM TEXT, MARR TEXT, DIV TEXT, HUSB TEXT, WIFE TEXT, CHIL TEXT)")
 
     def parse_lines(self, c, conn):
 
@@ -36,12 +35,12 @@ class Project3:
         lines = self.open_file()
         for line in lines:
             words = line.strip().split()
-            # print(words)  # debug
             if words[0] == "0":
                 if words[-1] in indi_tab:
-                    if indi_tab[words[-1]] != "NA":
+                    if indi_tab[words[-1]] == "NA":
+                        indi_tab[words[-1]] = words[1]
+                    else:
                         data = list(indi_tab.values())
-                        # print(data)  # debug
                         c.execute(
                             "INSERT INTO indi (INDI, NAME, SEX, BIRT, DEAT, FAMC, FAMS) VALUES (?, ?, ?, ?, ?, ?, ?)",
                             (data[0], data[1], data[2], data[3], data[4], data[5], data[6]))
@@ -49,13 +48,13 @@ class Project3:
 
                         for key in indi_tab:
                             indi_tab[key] = "NA"
-                    else:
-                        print(words[-1] == "")  # debug
+
                         indi_tab[words[-1]] = words[1]
                 if words[-1] in fam_tab:
-                    if fam_tab[words[-1]] != "NA":
+                    if fam_tab[words[-1]] == "NA":
+                        fam_tab[words[-1]] = words[1]
+                    else:
                         data = list(fam_tab.values())
-                        # print(data)  # debug
                         if isinstance(data[5], list):
                             c.execute("INSERT INTO fam (FAM, MARR, DIV, HUSB, WIFE, CHIL) VALUES (?, ?, ?, ?, ?, ?)",
                                       (data[0], data[1], data[2], data[3], data[4], ' '.join(data[5])))
@@ -66,17 +65,16 @@ class Project3:
 
                         for key in fam_tab:
                             fam_tab[key] = "NA"
-                    else:
-                        print(words[-1] == "")  # debug
+
                         fam_tab[words[-1]] = words[1]
             elif words[0] == "1":
                 if words[1] in date_tags:
                     date_name_cache = words[1]
+                    print(date_name_cache)
                 elif words[1] in indi_tab:
                     indi_tab[words[1]] = " ".join(words[2:])
                 elif words[1] in fam_tab:
                     if words[1] == "CHIL":
-                        # print(type(fam_tab[words[1]]))  # debug
                         if not isinstance(fam_tab[words[1]], list):
                             fam_tab[words[1]] = []
                         fam_tab[words[1]].append(" ".join(words[2:]))
