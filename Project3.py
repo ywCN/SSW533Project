@@ -1,5 +1,5 @@
 import sqlite3
-from datetime import datetime
+from datetime import datetime, date
 from prettytable import PrettyTable
 
 
@@ -44,7 +44,7 @@ class Project3:
         indi_tab = {"INDI": "NA", "NAME": "NA", "SEX": "NA", "BIRT": "NA", "DEAT": "NA", "FAMC": "NA", "FAMS": "NA"}
 
         fam_tab = {"FAM": "NA", "MARR": "NA", "DIV": "NA", "HUSB": "NA", "WIFE": "NA",
-                   "CHIL": "NA"}  # use list instead of [], but I do not know why
+                   "CHIL": "NA"}
         date_tags = ["BIRT", "DEAT", "MARR", "DIV"]
         date_name_cache = ""
 
@@ -96,7 +96,7 @@ class Project3:
                 elif date_name_cache in fam_tab:
                     fam_tab[date_name_cache] = str(datetime.strptime(" ".join(words[2:]), '%d %b %Y').date())
                     date_name_cache = "NA"
-                elif date_name_cache == "NA" or date_name_cache == "":  # I do not know why need == "", but it fixed a bug
+                elif date_name_cache == "NA" or date_name_cache == "":  # == "" fixed a bug but i don't know why
                     pass
                 else:
                     print("Something is wrong with the date_name_cache!")
@@ -109,14 +109,19 @@ class Project3:
         c.execute('SELECT FAM, MARR, DIV, HUSB, WIFE, CHIL FROM fam')
         return c.fetchall()
 
+    def get_age(self, birthday):
+        today = date.today()
+        return today - birthday
+
     def print_selected(self, c):
-        # indi = PrettyTable(["ID", "Name", "Gender", "Birthday", "Age", "Alive", "Death", "Child", "Spouse"])
-        # fam = PrettyTable(
-        #     ["ID", "Married", "Divorced", "Husband ID", "Husband Name", "Wife ID", "Wife Name", "Children"])
-        #  "age","alive", "Husband Name","Wife Name" optional for project3?
         t_indi = PrettyTable(["ID", "Name", "Gender", "Birthday", "Death", "Child", "Spouse"])
         t_fam = PrettyTable(["ID", "Married", "Divorced", "Husband ID", "Wife ID", "Children"])
+
         for row in self.get_indi_info(c):
+            # age =
+            # alive = False
+            # row.extend([age, alive])
+            print(self.get_age(row[3]))
             t_indi.add_row(row)
         for row in self.get_fam_info(c):
             t_fam.add_row(row)
