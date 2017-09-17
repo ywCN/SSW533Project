@@ -17,9 +17,8 @@ class Project3:
 
     def create_table(self, c):
 
-        c.execute(
-            "CREATE TABLE IF NOT EXISTS indi(INDI TEXT, NAME TEXT, SEX TEXT, BIRT TEXT, DEAT TEXT, FAMC TEXT, "
-            "FAMS TEXT)")
+        c.execute("CREATE TABLE IF NOT EXISTS indi(INDI TEXT, NAME TEXT, SEX TEXT, BIRT TEXT, DEAT TEXT, FAMC TEXT, "
+                  "FAMS TEXT)")
         # c.execute("CREATE TABLE IF NOT EXISTS indi_fam(INDI TEXT, FAM TEXT)")  # will be used in future projects
         c.execute(
             "CREATE TABLE IF NOT EXISTS fam(FAM TEXT, MARR TEXT, DIV TEXT, HUSB TEXT, WIFE TEXT, CHIL TEXT)")  # CHIL's type may be wrong
@@ -28,7 +27,8 @@ class Project3:
     def parse_lines(self, c, conn):
 
         indi_tab = {"INDI": "NA", "NAME": "NA", "SEX": "NA", "BIRT": "NA", "DEAT": "NA", "FAMC": "NA", "FAMS": "NA"}
-        fam_tab = {"FAM": "NA", "MARR": "NA", "DIV": "NA", "HUSB": "NA", "WIFE": "NA", "CHIL": []}
+        fam_tab = {"FAM": "NA", "MARR": "NA", "DIV": "NA", "HUSB": "NA", "WIFE": "NA",
+                   "CHIL": list}  # probably use a [] for CHIL, but do not know
         date_tags = ["BIRT", "DEAT", "MARR", "DIV"]
         date_name_cache = ""
 
@@ -38,9 +38,9 @@ class Project3:
             if words[0] == "0":
                 if words[-1] in indi_tab:
                     if indi_tab[words[-1]] != "":
-                        data = list(fam_tab.values())
+                        data = list(indi_tab.values())
                         c.execute(
-                            "INSERT INTO indi (INDI, NAME, SEX, BIRT, DEAT, FAMC, FAMS) VALUES (?, ?, ?, ?, ?, ?)",
+                            "INSERT INTO indi (INDI, NAME, SEX, BIRT, DEAT, FAMC, FAMS) VALUES (?, ?, ?, ?, ?, ?, ?)",
                             (data[0], data[1], data[2], data[3], data[4], data[5], data[6]))
                         conn.commit()
 
@@ -51,8 +51,8 @@ class Project3:
                 if words[-1] in fam_tab:
                     if fam_tab[words[-1]] != "":
                         data = list(fam_tab.values())
-                        c.execute("INSERT INTO fam (FAM, MARR, DIV, HUSB, WIFE, CHIL) VALUES (?, ?, ?, ?, ?)",
-                            (data[0], data[1], data[2], data[3], data[4], data[5]))
+                        c.execute("INSERT INTO fam (FAM, MARR, DIV, HUSB, WIFE, CHIL) VALUES (?, ?, ?, ?, ?, ?)",
+                                  (data[0], data[1], data[2], data[3], data[4], ' '.join(data[5])))
                         conn.commit()
 
                         for key in fam_tab:
@@ -69,6 +69,7 @@ class Project3:
                     indi_tab[words[1]] = " ".join(words[2:])
                 elif words[1] in fam_tab:
                     if words[1] == "CHIL":
+                        print(type(fam_tab[words[1]]))  # test
                         fam_tab[words[1]].append(" ".join(words[2:]))
                     else:
                         fam_tab[words[1]] = " ".join(words[2:])
