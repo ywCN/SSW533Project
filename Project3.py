@@ -52,7 +52,9 @@ class Project3:
         for line in lines:
             words = line.strip().split()
             if words[0] == "0":
-                if words[-1] in indi_tab :
+                print(indi_tab)
+                print(fam_tab)
+                if words[-1] in indi_tab:
                     if indi_tab[words[-1]] == "NA":
                         indi_tab[words[-1]] = words[1]
 
@@ -63,8 +65,9 @@ class Project3:
 
                         indi_tab[words[-1]] = words[1]
 
-                    if indi_tab[words[-1]] == "FAM":
+                    if words[-1] in fam_tab:
                         self.insert_entry(indi_tab, c, conn)
+                        fam_tab[words[-1]] = words[1]
 
                 if words[-1] in fam_tab:
                     if fam_tab[words[-1]] == "NA":
@@ -76,13 +79,13 @@ class Project3:
                             fam_tab[key] = "NA"
 
                         fam_tab[words[-1]] = words[1]
-                    if fam_tab[words[-1]] == "TRLR":
+
+                    if words[1] == "TRLR":
                         self.insert_entry(fam_tab, c, conn)
 
             elif words[0] == "1":
                 if words[1] in date_tags:
                     date_name_cache = words[1]
-                    print(date_name_cache)
                 elif words[1] in indi_tab:
                     indi_tab[words[1]] = " ".join(words[2:])
                 elif words[1] in fam_tab:
@@ -101,10 +104,9 @@ class Project3:
                 elif date_name_cache in fam_tab:
                     fam_tab[date_name_cache] = " ".join(words[2:])
                     date_name_cache = "NA"
-                elif date_name_cache == "NA":
+                elif date_name_cache == "NA" or date_name_cache == "":  # I do not know why need == ""
                     pass
                 else:
-                    print(date_name_cache)
                     print("Something is wrong with the date_name_cache!")
 
     def get_indi_info(self, c):
