@@ -109,18 +109,17 @@ class Project3:
         c.execute('SELECT FAM, MARR, DIV, HUSB, WIFE, CHIL FROM fam')
         return c.fetchall()
 
-    def get_age(self, birthday):
+    def get_age(self, birt):
         today = date.today()
-        birt = datetime.strptime(birthday, '%Y %b %d')
-        if today.month > birt.month:
+        if today.month > int(birt[5:7]):
             return today.year - birt.year
-        elif today.month == birt.month:
-            if today.day >= birt.day:
-                return today.year - birt.year
+        elif today.month == int(birt[5:7]):
+            if today.day >= int(birt[8:]):
+                return today.year - int(birt[0:4])
             else:
-                return today.year - birt.year - 1
+                return today.year - int(birt[0:4]) - 1
         else:
-            return today.year - birt.year - 1
+            return today.year - int(birt[0:4]) - 1
 
     def print_selected(self, c):
         t_indi = PrettyTable(["ID", "Name", "Gender", "Birthday", "Death", "Child", "Spouse"])
