@@ -144,7 +144,7 @@ class Project3:
             lst = list(row)
             lst.append(name_map[row[3]])
             lst.append(name_map[row[4]])
-            t_fam.add_row(row)
+            t_fam.add_row(lst)
 
         print(t_indi)
         print(t_fam)
@@ -156,7 +156,7 @@ def main():
     conn = sqlite3.connect('project.db')
     c = conn.cursor()
 
-    demo.create_table(c)
+    demo.create_table(c)  # MyFamily.ged
     demo.populate_table(c, conn)
     demo.print_selected(c)
 
