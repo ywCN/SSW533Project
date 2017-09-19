@@ -1,0 +1,294 @@
+C:\Users\wangyouhao\AppData\Local\Programs\Python\Python36-32\python.exe D:/Dropbox/HomeworkTextbooksClassNotes/Homework/SSW555/SSW555Project/OpenAndPrint.py
+Enter the file name: MyFamily.ged
+--> 0 NOTE Youhao Wang
+<-- 0|NOTE|Y|Youhao Wang
+--> 0 HEAD
+<-- 0|HEAD|Y|
+--> 1 SOUR Family Echo
+<-- 1|SOUR|N|Family Echo
+--> 2 WWW http://www.familyecho.com/
+<-- 2|WWW|N|http://www.familyecho.com/
+--> 1 FILE My Family
+<-- 1|FILE|N|My Family
+--> 1 DATE 5 SEP 2017
+<-- 1|DATE|N|5 SEP 2017
+--> 1 DEST ANSTFILE
+<-- 1|DEST|N|ANSTFILE
+--> 1 GEDC
+<-- 1|GEDC|N|
+--> 2 VERS 5.5.1
+<-- 2|VERS|N|5.5.1
+--> 2 FORM LINEAGE-LINKED
+<-- 2|FORM|N|LINEAGE-LINKED
+--> 1 SUBM @I1@
+<-- 1|SUBM|N|@I1@
+--> 2 NAME Yi Wang
+<-- 2|NAME|N|Yi Wang
+--> 1 SUBN
+<-- 1|SUBN|N|
+--> 1 CHAR UTF-8
+<-- 1|CHAR|N|UTF-8
+--> 0 @I1@ INDI
+<-- 0|INDI|Y|@I1@
+--> 1 NAME Youhao /Wang/
+<-- 1|NAME|Y|Youhao /Wang/
+--> 2 GIVN Youhao
+<-- 2|GIVN|N|Youhao
+--> 2 SURN Wang
+<-- 2|SURN|N|Wang
+--> 2 _MARNM Wang
+<-- 2|_MARNM|N|Wang
+--> 1 SEX M
+<-- 1|SEX|Y|M
+--> 1 BIRT
+<-- 1|BIRT|Y|
+--> 2 DATE 4 AUG 1990
+<-- 2|DATE|Y|4 AUG 1990
+--> 1 FAMC @F1@
+<-- 1|FAMC|Y|@F1@
+--> 0 @I2@ INDI
+<-- 0|INDI|Y|@I2@
+--> 1 NAME San /Wang/
+<-- 1|NAME|Y|San /Wang/
+--> 2 GIVN San
+<-- 2|GIVN|N|San
+--> 2 SURN Wang
+<-- 2|SURN|N|Wang
+--> 2 _MARNM Wang
+<-- 2|_MARNM|N|Wang
+--> 1 SEX M
+<-- 1|SEX|Y|M
+--> 1 BIRT
+<-- 1|BIRT|Y|
+--> 2 DATE 4 JUN 1967
+<-- 2|DATE|Y|4 JUN 1967
+--> 1 FAMS @F1@
+<-- 1|FAMS|Y|@F1@
+--> 1 FAMC @F2@
+<-- 1|FAMC|Y|@F2@
+--> 0 @I3@ INDI
+<-- 0|INDI|Y|@I3@
+--> 1 NAME Er /Fang/
+<-- 1|NAME|Y|Er /Fang/
+--> 2 GIVN Er
+<-- 2|GIVN|N|Er
+--> 2 SURN Fang
+<-- 2|SURN|N|Fang
+--> 2 _MARNM Wang
+<-- 2|_MARNM|N|Wang
+--> 1 SEX F
+<-- 1|SEX|Y|F
+--> 1 BIRT
+<-- 1|BIRT|Y|
+--> 2 DATE 4 FEB 1970
+<-- 2|DATE|Y|4 FEB 1970
+--> 1 FAMS @F1@
+<-- 1|FAMS|Y|@F1@
+--> 0 @I4@ INDI
+<-- 0|INDI|Y|@I4@
+--> 1 NAME Wu /Wang/
+<-- 1|NAME|Y|Wu /Wang/
+--> 2 GIVN Wu
+<-- 2|GIVN|N|Wu
+--> 2 SURN Wang
+<-- 2|SURN|N|Wang
+--> 2 _MARNM Wang
+<-- 2|_MARNM|N|Wang
+--> 1 SEX M
+<-- 1|SEX|Y|M
+--> 1 BIRT
+<-- 1|BIRT|Y|
+--> 2 DATE 11 JUL 1948
+<-- 2|DATE|Y|11 JUL 1948
+--> 1 FAMS @F2@
+<-- 1|FAMS|Y|@F2@
+--> 0 @I5@ INDI
+<-- 0|INDI|Y|@I5@
+--> 1 NAME Ping /Ju/
+<-- 1|NAME|Y|Ping /Ju/
+--> 2 GIVN Ping
+<-- 2|GIVN|N|Ping
+--> 2 SURN Ju
+<-- 2|SURN|N|Ju
+--> 2 _MARNM Wang
+<-- 2|_MARNM|N|Wang
+--> 1 SEX F
+<-- 1|SEX|Y|F
+--> 1 BIRT
+<-- 1|BIRT|Y|
+--> 2 DATE 23 JUN 1950
+<-- 2|DATE|Y|23 JUN 1950
+--> 1 FAMS @F2@
+<-- 1|FAMS|Y|@F2@
+--> 0 @I6@ INDI
+<-- 0|INDI|Y|@I6@
+--> 1 NAME Nan /Wang/
+<-- 1|NAME|Y|Nan /Wang/
+--> 2 GIVN Nan
+<-- 2|GIVN|N|Nan
+--> 2 SURN Wang
+<-- 2|SURN|N|Wang
+--> 2 _MARNM Liu
+<-- 2|_MARNM|N|Liu
+--> 1 SEX F
+<-- 1|SEX|Y|F
+--> 1 BIRT
+<-- 1|BIRT|Y|
+--> 2 DATE 9 JUL 1970
+<-- 2|DATE|Y|9 JUL 1970
+--> 1 FAMS @F3@
+<-- 1|FAMS|Y|@F3@
+--> 1 FAMS @F4@
+<-- 1|FAMS|Y|@F4@
+--> 1 FAMC @F2@
+<-- 1|FAMC|Y|@F2@
+--> 0 @I7@ INDI
+<-- 0|INDI|Y|@I7@
+--> 1 NAME Fu /Tian/
+<-- 1|NAME|Y|Fu /Tian/
+--> 2 GIVN Fu
+<-- 2|GIVN|N|Fu
+--> 2 SURN Tian
+<-- 2|SURN|N|Tian
+--> 2 _MARNM Tian
+<-- 2|_MARNM|N|Tian
+--> 1 SEX M
+<-- 1|SEX|Y|M
+--> 1 BIRT
+<-- 1|BIRT|Y|
+--> 2 DATE 15 JUL 1965
+<-- 2|DATE|Y|15 JUL 1965
+--> 1 DEAT Y
+<-- 1|DEAT|Y|Y
+--> 2 DATE 18 NOV 2008
+<-- 2|DATE|Y|18 NOV 2008
+--> 1 FAMS @F4@
+<-- 1|FAMS|Y|@F4@
+--> 0 @I8@ INDI
+<-- 0|INDI|Y|@I8@
+--> 1 NAME Jiu /Liu/
+<-- 1|NAME|Y|Jiu /Liu/
+--> 2 GIVN Jiu
+<-- 2|GIVN|N|Jiu
+--> 2 SURN Liu
+<-- 2|SURN|N|Liu
+--> 2 _MARNM Liu
+<-- 2|_MARNM|N|Liu
+--> 1 SEX M
+<-- 1|SEX|Y|M
+--> 1 BIRT
+<-- 1|BIRT|Y|
+--> 2 DATE 7 JUN 1964
+<-- 2|DATE|Y|7 JUN 1964
+--> 1 FAMS @F3@
+<-- 1|FAMS|Y|@F3@
+--> 0 @I9@ INDI
+<-- 0|INDI|Y|@I9@
+--> 1 NAME Gu /Tian/
+<-- 1|NAME|Y|Gu /Tian/
+--> 2 GIVN Gu
+<-- 2|GIVN|N|Gu
+--> 2 SURN Tian
+<-- 2|SURN|N|Tian
+--> 2 _MARNM Tian
+<-- 2|_MARNM|N|Tian
+--> 1 SEX M
+<-- 1|SEX|Y|M
+--> 1 BIRT
+<-- 1|BIRT|Y|
+--> 2 DATE 7 APR 1995
+<-- 2|DATE|Y|7 APR 1995
+--> 1 FAMC @F4@
+<-- 1|FAMC|Y|@F4@
+--> 0 @I10@ INDI
+<-- 0|INDI|Y|@I10@
+--> 1 NAME Wei /Liu/
+<-- 1|NAME|Y|Wei /Liu/
+--> 2 GIVN Wei
+<-- 2|GIVN|N|Wei
+--> 2 SURN Liu
+<-- 2|SURN|N|Liu
+--> 2 _MARNM Liu
+<-- 2|_MARNM|N|Liu
+--> 1 SEX F
+<-- 1|SEX|Y|F
+--> 1 BIRT
+<-- 1|BIRT|Y|
+--> 2 DATE 9 APR 2010
+<-- 2|DATE|Y|9 APR 2010
+--> 1 FAMC @F3@
+<-- 1|FAMC|Y|@F3@
+--> 0 @F1@ FAM
+<-- 0|FAM|Y|@F1@
+--> 1 HUSB @I2@
+<-- 1|HUSB|Y|@I2@
+--> 1 WIFE @I3@
+<-- 1|WIFE|Y|@I3@
+--> 1 CHIL @I1@
+<-- 1|CHIL|Y|@I1@
+--> 1 MARR
+<-- 1|MARR|Y|
+--> 2 DATE 9 MAR 1989
+<-- 2|DATE|Y|9 MAR 1989
+--> 2 PLAC China
+<-- 2|PLAC|N|China
+--> 1 _CURRENT Y
+<-- 1|_CURRENT|N|Y
+--> 0 @F2@ FAM
+<-- 0|FAM|Y|@F2@
+--> 1 HUSB @I4@
+<-- 1|HUSB|Y|@I4@
+--> 1 WIFE @I5@
+<-- 1|WIFE|Y|@I5@
+--> 1 CHIL @I2@
+<-- 1|CHIL|Y|@I2@
+--> 1 CHIL @I6@
+<-- 1|CHIL|Y|@I6@
+--> 1 MARR
+<-- 1|MARR|Y|
+--> 2 DATE 13 AUG 1966
+<-- 2|DATE|Y|13 AUG 1966
+--> 2 PLAC China
+<-- 2|PLAC|N|China
+--> 1 _CURRENT Y
+<-- 1|_CURRENT|N|Y
+--> 0 @F3@ FAM
+<-- 0|FAM|Y|@F3@
+--> 1 HUSB @I8@
+<-- 1|HUSB|Y|@I8@
+--> 1 WIFE @I6@
+<-- 1|WIFE|Y|@I6@
+--> 1 CHIL @I10@
+<-- 1|CHIL|Y|@I10@
+--> 1 MARR
+<-- 1|MARR|Y|
+--> 2 DATE 10 JUN 2010
+<-- 2|DATE|Y|10 JUN 2010
+--> 2 PLAC China
+<-- 2|PLAC|N|China
+--> 1 _CURRENT Y
+<-- 1|_CURRENT|N|Y
+--> 0 @F4@ FAM
+<-- 0|FAM|Y|@F4@
+--> 1 HUSB @I7@
+<-- 1|HUSB|Y|@I7@
+--> 1 WIFE @I6@
+<-- 1|WIFE|Y|@I6@
+--> 1 CHIL @I9@
+<-- 1|CHIL|Y|@I9@
+--> 1 MARR
+<-- 1|MARR|Y|
+--> 2 DATE 8 JUL 1993
+<-- 2|DATE|Y|8 JUL 1993
+--> 2 PLAC China
+<-- 2|PLAC|N|China
+--> 1 EVEN
+<-- 1|EVEN|N|
+--> 2 TYPE Ending
+<-- 2|TYPE|N|Ending
+--> 1 _CURRENT N
+<-- 1|_CURRENT|N|N
+--> 0 TRLR
+<-- 0|TRLR|Y|
+
+Process finished with exit code 0

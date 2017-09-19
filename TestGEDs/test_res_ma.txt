@@ -1,0 +1,27 @@
+"C:\Program Files (x86)\Python36\python.exe" D:/Dropbox/HomeworkTextbooksClassNotes/Homework/SSW555/SSW555Project/TestGEDs/Project3.py
+Enter the file name: fam_ma.ged
++-----+-----------------------+--------+------------+-----+-------+------------+-------+--------+
+|  ID |          Name         | Gender |  Birthday  | Age | Alive |   Death    | Child | Spouse |
++-----+-----------------------+--------+------------+-----+-------+------------+-------+--------+
+|  I1 |   Fraj /Alshammari/   |   M    | 1965-07-13 |  52 |  True |     NA     |   F3  |   F4   |
+|  I2 |   Mutni /Alshammari/  |   M    | 1939-04-18 |  78 | False | 1983-09-12 |   NA  |   F3   |
+|  I3 |   Hawa /Alshammari/   |   F    | 1942-05-11 |  75 | False | 1991-05-14 |   NA  |   F3   |
+|  I4 |   Mutni /Alshammari/  |   M    | 1990-07-03 |  27 |  True |     NA     |   F4  |   NA   |
+|  I5 |   Mitha /Alshammari/  |   F    | 1971-10-19 |  45 | False | 1993-09-15 |   NA  |   F4   |
+|  I6 |  Latifa /Alshammari/  |   F    | 1993-07-07 |  24 |  True |     NA     |   F4  |   NA   |
+|  I7 |   Aljoharh /Alanzi/   |   F    | 1975-09-12 |  42 |  True |     NA     |   NA  |   F1   |
+|  I8 | Muhammad /Alshammari/ |   M    | 1998-07-10 |  19 |  True |     NA     |   F1  |   NA   |
+|  I9 |   Husa /Alshammari/   |   F    | 2001-07-03 |  16 |  True |     NA     |   F1  |   NA   |
+| I10 |   Nora /Alshammari/   |   F    | 1967-08-26 |  50 | False | 2011-06-05 |   NA  |   F2   |
+| I11 | Abdullah /Alshammari/ |   M    | 1984-01-05 |  33 |  True |     NA     |   F2  |   NA   |
++-----+-----------------------+--------+------------+-----+-------+------------+-------+--------+
++----+------------+------------+------------+--------------------+---------+--------------------+----------+
+| ID |  Married   |  Divorced  | Husband ID |    Husband Name    | Wife ID |     Wife Name      | Children |
++----+------------+------------+------------+--------------------+---------+--------------------+----------+
+| F1 | 1995-03-13 |     NA     |     I1     | Fraj /Alshammari/  |    I7   | Aljoharh /Alanzi/  |  I8 I9   |
+| F2 | 1983-06-07 | 1986-04-07 |     I1     | Fraj /Alshammari/  |   I10   | Nora /Alshammari/  |   I11    |
+| F3 | 1960-05-12 |     NA     |     I2     | Mutni /Alshammari/ |    I3   | Hawa /Alshammari/  |    I1    |
+| F4 | 1988-10-14 |     NA     |     I1     | Fraj /Alshammari/  |    I5   | Mitha /Alshammari/ |  I4 I6   |
++----+------------+------------+------------+--------------------+---------+--------------------+----------+
+
+Process finished with exit code 0
