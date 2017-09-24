@@ -16,7 +16,11 @@ class HW4:
         """
         :rtype: bool
         """
+        query = "select INDI, NAME, DEAT, fam.MARR from indi INNER JOIN fam " \
+                "ON INDI.INDI = FAM.HUSB OR INDI.INDI = FAM.WIFE"
+        print(self.query_info(query))
         query = ""
+
 
         print("invalid INDI")
         return False
@@ -27,7 +31,6 @@ class HW4:
         """
         :rtype: bool
         """
-        query = ""
 
         print("invalid INDI")
         return False
@@ -39,6 +42,8 @@ class HW4:
         :type query: str
         :rtype: bool
         """
+        self.c.execute("%s" % query)
+        return self.c.fetchall()
 
 
 class TestHW4:
@@ -53,3 +58,10 @@ class TestHW4:
         test_query1 = ""
         test_query2 = ""
         test_query3 = ""
+
+def main():
+    demo = HW4()
+    demo.divorce_before_death()
+
+if __name__ == '__main__':
+    main()
