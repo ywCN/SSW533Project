@@ -1,5 +1,6 @@
 import sqlite3
 import unittest
+import os
 from datetime import datetime
 
 '''
@@ -10,8 +11,16 @@ Please put the .db file in the same path of this .py file.
 class HW4:
 
     def __init__(self):
-        self.conn = sqlite3.connect('project.db')
-        self.c = self.conn.cursor()
+        self.db = r'project.db'
+        if os.path.isfile(self.db):
+            self.conn = sqlite3.connect(self.db)
+            self.c = self.conn.cursor()
+        else:
+            print("\n"
+                  "--------------------------------------------------------------------\n"
+                  "| Please put the 'project.db' in the same path of this python file!|\n"
+                  "--------------------------------------------------------------------")
+            exit()
 
     def marriage_before_death(self):
         """
@@ -66,10 +75,18 @@ class TestHW4:
         test_query2 = ""
         test_query3 = ""
 
+
 def main():
     demo = HW4()
-    print(demo.marriage_before_death())
-    print(demo.divorce_before_death())
+    if demo.marriage_before_death():
+        print("All marriages are before death.")
+    else:
+        print("Not all marriages are before death.\nPlease check your file.")
+    if demo.divorce_before_death():
+        print("All divorces are before death.")
+    else:
+        print("Not all divorces are before death.\nPlease check your file.")
+
 
 if __name__ == '__main__':
     main()
