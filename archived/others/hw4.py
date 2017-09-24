@@ -1,5 +1,6 @@
 import sqlite3
 import unittest
+from datetime import datetime
 
 '''
 Our team is using database solution.
@@ -21,14 +22,12 @@ class HW4:
 
         for row in self.query_info(query):
 
-            print(row)
-        query = ""
-
-
-        # print("invalid INDI")
-        # return False
-        #
-        # return True
+            if row[2] != "NA":
+                death = datetime.strptime(row[2], '%Y-%m-%d').date()
+                marry = datetime.strptime(row[3], '%Y-%m-%d').date()
+                if marry > death:  # cannot marry after death
+                    return False
+        return True
 
     def divorce_before_death(self):
         """
@@ -43,7 +42,7 @@ class HW4:
     def query_info(self, query):
         """
         :type query: str
-        :rtype: bool
+        :rtype: List[List[str]]
         """
         self.c.execute("%s" % query)
         return self.c.fetchall()
@@ -64,7 +63,7 @@ class TestHW4:
 
 def main():
     demo = HW4()
-    demo.marriage_before_death()
+    print(demo.marriage_before_death())
 
 if __name__ == '__main__':
     main()
