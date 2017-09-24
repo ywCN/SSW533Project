@@ -21,7 +21,6 @@ class HW4:
                 "ON INDI.INDI = FAM.HUSB OR INDI.INDI = FAM.WIFE"
 
         for row in self.query_info(query):
-
             if row[2] != "NA":
                 death = datetime.strptime(row[2], '%Y-%m-%d').date()
                 marry = datetime.strptime(row[3], '%Y-%m-%d').date()
@@ -33,9 +32,15 @@ class HW4:
         """
         :rtype: bool
         """
+        query = "select INDI, NAME, DEAT, fam.DIV from indi INNER JOIN fam " \
+                "ON INDI.INDI = FAM.HUSB OR INDI.INDI = FAM.WIFE"
 
-        print("invalid INDI")
-        return False
+        for row in self.query_info(query):
+            if row[2] != "NA" and row[3] != "NA":
+                death = datetime.strptime(row[2], '%Y-%m-%d').date()
+                divorce = datetime.strptime(row[3], '%Y-%m-%d').date()
+                if divorce > death:  # cannot divorce after death
+                    return False
 
         return True
 
@@ -64,6 +69,7 @@ class TestHW4:
 def main():
     demo = HW4()
     print(demo.marriage_before_death())
+    print(demo.divorce_before_death())
 
 if __name__ == '__main__':
     main()
