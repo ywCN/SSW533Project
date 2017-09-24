@@ -8,8 +8,8 @@ Our team is using database solution.
 Please put the .db file in the same path of this .py file.
 '''
 
-class HW4:
 
+class HW4:
     def __init__(self):
         self.db = r'project.db'
         if os.path.isfile(self.db):
@@ -24,6 +24,7 @@ class HW4:
 
     def marriage_before_death(self):
         """
+        US05 - Marriage before death
         :rtype: bool
         """
         query = "select INDI, NAME, DEAT, fam.MARR from indi INNER JOIN fam " \
@@ -39,6 +40,7 @@ class HW4:
 
     def divorce_before_death(self):
         """
+        US06 - Divorce before death
         :rtype: bool
         """
         query = "select INDI, NAME, DEAT, fam.DIV from indi INNER JOIN fam " \
@@ -61,19 +63,27 @@ class HW4:
         self.c.execute("%s" % query)
         return self.c.fetchall()
 
+    def disconnect(self):
+        self.c.close()
+        self.conn.close()
 
-class TestHW4:
 
+class TestHW4(unittest.TestCase):
     def test_marriage_before_death(self):
-        expected = True
+        expected = True  # because my data is valid, invalid data won't pass test
+        self.assertTrue(HW4().marriage_before_death() == expected)
 
-    def divorce_before_death(self):
-        expected = True
+    def test_divorce_before_death(self):
+        expected = True  # because my data is valid, invalid data won't pass test
+        self.assertTrue(HW4().marriage_before_death() == expected)
 
-    def query_info(self):
-        test_query1 = ""
-        test_query2 = ""
-        test_query3 = ""
+    def test_query_info(self):
+        test_query1 = "select INDI, NAME, DEAT, fam.MARR from indi INNER JOIN fam " \
+                      "ON INDI.INDI = FAM.HUSB OR INDI.INDI = FAM.WIFE"
+        test_query2 = "select INDI, NAME, DEAT, fam.DIV from indi INNER JOIN fam " \
+                      "ON INDI.INDI = FAM.HUSB OR INDI.INDI = FAM.WIFE"
+        self.assertEqual(len(HW4().query_info(test_query1)[0]), 4)
+        self.assertEqual(len(HW4().query_info(test_query2)[0]), 4)
 
 
 def main():
@@ -86,7 +96,9 @@ def main():
         print("All divorces are before death.")
     else:
         print("Not all divorces are before death.\nPlease check your file.")
+    demo.disconnect()
 
 
 if __name__ == '__main__':
     main()
+    unittest.main()
