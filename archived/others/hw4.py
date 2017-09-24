@@ -18,14 +18,17 @@ class HW4:
         """
         query = "select INDI, NAME, DEAT, fam.MARR from indi INNER JOIN fam " \
                 "ON INDI.INDI = FAM.HUSB OR INDI.INDI = FAM.WIFE"
-        print(self.query_info(query))
+
+        for row in self.query_info(query):
+
+            print(row)
         query = ""
 
 
-        print("invalid INDI")
-        return False
-
-        return True
+        # print("invalid INDI")
+        # return False
+        #
+        # return True
 
     def divorce_before_death(self):
         """
@@ -61,7 +64,7 @@ class TestHW4:
 
 def main():
     demo = HW4()
-    demo.divorce_before_death()
+    demo.marriage_before_death()
 
 if __name__ == '__main__':
     main()
