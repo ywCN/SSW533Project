@@ -14,5 +14,10 @@ while counter < 580:
     else:
         res.append('XXX')
     counter += 1
-print(len(res))
-print(res[560:])
+# print(len(res))
+# print(res[570:])
+
+company = "google"
+f = open('%s_raw.txt' % company, 'w+')
+f.write(str(res))
+f.close()
