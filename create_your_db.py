@@ -114,6 +114,7 @@ def main():
     demo.create_db()  # MyFamily.ged
     demo.populate_db()
     demo.disconnect()
+    print("Database created. If you want to create a database, please renamed the old database.")
 
 
 if __name__ == '__main__':
