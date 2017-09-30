@@ -1,9 +1,13 @@
 import sqlite3
 from datetime import datetime
-from prettytable import PrettyTable
 
 
 class Project3:
+    def __init__(self):
+        self.conn = sqlite3.connect('project.db')
+        self.c = self.conn.cursor()
+        self.lines = self.open_file()
+
     def open_file(self):
         while True:
             file_name = input('Enter the file name: ')  # MyFamily.ged
@@ -15,48 +19,45 @@ class Project3:
                 continue
         return opened_file
 
-    def create_table(self, c):
+    def create_db(self):
 
-        c.execute("CREATE TABLE IF NOT EXISTS indi(INDI TEXT, NAME TEXT, SEX TEXT, BIRT TEXT, DEAT TEXT, FAMC TEXT, "
-                  "FAMS TEXT)")
+        self.c.execute("CREATE TABLE IF NOT EXISTS indi(INDI TEXT, NAME TEXT, SEX TEXT, BIRT TEXT, DEAT TEXT, "
+                       "FAMC TEXT, FAMS TEXT)")
         # c.execute("CREATE TABLE IF NOT EXISTS indi_fam(INDI TEXT, FAM TEXT)")  # may be used in future projects
-        c.execute(
-            "CREATE TABLE IF NOT EXISTS fam(FAM TEXT, MARR TEXT, DIV TEXT, HUSB TEXT, WIFE TEXT, CHIL TEXT)")
+        self.c.execute("CREATE TABLE IF NOT EXISTS fam(FAM TEXT, MARR TEXT, DIV TEXT, HUSB TEXT, WIFE TEXT, CHIL TEXT)")
 
-    def insert_entry(self, table, c, conn):
+    def insert_entry(self, table):
         data = list(table.values())
 
         if len(data) == 7:
-            c.execute("INSERT INTO indi (INDI, NAME, SEX, BIRT, DEAT, FAMC, FAMS) VALUES (?, ?, ?, ?, ?, ?, ?)",
-                (data[0], data[1], data[2], data[3], data[4], data[5], data[6]))
+            self.c.execute("INSERT INTO indi (INDI, NAME, SEX, BIRT, DEAT, FAMC, FAMS) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                           (data[0], data[1], data[2], data[3], data[4], data[5], data[6]))
 
         if len(data) == 6:
             if isinstance(data[5], list):
-                c.execute("INSERT INTO fam (FAM, MARR, DIV, HUSB, WIFE, CHIL) VALUES (?, ?, ?, ?, ?, ?)",
-                          (data[0], data[1], data[2], data[3], data[4], ' '.join(data[5])))
+                self.c.execute("INSERT INTO fam (FAM, MARR, DIV, HUSB, WIFE, CHIL) VALUES (?, ?, ?, ?, ?, ?)",
+                               (data[0], data[1], data[2], data[3], data[4], ' '.join(data[5])))
             else:
-                c.execute("INSERT INTO fam (FAM, MARR, DIV, HUSB, WIFE, CHIL) VALUES (?, ?, ?, ?, ?, ?)",
-                          (data[0], data[1], data[2], data[3], data[4], data[5]))
-        conn.commit()
+                self.c.execute("INSERT INTO fam (FAM, MARR, DIV, HUSB, WIFE, CHIL) VALUES (?, ?, ?, ?, ?, ?)",
+                               (data[0], data[1], data[2], data[3], data[4], data[5]))
+        self.conn.commit()
 
-    def populate_table(self, c, conn):
+    def populate_db(self):
 
         indi_tab = {"INDI": "NA", "NAME": "NA", "SEX": "NA", "BIRT": "NA", "DEAT": "NA", "FAMC": "NA", "FAMS": "NA"}
 
-        fam_tab = {"FAM": "NA", "MARR": "NA", "DIV": "NA", "HUSB": "NA", "WIFE": "NA",
-                   "CHIL": "NA"}
+        fam_tab = {"FAM": "NA", "MARR": "NA", "DIV": "NA", "HUSB": "NA", "WIFE": "NA", "CHIL": "NA"}
         date_tags = ["BIRT", "DEAT", "MARR", "DIV"]
         date_name_cache = ""
 
-        lines = self.open_file()
-        for line in lines:
+        for line in self.lines:
             words = line.strip().split()
             if words[0] == "0":
                 if words[-1] in indi_tab:
                     if indi_tab[words[-1]] == "NA":
                         indi_tab[words[-1]] = words[1]
                         continue
-                    self.insert_entry(indi_tab, c, conn)
+                    self.insert_entry(indi_tab)
                     for key in indi_tab:
                         indi_tab[key] = "NA"
 
@@ -64,17 +65,17 @@ class Project3:
 
                 if words[-1] in fam_tab:
                     if words[1] == "F1":
-                        self.insert_entry(indi_tab, c, conn)
+                        self.insert_entry(indi_tab)
                         fam_tab[words[-1]] = words[1]
                         continue
-                    self.insert_entry(fam_tab, c, conn)
+                    self.insert_entry(fam_tab)
                     for key in fam_tab:
                         fam_tab[key] = "NA"
 
                     fam_tab[words[-1]] = words[1]
 
                 if words[1] == "TRLR":
-                    self.insert_entry(fam_tab, c, conn)
+                    self.insert_entry(fam_tab)
 
             elif words[0] == "1":
                 if words[1] in date_tags:
@@ -103,69 +104,16 @@ class Project3:
                 else:
                     print("Something is wrong with the date_name_cache!")
 
-    def get_indi_info(self, c):
-        c.execute('SELECT INDI, NAME, SEX, BIRT, DEAT, FAMC, FAMS FROM indi')
-        return c.fetchall()
-
-    def get_fam_info(self, c):
-        c.execute('SELECT FAM, MARR, DIV, HUSB, WIFE, CHIL FROM fam')
-        return c.fetchall()
-
-    def get_age(self, birthday):
-        today = datetime.today().date()
-        birt = datetime.strptime(birthday, '%Y-%m-%d').date()
-        if today.month > birt.month:
-            return today.year - birt.year
-        elif today.month == birt.month:
-            if today.day >= birt.day:
-                return today.year - birt.year
-            else:
-                return today.year - birt.year - 1
-        else:
-            return today.year - birt.year - 1
-
-    def print_selected(self, c):
-        t_indi = PrettyTable(["ID", "Name", "Gender", "Birthday", "Age", "Alive", "Death", "Child", "Spouse"])
-        t_fam = PrettyTable(["ID", "Married", "Divorced", "Husband ID", "Husband Name", "Wife ID", "Wife Name",
-                             "Children"])
-        name_map = {}
-
-        for row in self.get_indi_info(c):
-            age = self.get_age(row[3])
-
-            if row[4] == "NA":
-                alive = True
-            else:
-                alive = False
-
-            name_map[row[0]] = row[1]
-            lst = list(row)
-            lst.insert(4, age)
-            lst.insert(5, alive)
-            t_indi.add_row(lst)
-
-        for row in self.get_fam_info(c):
-            lst = list(row)
-            lst.insert(4, name_map[row[3]])
-            lst.insert(6, name_map[row[4]])
-            t_fam.add_row(lst)
-
-        print(t_indi)
-        print(t_fam)
+    def disconnect(self):
+        self.c.close()
+        self.conn.close()
 
 
 def main():
     demo = Project3()
-
-    conn = sqlite3.connect('project.db')
-    c = conn.cursor()
-
-    demo.create_table(c)  # MyFamily.ged
-    demo.populate_table(c, conn)
-    demo.print_selected(c)
-
-    c.close()
-    conn.close()
+    demo.create_db()  # MyFamily.ged
+    demo.populate_db()
+    demo.disconnect()
 
 
 if __name__ == '__main__':
