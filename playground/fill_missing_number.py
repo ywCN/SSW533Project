@@ -17,7 +17,7 @@ while counter < 580:
 # print(len(res))
 # print(res[570:])
 
-company = "google"
-f = open('%s_raw.txt' % company, 'w+')
+company = "Two Sigma"
+f = open('%s.txt' % company, 'w+')
 f.write(str(res))
 f.close()
