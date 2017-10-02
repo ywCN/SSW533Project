@@ -1,0 +1,92 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Mon Sep 25 23:50:55 2017
+
+@author: allo0o2a
+"""
+from datetime import date
+from dateutil.relativedelta import relativedelta
+
+import sys
+import unittest
+
+
+
+def check_dom(domparent, dobchild):
+    if domparent < dobchild:
+        return ("The child born after 9 months or more from parent marriage.")    
+        
+    elif dobchild < domparent:
+        return ("The child can not born before parent marriage. TRY AGAIN!")
+
+
+
+def check_dod(domparent, dodparent, dobchild):
+    Addninemonths = relativedelta(months=9)
+    C = dodparent + Addninemonths
+    if domparent < dobchild:
+        if dobchild > C:
+            return ("The child can not born after 9 months of divorce.") 
+        elif dobchild < C:
+            return ("The child born after the parent divorce within 9 months.")  
+    elif dobchild < domparent:
+        return ("The child can not born before parent marriage. TRY AGAIN!")
+        
+        
+def main():
+    try:
+        print("You can just use: YYYY-MM-DD format")
+        
+        DOM = input('Please enter the DOM of the parent: ')
+        year1, month1, day1 = map(int, DOM.split('-'))
+        
+        AskD = input('Are the parent divorced? Y or N.   ')
+        if AskD == 'Y':
+            DOD = input('Please enter the DOD of the parent: ')
+            year2, month2, day2 = map(int, DOD.split('-'))
+            DOFChild = input('Please enter the DOF of the child: ')
+            year3, month3, day3 = map(int, DOFChild.split('-'))
+            check_dod(date(year1, month1, day1),date(year2, month2, day2),date(year3, month3, day3))
+        
+        elif AskD == 'N':        
+            DOFChild = input('Please enter the DOF of the child: ')
+            year3, month3, day3 = map(int, DOFChild.split('-'))
+            check_dom(date(year1, month1, day1),date(year3, month3, day3))
+
+
+    except:
+        print ("Please enter a valid date.")
+        sys.exit()
+
+class TestCA (unittest.TestCase):
+    def test_check_dom(self):
+        #Date of Marriage: 1970-1-1
+        #Date of Child Birth: 1989-1-1 OK 1960-1-1 NO
+        DOM = date(1970,1,1)
+        DOB1 = date(1989,1,1)
+        DOB2 = date(1960,1,1)
+
+        self.assertEqual(check_dom(DOM,DOB1),"The child born after 9 months or more from parent marriage.")
+        self.assertEqual(check_dom(DOM,DOB2),"The child can not born before parent marriage. TRY AGAIN!")
+        self.assertFalse (check_dom(DOM,DOB1) == "The child can not born before parent marriage. TRY AGAIN!")
+        self.assertTrue (check_dom(DOM,DOB2) == "The child can not born before parent marriage. TRY AGAIN!")
+
+    def test_check_dod(self):
+        #Date of Marriage: 1970-1-1
+        #Date of Divorce: 1990-1-1
+        #Date of Child Birth: 1990-11-1 NO  1990-9-1 OK 1960-1-1 NO
+        DOM = date(1970,1,1)
+        DOD = date(1990,1,1)
+        DOB1 = date(1990,8,1)
+        DOB2 = date (1990,11,1)
+        DOB3 = date(1960,1,1)
+        
+        self.assertEqual(check_dod(DOM,DOD,DOB1),"The child born after the parent divorce within 9 months.")
+        self.assertEqual(check_dod(DOM,DOD,DOB2),"The child can not born after 9 months of divorce.")
+        self.assertEqual(check_dod(DOM,DOD,DOB3),"The child can not born before parent marriage. TRY AGAIN!")
+
+
+if __name__ == '__main__':
+    #main()
+    unittest.main(exit=False, verbosity=2) 
