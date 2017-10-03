@@ -143,16 +143,31 @@ class HW4:
 
     def birth_before_marriage_of_parents(self):
         """
-        US08 - Less then 150 years old
-        :rtype: bool
+        US08 - Birth before marriage of parents
+        :rtype: None
         """
-        query1 = "select INDI from indi WHERE FAMC NOT LIKE 'NA'"
-        children = self.query_info(query1)  # ids
-        query2 = "select MARR, DIV, CHIL from fam"
-        dates = self.query_info(query2)  # marr div chil  type: list[tuple(str)]
-
-
-
+        query = "select indi.INDI, indi.NAME, indi.BIRT, fam.MARR, fam.DIV from indi left join fam on indi.FAMC = " \
+                "fam.FAM "
+        for row in self.query_info(query):
+            birth = datetime.strptime(row[2], '%Y-%m-%d').date()
+            try:
+                marry = datetime.strptime(row[3], '%Y-%m-%d').date()
+            except (TypeError, ValueError):
+                marry = "NA"
+            try:
+                divorce = datetime.strptime(row[4], '%Y-%m-%d').date()
+            except (TypeError, ValueError):
+                divorce = "NA"
+            if marry != "NA" and birth < marry:
+                print("ERROR: US08: Parent marriage {} after birth {} of {}".format(marry, birth, row[0] + row[1]))
+            if divorce != "NA":
+                if divorce.year == birth.year:
+                    if birth.month - divorce.month > 9:
+                        print("ERROR: {} was born {} after 9 months of divorce {}".format(row[0] + row[1], birth, divorce))
+                if divorce.year == birth.year - 1:
+                    months = birth.month + 12 - divorce.month
+                    if months > 9:
+                        print("ERROR: {} was born {} after 9 months of divorce {}".format(row[0] + row[1], birth, divorce))
     def query_info(self, query):
         """
         :type query: str
