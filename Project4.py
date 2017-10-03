@@ -63,7 +63,8 @@ class HW4:
                 birth = datetime.strptime(row[2], '%Y-%m-%d').date()
                 marriage = datetime.strptime(row[3], '%Y-%m-%d').date()
                 if birth > marriage:
-                    print("ERROR: US02: Birth {} occurs after marriage {} for {}".format(birth, marriage, row[0] + row[1]))
+                    print("ERROR: US02: Birth {} occurs after marriage {} for {}"
+                          .format(birth, marriage, row[0] + row[1]))
 
     def birth_before_death(self):
         """
@@ -90,7 +91,8 @@ class HW4:
                 marry = datetime.strptime(row[2], '%Y-%m-%d').date()
                 divorce = datetime.strptime(row[3], '%Y-%m-%d').date()
                 if marry > divorce:
-                    print("ERROR: US04: Marriage {} occurs after divorce {} for {}".format(marry, divorce, row[0] + row[1]))
+                    print("ERROR: US04: Marriage {} occurs after divorce {} for {}"
+                          .format(marry, divorce, row[0] + row[1]))
 
     def marriage_before_death(self):
         """
@@ -163,11 +165,13 @@ class HW4:
             if divorce != "NA":
                 if divorce.year == birth.year:
                     if birth.month - divorce.month > 9:
-                        print("ERROR: {} was born {} after 9 months of divorce {}".format(row[0] + row[1], birth, divorce))
+                        print("ERROR: {} was born {} after 9 months of divorce {}"
+                              .format(row[0] + row[1], birth, divorce))
                 if divorce.year == birth.year - 1:
                     months = birth.month + 12 - divorce.month
                     if months > 9:
-                        print("ERROR: {} was born {} after 9 months of divorce {}".format(row[0] + row[1], birth, divorce))
+                        print("ERROR: {} was born {} after 9 months of divorce {}"
+                              .format(row[0] + row[1], birth, divorce))
 
     def query_info(self, query):
         """
@@ -224,6 +228,7 @@ class HW4:
             lst.insert(4, name_map[row[3]])
             lst.insert(6, name_map[row[4]])
             t_fam.add_row(lst)
+
         print("People")
         print(t_indi)
         print("Families")
