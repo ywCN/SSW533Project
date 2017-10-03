@@ -2,6 +2,8 @@ import sqlite3
 import unittest
 import os
 from datetime import datetime
+from prettytable import PrettyTable
+
 
 '''
 Our team is using database solution.
@@ -25,7 +27,7 @@ class HW4:
     def marriage_before_death(self):
         """
         US05 - Marriage before death
-        :rtype: bool
+        :rtype: null
         """
         query = "select INDI, NAME, DEAT, fam.MARR from indi INNER JOIN fam " \
                 "ON INDI.INDI = FAM.HUSB OR INDI.INDI = FAM.WIFE"
@@ -35,6 +37,7 @@ class HW4:
                 death = datetime.strptime(row[2], '%Y-%m-%d').date()
                 marry = datetime.strptime(row[3], '%Y-%m-%d').date()
                 if marry > death:  # cannot marry after death
+                    print("ERROR: US05: Marriage {} occurs after death {} for {}".format(marry, death, row[0] + row[1]))
                     return False
         return True
 
@@ -52,7 +55,6 @@ class HW4:
                 divorce = datetime.strptime(row[3], '%Y-%m-%d').date()
                 if divorce > death:  # cannot divorce after death
                     return False
-
         return True
 
     def query_info(self, query):
