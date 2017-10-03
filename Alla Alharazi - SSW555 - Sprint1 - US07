@@ -1,0 +1,50 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Mon Sep 25 23:50:55 2017
+
+@author: allo0o2a
+"""
+from datetime import date
+import sys
+import unittest
+
+
+
+def calculate_age(bd):
+    today = date.today()
+    AGE  =  today.year - bd.year - ((today.month, today.day) < (bd.month, bd.day))
+    if AGE <150:
+        #print("The age is:",AGE, "which means less than 150")
+        return "Less than 150"
+    else:
+        #print("The age is:",AGE, "which means more than 150")
+        return "More than 150"
+  
+def main():
+    try:
+        print("You can just use: YYYY-MM-DD format")
+        DOM = input('Please enter your DOB: ')
+        year, month, day = map(int, DOM.split('-'))
+
+        calculate_age(date(year, month, day))
+    
+    
+    except:
+        print ("Please enter a valid date.")
+        sys.exit()
+
+class TestCA (unittest.TestCase):
+    def test_calculate_age(self):
+        self.assertEqual(calculate_age(date(1989,8,18)),"Less than 150")
+        self.assertEqual(calculate_age(date(1111,8,1)),"More than 150")
+        
+        self.assertNotEqual(calculate_age(date(1111,8,1)),"Less than 150")
+        self.assertNotEqual(calculate_age(date(1989,8,18)),"More than 150")
+        
+        self.assertFalse (calculate_age(date(1989,8,18)) == "More than 150")
+        self.assertTrue(calculate_age(date(1989,8,18)) == "Less than 150")
+        
+if __name__ == '__main__':
+    #main()
+    unittest.main(exit=False, verbosity=2) 
