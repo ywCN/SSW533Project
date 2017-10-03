@@ -1,0 +1,1 @@
+Delete the db before testing other files.
