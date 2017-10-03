@@ -168,6 +168,7 @@ class HW4:
                     months = birth.month + 12 - divorce.month
                     if months > 9:
                         print("ERROR: {} was born {} after 9 months of divorce {}".format(row[0] + row[1], birth, divorce))
+
     def query_info(self, query):
         """
         :type query: str
@@ -183,11 +184,54 @@ class HW4:
         self.c.close()
         self.conn.close()
 
-    def print_everything(self):
-        query1 =""
-        query2 =""
+    def get_age(self, birthday):
+        today = datetime.today().date()
+        birt = datetime.strptime(birthday, '%Y-%m-%d').date()
+        if today.month > birt.month:
+            return today.year - birt.year
+        elif today.month == birt.month:
+            if today.day >= birt.day:
+                return today.year - birt.year
+            else:
+                return today.year - birt.year - 1
+        else:
+            return today.year - birt.year - 1
+
+    def print_info(self):
+        indi_info = 'SELECT INDI, NAME, SEX, BIRT, DEAT, FAMC, FAMS FROM indi'
+        fam_info = 'SELECT FAM, MARR, DIV, HUSB, WIFE, CHIL FROM fam'
+        t_indi = PrettyTable(["ID", "Name", "Gender", "Birthday", "Age", "Alive", "Death", "Child", "Spouse"])
+        t_fam = PrettyTable(
+            ["ID", "Married", "Divorced", "Husband ID", "Husband Name", "Wife ID", "Wife Name", "Children"])
+        name_map = {}
+
+        for row in self.query_info(indi_info):
+            age = self.get_age(row[3])
+
+            if row[4] == "NA":
+                alive = True
+            else:
+                alive = False
+
+            name_map[row[0]] = row[1]
+            lst = list(row)
+            lst.insert(4, age)
+            lst.insert(5, alive)
+            t_indi.add_row(lst)
+
+        for row in self.query_info(fam_info):
+            lst = list(row)
+            lst.insert(4, name_map[row[3]])
+            lst.insert(6, name_map[row[4]])
+            t_fam.add_row(lst)
+        print("People")
+        print(t_indi)
+        print("Families")
+        print(t_fam)
+        print()
 
     def run_sprint1(self):
+        self.print_info()
         self.dates_before_current_date()
         self.birth_before_marriage()
         self.birth_before_death()
@@ -196,7 +240,6 @@ class HW4:
         self.divorce_before_death()
         self.less_than_150_years_old()
         self.birth_before_marriage_of_parents()
-
 
 
 def main():
