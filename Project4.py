@@ -34,12 +34,20 @@ class HW4:
 
         for row in self.query_info(query):
             birth = datetime.strptime(row[2], '%Y-%m-%d').date()
-            death = datetime.strptime(row[3], '%Y-%m-%d').date()
-            if not row[4]:
+            if row[3] != "NA":
+                death = datetime.strptime(row[3], '%Y-%m-%d').date()
+            else:
+                death = "NA"
+            print(row[4])
+            print(type(row[4]))
+            if type(row[4]) != 'NoneType' and row[4] != "NA":
                 marriage = datetime.strptime(row[4], '%Y-%m-%d').date()
             else:
                 marriage = "NA"
-            divorce = datetime.strptime(row[5], '%Y-%m-%d').date()
+            if row[5] != "None" and row[5] != "NA":
+                divorce = datetime.strptime(row[5], '%Y-%m-%d').date()
+            else:
+                divorce = "NA"
             dates = [birth, death, marriage, divorce]
             for date in dates:
                 if date != "NA" and date > today:
@@ -120,6 +128,26 @@ class HW4:
                     return False
         return True
 
+    def less_than_150_years_old(self):
+        """
+        US07 - Less then 150 years old
+        :rtype: bool
+        """
+        query = "select INDI, NAME, BIRT, DEAT from indi"
+        today = datetime.today().date()
+        for row in self.query_info(query):
+            birth = datetime.strptime(row[2], '%Y-%m-%d').date()
+            age = 9999
+            if row[3] != "NA":
+                death = datetime.strptime(row[3], '%Y-%m-%d').date()
+                age = death.year - birth.year
+            else:
+                age = today.year - birth.year
+            if age >= 150:
+                print("ERROR: US07: age is greater than or equal to 150 years for {}".format(row[0] + row[1]))
+                return False
+
+
     def query_info(self, query):
         """
         :type query: str
@@ -146,6 +174,7 @@ class HW4:
         self.marriage_before_divorce()
         self.marriage_before_death()
         self.divorce_before_death()
+        self.less_than_150_years_old()
 
 
 
