@@ -1,5 +1,4 @@
 import sqlite3
-import unittest
 import os
 from datetime import datetime
 from prettytable import PrettyTable
@@ -24,10 +23,73 @@ class HW4:
                   "--------------------------------------------------------------------")
             exit()
 
+    def dates_before_current_date(self):
+        """
+        US01 - Dates before current date
+        :rtype: bool
+        """
+        query = "select INDI, NAME, BIRT, DEAT, fam.MARR, fam.DIV from indi LEFT JOIN fam ON INDI.INDI = FAM.HUSB OR " \
+                "INDI.INDI = FAM.WIFE "
+        today = datetime.today().date()
+
+        for row in self.query_info(query):
+            birth = datetime.strptime(row[2], '%Y-%m-%d').date()
+            death = datetime.strptime(row[3], '%Y-%m-%d').date()
+            if not row[4]:
+                marriage = datetime.strptime(row[4], '%Y-%m-%d').date()
+            else:
+                marriage = "NA"
+            divorce = datetime.strptime(row[5], '%Y-%m-%d').date()
+            dates = [birth, death, marriage, divorce]
+            for date in dates:
+                if date != "NA" and date > today:
+                    print("ERROR: US01: {} occurs after today {} for {}".format(date, today, row[0] + row[1]))
+
+    def birth_before_marriage(self):
+        """
+        US02 - Birth before marriage
+        :rtype: bool
+        """
+        query = "select INDI, NAME, BIRT, fam.MARR from indi INNER JOIN fam ON INDI.INDI = FAM.HUSB OR INDI.INDI = " \
+                "FAM.WIFE "
+        for row in self.query_info(query):
+            if row[3] != "NA":
+                birth = datetime.strptime(row[2], '%Y-%m-%d').date()
+                marriage = datetime.strptime(row[3], '%Y-%m-%d').date()
+                if birth > marriage:
+                    print("ERROR: US02: Birth {} occurs after marriage {} for {}".format(birth, marriage, row[0] + row[1]))
+
+    def birth_before_death(self):
+        """
+        US03 - Birth before death
+        :rtype: bool
+        """
+        query = "select INDI, NAME, BIRT, DEAT from indi"
+        for row in self.query_info(query):
+            if row[3] != "NA":
+                birth = datetime.strptime(row[2], '%Y-%m-%d').date()
+                death = datetime.strptime(row[3], '%Y-%m-%d').date()
+                if birth > death:
+                    print("ERROR: US03: Birth {} occurs after death {} for {}".format(birth, death, row[0] + row[1]))
+
+    def marriage_before_divorce(self):
+        """
+        US04 - Marriage before divorce
+        :rtype: bool
+        """
+        query = "select INDI, NAME, fam.MARR, fam.DIV from indi INNER JOIN fam " \
+                "ON INDI.INDI = FAM.HUSB OR INDI.INDI = FAM.WIFE"
+        for row in self.query_info(query):
+            if row[3] != "NA":
+                marry = datetime.strptime(row[2], '%Y-%m-%d').date()
+                divorce = datetime.strptime(row[3], '%Y-%m-%d').date()
+                if marry > divorce:
+                    print("ERROR: US04: Marriage {} occurs after divorce {} for {}".format(marry, divorce, row[0] + row[1]))
+
     def marriage_before_death(self):
         """
         US05 - Marriage before death
-        :rtype: null
+        :rtype: bool
         """
         query = "select INDI, NAME, DEAT, fam.MARR from indi INNER JOIN fam " \
                 "ON INDI.INDI = FAM.HUSB OR INDI.INDI = FAM.WIFE"
@@ -54,6 +116,7 @@ class HW4:
                 death = datetime.strptime(row[2], '%Y-%m-%d').date()
                 divorce = datetime.strptime(row[3], '%Y-%m-%d').date()
                 if divorce > death:  # cannot divorce after death
+                    print("ERROR: US06: Divorce {} occurs after death {} for {}".format(divorce, death, row[0] + row[1]))
                     return False
         return True
 
@@ -72,46 +135,25 @@ class HW4:
         self.c.close()
         self.conn.close()
 
+    def print_everything(self):
+        query1 =""
+        query2 =""
 
-class TestHW4(unittest.TestCase):
-    def test_marriage_before_death(self):
-        expected = True  # because my data is valid, invalid data won't pass test
-        unexpected = False  # This should not happen if the given data is valid.
-        self.assertTrue(HW4().marriage_before_death())
-        self.assertTrue(HW4().marriage_before_death() == expected)
-        self.assertFalse(HW4().marriage_before_death() == unexpected)
+    def run_sprint1(self):
+        self.dates_before_current_date()
+        self.birth_before_marriage()
+        self.birth_before_death()
+        self.marriage_before_divorce()
+        self.marriage_before_death()
+        self.divorce_before_death()
 
-    def test_divorce_before_death(self):
-        expected = True
-        unexpected = False
-        self.assertTrue(HW4().divorce_before_death())
-        self.assertTrue(HW4().divorce_before_death() == expected)
-        self.assertFalse(HW4().divorce_before_death() == unexpected)
-
-    def test_query_info(self):
-        test_query1 = "select INDI, NAME, DEAT, fam.MARR from indi INNER JOIN fam " \
-                      "ON INDI.INDI = FAM.HUSB OR INDI.INDI = FAM.WIFE"
-        test_query2 = "select INDI, NAME, DEAT, fam.DIV from indi INNER JOIN fam " \
-                      "ON INDI.INDI = FAM.HUSB OR INDI.INDI = FAM.WIFE"
-        self.assertEqual(len(HW4().query_info(test_query1)[0]), 4)
-        self.assertEqual(len(HW4().query_info(test_query1)), 8)
-        self.assertEqual(len(HW4().query_info(test_query2)[0]), 4)
-        self.assertEqual(len(HW4().query_info(test_query2)), 8)
 
 
 def main():
     demo = HW4()
-    if demo.marriage_before_death():
-        print("All marriages are before death.")
-    else:
-        print("Not all marriages are before death.\nPlease check your file.")
-    if demo.divorce_before_death():
-        print("All divorces are before death.")
-    else:
-        print("Not all divorces are before death.\nPlease check your file.")
+    demo.run_sprint1()
     demo.disconnect()
 
 
 if __name__ == '__main__':
     main()
-    unittest.main()
