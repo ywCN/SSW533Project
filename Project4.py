@@ -47,10 +47,11 @@ class HW4:
             except (TypeError, ValueError):
                 divorce = "NA"
             dates = [birth, death, marriage, divorce]
-            print(dates)
             for date in dates:
                 if date != "NA" and date > today:
                     print("ERROR: US01: {} occurs after today {} for {}".format(date, today, row[0] + row[1]))
+                    # return False
+        return True
 
     def birth_before_marriage(self):
         """
@@ -65,6 +66,8 @@ class HW4:
                 marriage = datetime.strptime(row[3], '%Y-%m-%d').date()
                 if birth > marriage:
                     print("ERROR: US02: Birth {} occurs after marriage {} for {}".format(birth, marriage, row[0] + row[1]))
+                    # return False
+        return True
 
     def birth_before_death(self):
         """
@@ -78,6 +81,8 @@ class HW4:
                 death = datetime.strptime(row[3], '%Y-%m-%d').date()
                 if birth > death:
                     print("ERROR: US03: Birth {} occurs after death {} for {}".format(birth, death, row[0] + row[1]))
+                    # return False
+        return True
 
     def marriage_before_divorce(self):
         """
@@ -92,6 +97,8 @@ class HW4:
                 divorce = datetime.strptime(row[3], '%Y-%m-%d').date()
                 if marry > divorce:
                     print("ERROR: US04: Marriage {} occurs after divorce {} for {}".format(marry, divorce, row[0] + row[1]))
+                    # return False
+        return True
 
     def marriage_before_death(self):
         """
@@ -107,7 +114,7 @@ class HW4:
                 marry = datetime.strptime(row[3], '%Y-%m-%d').date()
                 if marry > death:  # cannot marry after death
                     print("ERROR: US05: Marriage {} occurs after death {} for {}".format(marry, death, row[0] + row[1]))
-                    return False
+                    # return False
         return True
 
     def divorce_before_death(self):
@@ -124,7 +131,7 @@ class HW4:
                 divorce = datetime.strptime(row[3], '%Y-%m-%d').date()
                 if divorce > death:  # cannot divorce after death
                     print("ERROR: US06: Divorce {} occurs after death {} for {}".format(divorce, death, row[0] + row[1]))
-                    return False
+                    # return False
         return True
 
     def less_than_150_years_old(self):
@@ -143,9 +150,15 @@ class HW4:
             else:
                 age = today.year - birth.year
             if age >= 150:
-                print("ERROR: US07: age is greater than or equal to 150 years for {}".format(row[0] + row[1]))
-                return False
+                print("ERROR: US07: Age is greater than or equal to 150 years for {}".format(row[0] + row[1]))
+                # return False
+        return True
 
+    def birth_before_marriage_of_parents(self):
+        """
+        US08 - Less then 150 years old
+        :rtype: bool
+        """
 
     def query_info(self, query):
         """
