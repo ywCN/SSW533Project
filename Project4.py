@@ -34,21 +34,20 @@ class HW4:
 
         for row in self.query_info(query):
             birth = datetime.strptime(row[2], '%Y-%m-%d').date()
-            if row[3] != "NA":
+            try:
                 death = datetime.strptime(row[3], '%Y-%m-%d').date()
-            else:
+            except (TypeError, ValueError):
                 death = "NA"
-            print(row[4])
-            print(type(row[4]))
-            if type(row[4]) != 'NoneType' and row[4] != "NA":
+            try:
                 marriage = datetime.strptime(row[4], '%Y-%m-%d').date()
-            else:
+            except (TypeError, ValueError):
                 marriage = "NA"
-            if row[5] != "None" and row[5] != "NA":
+            try:
                 divorce = datetime.strptime(row[5], '%Y-%m-%d').date()
-            else:
+            except (TypeError, ValueError):
                 divorce = "NA"
             dates = [birth, death, marriage, divorce]
+            print(dates)
             for date in dates:
                 if date != "NA" and date > today:
                     print("ERROR: US01: {} occurs after today {} for {}".format(date, today, row[0] + row[1]))
