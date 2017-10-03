@@ -122,7 +122,8 @@ class HW4:
                 death = datetime.strptime(row[2], '%Y-%m-%d').date()
                 divorce = datetime.strptime(row[3], '%Y-%m-%d').date()
                 if divorce > death:  # cannot divorce after death
-                    print("ERROR: US06: Divorce {} occurs after death {} for {}".format(divorce, death, row[0] + row[1]))
+                    print("ERROR: US06: Divorce {} occurs after death {} for {}"
+                          .format(divorce, death, row[0] + row[1]))
 
     def less_than_150_years_old(self):
         """
@@ -133,7 +134,6 @@ class HW4:
         today = datetime.today().date()
         for row in self.query_info(query):
             birth = datetime.strptime(row[2], '%Y-%m-%d').date()
-            age = 9999
             if row[3] != "NA":
                 death = datetime.strptime(row[3], '%Y-%m-%d').date()
                 age = death.year - birth.year
@@ -141,7 +141,6 @@ class HW4:
                 age = today.year - birth.year
             if age >= 150:
                 print("ERROR: US07: Age is greater than or equal to 150 years for {}".format(row[0] + row[1]))
-
 
     def birth_before_marriage_of_parents(self):
         """
