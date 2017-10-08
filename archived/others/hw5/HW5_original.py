@@ -166,11 +166,14 @@ class HW4:
                     if birth.month - divorce.month > 9:
                         print("ERROR: {} was born {} after 9 months of parent divorce {}"
                               .format(row[0] + row[1], birth, divorce))
-                if divorce.year == birth.year - 1:
+                elif divorce.year == birth.year - 1:
                     months = birth.month + 12 - divorce.month
                     if months > 9:
-                        print("ERROR: {} was born {} after 9 months of parent divorce {}"
+                        print("ERROR: US08: {} was born {} after 9 months of parent divorce {}"
                               .format(row[0] + row[1], birth, divorce))
+                elif divorce.year < birth.year - 1:
+                    print("ERROR: US08: {} was born {} after 9 months of parent divorce {}"
+                          .format(row[0] + row[1], birth, divorce))
 
     def query_info(self, query):
         """
