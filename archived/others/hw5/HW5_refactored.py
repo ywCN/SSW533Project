@@ -34,14 +34,8 @@ class HW5:
                 "INDI.INDI = FAM.WIFE "
 
         for row in self.query_info(query):
-            # birth = self.convert_to_datetime(row[2])
-            # death = self.convert_to_datetime(row[3])
-            # marriage = self.convert_to_datetime(row[4])
-            # divorce = self.convert_to_datetime(row[5])
-            # dates = [birth, death, marriage, divorce]
             dates = [row[2], row[3], row[4], row[5]]
             for date in dates:
-                # if date != "NA" and date > self.today:
                 if not self.before_today(date):
                     print("ERROR: US01: {} occurs after today {} for {}"
                           .format(date, self.today, self.combine_id_name(row[0], row[1])))
@@ -67,9 +61,9 @@ class HW5:
         """
         query = "select INDI, NAME, BIRT, DEAT from indi"
         for row in self.query_info(query):
-            birth = self.convert_to_datetime(row[2])
-            death = self.convert_to_datetime(row[3])
-            if death != "NA" and birth > death:
+            birth = row[2]
+            death = row[3]
+            if not self.date_before(birth, death):
                 print("ERROR: US03: Birth {} occurs after death {} for {}"
                       .format(birth, death, self.combine_id_name(row[0], row[1])))
 
@@ -81,12 +75,11 @@ class HW5:
         query = "select INDI, NAME, fam.MARR, fam.DIV from indi INNER JOIN fam " \
                 "ON INDI.INDI = FAM.HUSB OR INDI.INDI = FAM.WIFE"
         for row in self.query_info(query):
-            if row[3] != "NA":
-                marry = self.convert_to_datetime(row[2])
-                divorce = self.convert_to_datetime(row[3])
-                if marry > divorce:
-                    print("ERROR: US04: Marriage {} occurs after divorce {} for {}"
-                          .format(marry, divorce, self.combine_id_name(row[0], row[1])))
+            marry = row[2]
+            divorce = row[3]
+            if not self.date_before(marry, divorce):
+                print("ERROR: US04: Marriage {} occurs after divorce {} for {}"
+                      .format(marry, divorce, self.combine_id_name(row[0], row[1])))
 
     def marriage_before_death(self):
         """
@@ -97,12 +90,11 @@ class HW5:
                 "ON INDI.INDI = FAM.HUSB OR INDI.INDI = FAM.WIFE"
 
         for row in self.query_info(query):
-            if row[2] != "NA":
-                death = self.convert_to_datetime(row[2])
-                marry = self.convert_to_datetime(row[3])
-                if marry > death:  # cannot marry after death
-                    print("ERROR: US05: Marriage {} occurs after death {} for {}"
-                          .format(marry, death, self.combine_id_name(row[0], row[1])))
+            death = row[2]
+            marry = row[3]
+            if not self.date_before(marry, death):
+                print("ERROR: US05: Marriage {} occurs after death {} for {}"
+                      .format(marry, death, self.combine_id_name(row[0], row[1])))
 
     def divorce_before_death(self):
         """
@@ -113,12 +105,11 @@ class HW5:
                 "ON INDI.INDI = FAM.HUSB OR INDI.INDI = FAM.WIFE"
 
         for row in self.query_info(query):
-            if row[2] != "NA" and row[3] != "NA":
-                death = self.convert_to_datetime(row[2])
-                divorce = self.convert_to_datetime(row[3])
-                if divorce > death:  # cannot divorce after death
-                    print("ERROR: US06: Divorce {} occurs after death {} for {}"
-                          .format(divorce, death, self.combine_id_name(row[0], row[1])))
+            death = row[2]
+            divorce = row[3]
+            if not self.date_before(divorce, death):
+                print("ERROR: US06: Divorce {} occurs after death {} for {}"
+                      .format(divorce, death, self.combine_id_name(row[0], row[1])))
 
     def less_than_150_years_old(self):
         """
@@ -139,14 +130,15 @@ class HW5:
         query = "select indi.INDI, indi.NAME, indi.BIRT, fam.MARR, fam.DIV from indi left join fam on indi.FAMC = " \
                 "fam.FAM "
         for row in self.query_info(query):
-            birth = self.convert_to_datetime(row[2])
-            marry = self.convert_to_datetime(row[3])
-            divorce = self.convert_to_datetime(row[4])
-            if marry != "NA" and birth < marry:
+            birth = row[2]
+            marry = row[3]
+            divorce = row[4]
+            # if marry != "NA" and birth < marry:
+            if not self.date_before(marry, birth):
                 print("ERROR: US08: Parent marriage {} after birth {} of {}"
                       .format(marry, birth, self.combine_id_name(row[0], row[1])))
-            if divorce != "NA" and divorce > birth and not self.dates_within(divorce, birth, 9, "months"):
-                print("ERROR: US08: {} was born {} after 9 months of divorce {}".format(
+            if self.date_before(divorce, birth) and not self.dates_within(divorce, birth, 9, "months"):
+                print("ERROR: US08: {} was born {} after 9 months of parent divorce {}".format(
                     self.combine_id_name(row[0], row[1]), birth, divorce))
 
     def query_info(self, query):
@@ -165,6 +157,10 @@ class HW5:
         self.conn.close()
 
     def convert_to_datetime(self, date):
+        """
+        :param date: str
+        :return: datatime type or str "NA"
+        """
         try:
             res = datetime.strptime(date, '%Y-%m-%d').date()
         except (TypeError, ValueError):
@@ -185,13 +181,16 @@ class HW5:
         """
         dt1 = self.convert_to_datetime(date1)
         dt2 = self.convert_to_datetime(date2)
+        if dt1 == "NA" or dt2 == "NA":
+            return True
         if unit not in self.conversion:
             raise Exception("No such unit")
         return (abs((dt1 - dt2).days) / self.conversion[unit]) <= limit
 
     def date_before(self, before, after):
         """
-        check if before date happens after after date
+        before happens first
+        after happens later
         :param before: the date should happen first
         :param after: the date should happen after
         :return: bool
