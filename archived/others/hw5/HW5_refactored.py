@@ -14,6 +14,7 @@ class HW4:
     def __init__(self):
         self.db = r'project.db'
         self.today = datetime.today().date()
+        self.conversion = {'days': 1, 'months': 30.4, 'years': 365.25}
         if os.path.isfile(self.db):
             self.conn = sqlite3.connect(self.db)
             self.c = self.conn.cursor()
@@ -196,10 +197,13 @@ class HW4:
         conversion = {'days': 1, 'months': 30.4, 'years': 365.25}
         return (abs((dt1 - dt2).days) / conversion[units]) <= limit
 
-    def get_age(self, birthday):
+    def get_age(self, birthday, deathday):
         today = datetime.today().date()
         birth = datetime.strptime(birthday, '%Y-%m-%d').date()
-        return
+        if deathday != "NA":
+            death = datetime.strptime(deathday, '%Y-%m-%d').date()
+            return round((death - birth).days / self.conversion["years"])
+        return round((today - birth).days / self.conversion["years"])
 
     def print_info(self):
         indi_info = 'SELECT INDI, NAME, SEX, BIRT, DEAT, FAMC, FAMS FROM indi'
@@ -210,7 +214,7 @@ class HW4:
         name_map = {}
 
         for row in self.query_info(indi_info):
-            age = self.get_age(row[3])
+            age = self.get_age(row[3], row[4])
 
             if row[4] == "NA":
                 alive = True
