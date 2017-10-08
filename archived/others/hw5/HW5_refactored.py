@@ -13,6 +13,7 @@ Please put the .db file in the same path of this .py file.
 class HW4:
     def __init__(self):
         self.db = r'project.db'
+        self.today = datetime.today().date()
         if os.path.isfile(self.db):
             self.conn = sqlite3.connect(self.db)
             self.c = self.conn.cursor()
@@ -30,7 +31,6 @@ class HW4:
         """
         query = "select INDI, NAME, BIRT, DEAT, fam.MARR, fam.DIV from indi LEFT JOIN fam ON INDI.INDI = FAM.HUSB OR " \
                 "INDI.INDI = FAM.WIFE "
-        today = datetime.today().date()
 
         for row in self.query_info(query):
             birth = datetime.strptime(row[2], '%Y-%m-%d').date()
@@ -48,8 +48,8 @@ class HW4:
                 divorce = "NA"
             dates = [birth, death, marriage, divorce]
             for date in dates:
-                if date != "NA" and date > today:
-                    print("ERROR: US01: {} occurs after today {} for {}".format(date, today, row[0] + row[1]))
+                if date != "NA" and date > self.today:
+                    print("ERROR: US01: {} occurs after today {} for {}".format(date, self.today, row[0] + row[1]))
 
     def birth_before_marriage(self):
         """
@@ -131,14 +131,13 @@ class HW4:
         :rtype: None
         """
         query = "select INDI, NAME, BIRT, DEAT from indi"
-        today = datetime.today().date()
         for row in self.query_info(query):
             birth = datetime.strptime(row[2], '%Y-%m-%d').date()
             if row[3] != "NA":
                 death = datetime.strptime(row[3], '%Y-%m-%d').date()
                 age = death.year - birth.year
             else:
-                age = today.year - birth.year
+                age = self.today.year - birth.year
             if age >= 150:
                 print("ERROR: US07: Age is greater than or equal to 150 years for {}".format(row[0] + row[1]))
 
@@ -187,18 +186,20 @@ class HW4:
         self.c.close()
         self.conn.close()
 
+    def dates_within(self, dt1, dt2, limit, units):
+        """ return True if dt1 and dt2 are within limit units, where:
+        dt1, dt2 are instances of datetime
+        limit is a number
+        units is a string in ('days', 'months', 'years')
+        """
+
+        conversion = {'days': 1, 'months': 30.4, 'years': 365.25}
+        return (abs((dt1 - dt2).days) / conversion[units]) <= limit
+
     def get_age(self, birthday):
         today = datetime.today().date()
-        birt = datetime.strptime(birthday, '%Y-%m-%d').date()
-        if today.month > birt.month:
-            return today.year - birt.year
-        elif today.month == birt.month:
-            if today.day >= birt.day:
-                return today.year - birt.year
-            else:
-                return today.year - birt.year - 1
-        else:
-            return today.year - birt.year - 1
+        birth = datetime.strptime(birthday, '%Y-%m-%d').date()
+        return
 
     def print_info(self):
         indi_info = 'SELECT INDI, NAME, SEX, BIRT, DEAT, FAMC, FAMS FROM indi'
