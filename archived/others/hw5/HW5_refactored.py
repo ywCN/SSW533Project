@@ -52,12 +52,11 @@ class HW5:
         query = "select INDI, NAME, BIRT, fam.MARR from indi INNER JOIN fam ON INDI.INDI = FAM.HUSB OR INDI.INDI = " \
                 "FAM.WIFE "
         for row in self.query_info(query):
-            if row[3] != "NA":
-                birth = self.convert_to_datetime(row[2])
-                marriage = self.convert_to_datetime(row[3])
-                if birth > marriage:
-                    print("ERROR: US02: Birth {} occurs after marriage {} for {}"
-                          .format(birth, marriage, self.combine_id_name(row[0], row[1])))
+            birth = self.convert_to_datetime(row[2])
+            marriage = self.convert_to_datetime(row[3])
+            if marriage != "NA" and birth > marriage:
+                print("ERROR: US02: Birth {} occurs after marriage {} for {}"
+                      .format(birth, marriage, self.combine_id_name(row[0], row[1])))
 
     def birth_before_death(self):
         """
@@ -66,12 +65,11 @@ class HW5:
         """
         query = "select INDI, NAME, BIRT, DEAT from indi"
         for row in self.query_info(query):
-            if row[3] != "NA":
-                birth = self.convert_to_datetime(row[2])
-                death = self.convert_to_datetime(row[3])
-                if birth > death:
-                    print("ERROR: US03: Birth {} occurs after death {} for {}"
-                          .format(birth, death, self.combine_id_name(row[0], row[1])))
+            birth = self.convert_to_datetime(row[2])
+            death = self.convert_to_datetime(row[3])
+            if death != "NA" and birth > death:
+                print("ERROR: US03: Birth {} occurs after death {} for {}"
+                      .format(birth, death, self.combine_id_name(row[0], row[1])))
 
     def marriage_before_divorce(self):
         """
@@ -171,8 +169,8 @@ class HW5:
             res = "NA"
         return res
 
-    def combine_id_name(self, id, name):
-        return id + " " + name
+    def combine_id_name(self, indi, name):
+        return indi + " " + name
 
     def dates_within(self, date1, date2, limit, unit):
         """ return True if dt1 and dt2 are within limit units, where:
@@ -185,6 +183,12 @@ class HW5:
         if unit not in self.conversion:
             raise Exception("No such unit")
         return (abs((dt1 - dt2).days) / self.conversion[unit]) <= limit
+
+    def date_before(self, before, after):
+        dt1 = self.convert_to_datetime(before)
+        dt2 = self.convert_to_datetime(after)
+        if dt1 != "NA" and dt2 != "NA":
+            return dt1 < dt2
 
     def get_age(self, birthday, deathday):
         birth = self.convert_to_datetime(birthday)
