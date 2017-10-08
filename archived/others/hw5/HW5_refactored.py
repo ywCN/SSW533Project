@@ -34,19 +34,10 @@ class HW4:
                 "INDI.INDI = FAM.WIFE "
 
         for row in self.query_info(query):
-            birth = datetime.strptime(row[2], '%Y-%m-%d').date()
-            try:
-                death = datetime.strptime(row[3], '%Y-%m-%d').date()
-            except (TypeError, ValueError):
-                death = "NA"
-            try:
-                marriage = datetime.strptime(row[4], '%Y-%m-%d').date()
-            except (TypeError, ValueError):
-                marriage = "NA"
-            try:
-                divorce = datetime.strptime(row[5], '%Y-%m-%d').date()
-            except (TypeError, ValueError):
-                divorce = "NA"
+            birth = self.convert_to_datetime(row[2])
+            death = self.convert_to_datetime(row[3])
+            marriage = self.convert_to_datetime(row[4])
+            divorce = self.convert_to_datetime(row[5])
             dates = [birth, death, marriage, divorce]
             for date in dates:
                 if date != "NA" and date > self.today:
@@ -61,8 +52,8 @@ class HW4:
                 "FAM.WIFE "
         for row in self.query_info(query):
             if row[3] != "NA":
-                birth = datetime.strptime(row[2], '%Y-%m-%d').date()
-                marriage = datetime.strptime(row[3], '%Y-%m-%d').date()
+                birth = self.convert_to_datetime(row[2])
+                marriage = self.convert_to_datetime(row[3])
                 if birth > marriage:
                     print("ERROR: US02: Birth {} occurs after marriage {} for {}"
                           .format(birth, marriage, row[0] + row[1]))
@@ -152,11 +143,11 @@ class HW4:
         for row in self.query_info(query):
             birth = datetime.strptime(row[2], '%Y-%m-%d').date()
             try:
-                marry = datetime.strptime(row[3], '%Y-%m-%d').date()
+                marry = self.convert_to_datetime(row[3])
             except (TypeError, ValueError):
                 marry = "NA"
             try:
-                divorce = datetime.strptime(row[4], '%Y-%m-%d').date()
+                divorce = self.convert_to_datetime(row[4])
             except (TypeError, ValueError):
                 divorce = "NA"
             if marry != "NA" and birth < marry:
@@ -187,23 +178,31 @@ class HW4:
         self.c.close()
         self.conn.close()
 
-    def dates_within(self, dt1, dt2, limit, units):
+    def convert_to_datetime(self, date):
+        try:
+            res = datetime.strptime(date, '%Y-%m-%d').date()
+        except (TypeError, ValueError):
+            res = "NA"
+        return res
+
+    def dates_within(self, date1, date2, limit, unit):
         """ return True if dt1 and dt2 are within limit units, where:
         dt1, dt2 are instances of datetime
         limit is a number
         units is a string in ('days', 'months', 'years')
         """
-
-        conversion = {'days': 1, 'months': 30.4, 'years': 365.25}
-        return (abs((dt1 - dt2).days) / conversion[units]) <= limit
+        dt1 = self.convert_to_datetime(date1)
+        dt2 = self.convert_to_datetime(date2)
+        if unit not in self.conversion:
+            raise Exception("No such unit")
+        return (abs((dt1 - dt2).days) / self.conversion[unit]) <= limit
 
     def get_age(self, birthday, deathday):
-        today = datetime.today().date()
-        birth = datetime.strptime(birthday, '%Y-%m-%d').date()
+        birth = self.convert_to_datetime(birthday)
         if deathday != "NA":
-            death = datetime.strptime(deathday, '%Y-%m-%d').date()
+            death = self.convert_to_datetime(deathday)
             return round((death - birth).days / self.conversion["years"])
-        return round((today - birth).days / self.conversion["years"])
+        return round((self.today - birth).days / self.conversion["years"])
 
     def print_info(self):
         indi_info = 'SELECT INDI, NAME, SEX, BIRT, DEAT, FAMC, FAMS FROM indi'
@@ -249,13 +248,12 @@ class HW4:
         self.divorce_before_death()
         self.less_than_150_years_old()
         self.birth_before_marriage_of_parents()
+        self.disconnect()
 
 
 def main():
     demo = HW4()
     demo.run_sprint1()
-    demo.disconnect()
-
 
 if __name__ == '__main__':
     main()
