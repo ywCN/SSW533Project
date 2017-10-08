@@ -10,7 +10,7 @@ Please put the .db file in the same path of this .py file.
 '''
 
 
-class HW4:
+class HW5:
     def __init__(self):
         self.db = r'project.db'
         self.today = datetime.today().date()
@@ -41,7 +41,7 @@ class HW4:
             dates = [birth, death, marriage, divorce]
             for date in dates:
                 if date != "NA" and date > self.today:
-                    print("ERROR: US01: {} occurs after today {} for {}".format(date, self.today, row[0] + row[1]))
+                    print("ERROR: US01: {} occurs after today {} for {}".format(date, self.today, self.combine_id_name(row[0], row[1])))
 
     def birth_before_marriage(self):
         """
@@ -56,7 +56,7 @@ class HW4:
                 marriage = self.convert_to_datetime(row[3])
                 if birth > marriage:
                     print("ERROR: US02: Birth {} occurs after marriage {} for {}"
-                          .format(birth, marriage, row[0] + row[1]))
+                          .format(birth, marriage, self.combine_id_name(row[0], row[1])))
 
     def birth_before_death(self):
         """
@@ -66,10 +66,10 @@ class HW4:
         query = "select INDI, NAME, BIRT, DEAT from indi"
         for row in self.query_info(query):
             if row[3] != "NA":
-                birth = datetime.strptime(row[2], '%Y-%m-%d').date()
-                death = datetime.strptime(row[3], '%Y-%m-%d').date()
+                birth = self.convert_to_datetime(row[2])
+                death = self.convert_to_datetime(row[3])
                 if birth > death:
-                    print("ERROR: US03: Birth {} occurs after death {} for {}".format(birth, death, row[0] + row[1]))
+                    print("ERROR: US03: Birth {} occurs after death {} for {}".format(birth, death, self.combine_id_name(row[0], row[1])))
 
     def marriage_before_divorce(self):
         """
@@ -80,11 +80,11 @@ class HW4:
                 "ON INDI.INDI = FAM.HUSB OR INDI.INDI = FAM.WIFE"
         for row in self.query_info(query):
             if row[3] != "NA":
-                marry = datetime.strptime(row[2], '%Y-%m-%d').date()
-                divorce = datetime.strptime(row[3], '%Y-%m-%d').date()
+                marry = self.convert_to_datetime(row[2])
+                divorce = self.convert_to_datetime(row[3])
                 if marry > divorce:
                     print("ERROR: US04: Marriage {} occurs after divorce {} for {}"
-                          .format(marry, divorce, row[0] + row[1]))
+                          .format(marry, divorce, self.combine_id_name(row[0], row[1])))
 
     def marriage_before_death(self):
         """
@@ -96,10 +96,10 @@ class HW4:
 
         for row in self.query_info(query):
             if row[2] != "NA":
-                death = datetime.strptime(row[2], '%Y-%m-%d').date()
-                marry = datetime.strptime(row[3], '%Y-%m-%d').date()
+                death = self.convert_to_datetime(row[2])
+                marry = self.convert_to_datetime(row[3])
                 if marry > death:  # cannot marry after death
-                    print("ERROR: US05: Marriage {} occurs after death {} for {}".format(marry, death, row[0] + row[1]))
+                    print("ERROR: US05: Marriage {} occurs after death {} for {}".format(marry, death, self.combine_id_name(row[0], row[1])))
 
     def divorce_before_death(self):
         """
@@ -111,11 +111,11 @@ class HW4:
 
         for row in self.query_info(query):
             if row[2] != "NA" and row[3] != "NA":
-                death = datetime.strptime(row[2], '%Y-%m-%d').date()
-                divorce = datetime.strptime(row[3], '%Y-%m-%d').date()
+                death = self.convert_to_datetime(row[2])
+                divorce = self.convert_to_datetime(row[3])
                 if divorce > death:  # cannot divorce after death
                     print("ERROR: US06: Divorce {} occurs after death {} for {}"
-                          .format(divorce, death, row[0] + row[1]))
+                          .format(divorce, death, self.combine_id_name(row[0], row[1])))
 
     def less_than_150_years_old(self):
         """
@@ -124,14 +124,14 @@ class HW4:
         """
         query = "select INDI, NAME, BIRT, DEAT from indi"
         for row in self.query_info(query):
-            birth = datetime.strptime(row[2], '%Y-%m-%d').date()
+            birth = self.convert_to_datetime(row[2])
             if row[3] != "NA":
-                death = datetime.strptime(row[3], '%Y-%m-%d').date()
+                death = self.convert_to_datetime(row[3])
                 age = death.year - birth.year
             else:
                 age = self.today.year - birth.year
             if age >= 150:
-                print("ERROR: US07: Age is greater than or equal to 150 years for {}".format(row[0] + row[1]))
+                print("ERROR: US07: Age is greater than or equal to 150 years for {}".format(self.combine_id_name(row[0], row[1])))
 
     def birth_before_marriage_of_parents(self):
         """
@@ -141,27 +141,21 @@ class HW4:
         query = "select indi.INDI, indi.NAME, indi.BIRT, fam.MARR, fam.DIV from indi left join fam on indi.FAMC = " \
                 "fam.FAM "
         for row in self.query_info(query):
-            birth = datetime.strptime(row[2], '%Y-%m-%d').date()
-            try:
-                marry = self.convert_to_datetime(row[3])
-            except (TypeError, ValueError):
-                marry = "NA"
-            try:
-                divorce = self.convert_to_datetime(row[4])
-            except (TypeError, ValueError):
-                divorce = "NA"
+            birth = self.convert_to_datetime(row[2])
+            marry = self.convert_to_datetime(row[3])
+            divorce = self.convert_to_datetime(row[4])
             if marry != "NA" and birth < marry:
-                print("ERROR: US08: Parent marriage {} after birth {} of {}".format(marry, birth, row[0] + row[1]))
+                print("ERROR: US08: Parent marriage {} after birth {} of {}".format(marry, birth, self.combine_id_name(row[0], row[1])))
             if divorce != "NA":
                 if divorce.year == birth.year:
                     if birth.month - divorce.month > 9:
                         print("ERROR: {} was born {} after 9 months of divorce {}"
-                              .format(row[0] + row[1], birth, divorce))
+                              .format(self.combine_id_name(row[0], row[1]), birth, divorce))
                 if divorce.year == birth.year - 1:
                     months = birth.month + 12 - divorce.month
                     if months > 9:
                         print("ERROR: {} was born {} after 9 months of divorce {}"
-                              .format(row[0] + row[1], birth, divorce))
+                              .format(self.combine_id_name(row[0], row[1]), birth, divorce))
 
     def query_info(self, query):
         """
@@ -184,6 +178,9 @@ class HW4:
         except (TypeError, ValueError):
             res = "NA"
         return res
+
+    def combine_id_name(self, id, name):
+        return id + " " + name
 
     def dates_within(self, date1, date2, limit, unit):
         """ return True if dt1 and dt2 are within limit units, where:
@@ -252,8 +249,9 @@ class HW4:
 
 
 def main():
-    demo = HW4()
+    demo = HW5()
     demo.run_sprint1()
+
 
 if __name__ == '__main__':
     main()
