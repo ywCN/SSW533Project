@@ -190,18 +190,12 @@ class HW4:
         self.c.close()
         self.conn.close()
 
-    def get_age(self, birthday):
+    def get_age(self, birthday, deathday):
         today = datetime.today().date()
-        birt = datetime.strptime(birthday, '%Y-%m-%d').date()
-        if today.month > birt.month:
-            return today.year - birt.year
-        elif today.month == birt.month:
-            if today.day >= birt.day:
-                return today.year - birt.year
-            else:
-                return today.year - birt.year - 1
-        else:
-            return today.year - birt.year - 1
+        birth = datetime.strptime(birthday, '%Y-%m-%d').date()
+        if deathday != "NA":
+            return (datetime.strptime(deathday, '%Y-%m-%d').date() - birth).days / 365.25
+        return (today - birth).days / 365.25
 
     def print_info(self):
         indi_info = 'SELECT INDI, NAME, SEX, BIRT, DEAT, FAMC, FAMS FROM indi'
@@ -212,7 +206,7 @@ class HW4:
         name_map = {}
 
         for row in self.query_info(indi_info):
-            age = self.get_age(row[3])
+            age = round(self.get_age(row[3], row[4]))
 
             if row[4] == "NA":
                 alive = True
