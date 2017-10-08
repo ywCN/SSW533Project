@@ -34,13 +34,15 @@ class HW5:
                 "INDI.INDI = FAM.WIFE "
 
         for row in self.query_info(query):
-            birth = self.convert_to_datetime(row[2])
-            death = self.convert_to_datetime(row[3])
-            marriage = self.convert_to_datetime(row[4])
-            divorce = self.convert_to_datetime(row[5])
-            dates = [birth, death, marriage, divorce]
+            # birth = self.convert_to_datetime(row[2])
+            # death = self.convert_to_datetime(row[3])
+            # marriage = self.convert_to_datetime(row[4])
+            # divorce = self.convert_to_datetime(row[5])
+            # dates = [birth, death, marriage, divorce]
+            dates = [row[2], row[3], row[4], row[5]]
             for date in dates:
-                if date != "NA" and date > self.today:
+                # if date != "NA" and date > self.today:
+                if not self.before_today(date):
                     print("ERROR: US01: {} occurs after today {} for {}"
                           .format(date, self.today, self.combine_id_name(row[0], row[1])))
 
@@ -52,9 +54,9 @@ class HW5:
         query = "select INDI, NAME, BIRT, fam.MARR from indi INNER JOIN fam ON INDI.INDI = FAM.HUSB OR INDI.INDI = " \
                 "FAM.WIFE "
         for row in self.query_info(query):
-            birth = self.convert_to_datetime(row[2])
-            marriage = self.convert_to_datetime(row[3])
-            if marriage != "NA" and birth > marriage:
+            birth = row[2]
+            marriage = row[3]
+            if not self.date_before(birth, marriage):
                 print("ERROR: US02: Birth {} occurs after marriage {} for {}"
                       .format(birth, marriage, self.combine_id_name(row[0], row[1])))
 
@@ -173,10 +175,13 @@ class HW5:
         return indi + " " + name
 
     def dates_within(self, date1, date2, limit, unit):
-        """ return True if dt1 and dt2 are within limit units, where:
-        dt1, dt2 are instances of datetime
-        limit is a number
-        units is a string in ('days', 'months', 'years')
+        """
+        check the interval between two dates
+        :param date1: first date in '%Y-%m-%d' format
+        :param date2: second date in '%Y-%m-%d' format
+        :param limit: int
+        :param unit: str in ('days', 'months', 'years')
+        :return: bool
         """
         dt1 = self.convert_to_datetime(date1)
         dt2 = self.convert_to_datetime(date2)
@@ -185,10 +190,23 @@ class HW5:
         return (abs((dt1 - dt2).days) / self.conversion[unit]) <= limit
 
     def date_before(self, before, after):
+        """
+        check if before date happens after after date
+        :param before: the date should happen first
+        :param after: the date should happen after
+        :return: bool
+        """
         dt1 = self.convert_to_datetime(before)
         dt2 = self.convert_to_datetime(after)
-        if dt1 != "NA" and dt2 != "NA":
-            return dt1 < dt2
+        if dt1 == "NA" or dt2 == "NA":
+            return True
+        return dt1 < dt2  # after should be greater than before
+
+    def before_today(self, date):
+        dt = self.convert_to_datetime(date)
+        if dt == "NA":
+            return True
+        return dt < self.today
 
     def get_age(self, birthday, deathday):
         birth = self.convert_to_datetime(birthday)
