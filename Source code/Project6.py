@@ -148,6 +148,13 @@ class Project6:
         :return: bool
         """
         status = True
+        query1 = 'select indi.INDI, indi.SEX, indi.DEAT from indi where indi.DEAT != "NA"'  # dead people
+        deads = self.query_info(query1)
+        for dead in deads:
+            death = dead[2]
+            query2 = 'select fam.CHIL from fam where fam.HUSB == "{}"'.format(dead[0])
+            print(self.query_info(query2))
+
 
         return status
 
@@ -303,7 +310,7 @@ class Project6:
         t_fam = PrettyTable(
             ["ID", "Married", "Divorced", "Husband ID", "Husband Name", "Wife ID", "Wife Name", "Children"])
         name_map = {}
-
+        # TODO: query all info directly do not use hash table
         for row in self.query_info(indi_info):
             age = round(self.get_age(row[3], row[4]))
 
@@ -320,7 +327,9 @@ class Project6:
 
         for row in self.query_info(fam_info):
             lst = list(row)
+            print('before', lst)
             lst.insert(4, name_map[row[3]])
+            print('after', lst)
             lst.insert(6, name_map[row[4]])
             t_fam.add_row(lst)
 
@@ -331,7 +340,6 @@ class Project6:
         print()
 
     def run_sprint1(self):
-        self.print_info()
         self.dates_before_current_date()
         self.birth_before_marriage()
         self.birth_before_death()
@@ -355,46 +363,46 @@ class Project6:
         self.disconnect()
 
 
-class TestSprint2(unittest.TestCase):
-    def test_birth_before_death_of_parents(self):
-        test = Project6()
-        self.assertFalse(test.birth_before_death_of_parents())
-
-    def test_parent_not_too_old(self):
-        test = Project6()
-        self.assertFalse(test.parent_not_too_old)
-
-    def test_siblings_spacing(self):
-        test = Project6()
-        self.assertFalse(test.siblings_spacing)
-
-    def test_multiple_births_less_than_5(self):
-        test = Project6()
-        self.assertFalse(test.multiple_births_less_than_5)
-
-    def test_fewer_than_15_siblings(self):
-        test = Project6()
-        self.assertFalse(test.fewer_than_15_siblings)
-
-    def test_male_last_names(self):
-        test = Project6()
-        self.assertFalse(test.male_last_names)
-
-    def test_no_marriage_to_descendants(self):
-        test = Project6()
-        self.assertFalse(test.no_marriage_to_descendants)
-
-    def test_siblings_should_not_marry(self):
-        test = Project6()
-        self.assertFalse(test.siblings_should_not_marry)
+# class TestSprint2(unittest.TestCase):
+#     def test_birth_before_death_of_parents(self):
+#         test = Project6()
+#         self.assertFalse(test.birth_before_death_of_parents())
+#
+#     def test_parent_not_too_old(self):
+#         test = Project6()
+#         self.assertFalse(test.parent_not_too_old)
+#
+#     def test_siblings_spacing(self):
+#         test = Project6()
+#         self.assertFalse(test.siblings_spacing)
+#
+#     def test_multiple_births_less_than_5(self):
+#         test = Project6()
+#         self.assertFalse(test.multiple_births_less_than_5)
+#
+#     def test_fewer_than_15_siblings(self):
+#         test = Project6()
+#         self.assertFalse(test.fewer_than_15_siblings)
+#
+#     def test_male_last_names(self):
+#         test = Project6()
+#         self.assertFalse(test.male_last_names)
+#
+#     def test_no_marriage_to_descendants(self):
+#         test = Project6()
+#         self.assertFalse(test.no_marriage_to_descendants)
+#
+#     def test_siblings_should_not_marry(self):
+#         test = Project6()
+#         self.assertFalse(test.siblings_should_not_marry)
 
 
 def main():
     demo = Project6()
     # demo.run_sprint1()
-    demo.run_sprint1()
+    demo.run_sprint2()
 
 
 if __name__ == '__main__':
     main()
-    unittest.main()
+    # unittest.main()
