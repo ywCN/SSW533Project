@@ -156,6 +156,7 @@ class Project6:
             print(self.query_info(query2))
 
 
+
         return status
 
     def parent_not_too_old(self):
