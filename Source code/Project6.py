@@ -310,7 +310,6 @@ class Project6:
         t_fam = PrettyTable(
             ["ID", "Married", "Divorced", "Husband ID", "Husband Name", "Wife ID", "Wife Name", "Children"])
         name_map = {}
-        # TODO: query all info directly do not use hash table
         for row in self.query_info(indi_info):
             age = round(self.get_age(row[3], row[4]))
 
@@ -318,8 +317,11 @@ class Project6:
                 alive = True
             else:
                 alive = False
-
-            name_map[row[0]] = row[1]
+            print(name_map)
+            if row[0] in name_map:
+                pass
+            else:
+                name_map[row[0]] = row[1]
             lst = list(row)
             lst.insert(4, age)
             lst.insert(5, alive)
@@ -327,9 +329,9 @@ class Project6:
 
         for row in self.query_info(fam_info):
             lst = list(row)
-            print('before', lst)
+            # print('before', lst)
             lst.insert(4, name_map[row[3]])
-            print('after', lst)
+            # print('after', lst)
             lst.insert(6, name_map[row[4]])
             t_fam.add_row(lst)
 
