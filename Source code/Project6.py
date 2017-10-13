@@ -182,6 +182,16 @@ class Project6:
         :return: bool
         """
         status = True
+        query1 = 'select indi.INDI, indi.BIRT, indi.FAMC from indi where indi.FAMC != "NA"'
+        children = self.query_info(query1)
+        for child in children:
+            birth = child[1]
+            # print(child)
+            query2 = 'select fam.HUSB, fam.WIFE from fam where fam.FAM == "{}"'.format(child[2])
+            parents = self.query_info(query2)  # parent ids (male, female)
+            father_birth = self.query_info('select indi.BIRT from indi where indi.INDI == "{}"'.format(parents[0][0]))
+            mother_birth = self.query_info('select indi.BIRT from indi where indi.INDI == "{}"'.format(parents[0][1]))
+            print(father_birth, mother_birth)
 
         return status
 
