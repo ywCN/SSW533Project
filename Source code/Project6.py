@@ -354,31 +354,40 @@ class Project6:
         self.siblings_should_not_marry()
         self.disconnect()
 
+
 class TestSprint2(unittest.TestCase):
-    # TODO: test returned boolean value
     def test_birth_before_death_of_parents(self):
-        pass
+        test = Project6()
+        self.assertFalse(test.birth_before_death_of_parents())
 
     def test_parent_not_too_old(self):
-        pass
+        test = Project6()
+        self.assertFalse(test.parent_not_too_old)
 
     def test_siblings_spacing(self):
-        pass
+        test = Project6()
+        self.assertFalse(test.siblings_spacing)
 
     def test_multiple_births_less_than_5(self):
-        pass
+        test = Project6()
+        self.assertFalse(test.multiple_births_less_than_5)
 
     def test_fewer_than_15_siblings(self):
-        pass
+        test = Project6()
+        self.assertFalse(test.fewer_than_15_siblings)
 
     def test_male_last_names(self):
-        pass
+        test = Project6()
+        self.assertFalse(test.male_last_names)
 
     def test_no_marriage_to_descendants(self):
-        pass
+        test = Project6()
+        self.assertFalse(test.no_marriage_to_descendants)
 
     def test_siblings_should_not_marry(self):
-        pass
+        test = Project6()
+        self.assertFalse(test.siblings_should_not_marry)
+
 
 def main():
     demo = Project6()
