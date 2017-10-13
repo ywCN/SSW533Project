@@ -1,0 +1,358 @@
+import sqlite3
+import os
+import unittest
+from datetime import datetime
+from prettytable import PrettyTable
+
+
+'''
+Our team is using database solution.
+Please put the .db file in the same path of this .py file.
+'''
+
+
+class HW5:
+    def __init__(self):
+        self.db = r'project.db'
+        self.today = datetime.today().date()
+        self.conversion = {'days': 1, 'months': 30.4, 'years': 365.25}
+        if os.path.isfile(self.db):
+            self.conn = sqlite3.connect(self.db)
+            self.c = self.conn.cursor()
+        else:
+            print("\n"
+                  "--------------------------------------------------------------------\n"
+                  "| Please put the 'project.db' in the same path of this python file!|\n"
+                  "--------------------------------------------------------------------")
+            exit()
+
+    def dates_before_current_date(self):
+        """
+        US01 - Dates before current date
+        :rtype: None
+        """
+        query = "select INDI, NAME, BIRT, DEAT, fam.MARR, fam.DIV from indi LEFT JOIN fam ON INDI.INDI = FAM.HUSB OR " \
+                "INDI.INDI = FAM.WIFE "
+
+        for row in self.query_info(query):
+            dates = [row[2], row[3], row[4], row[5]]
+            for date in dates:
+                if not self.before_today(date):
+                    print("ERROR: US01: {} occurs after today {} for {}"
+                          .format(date, self.today, self.combine_id_name(row[0], row[1])))
+
+    def birth_before_marriage(self):
+        """
+        US02 - Birth before marriage
+        :rtype: None
+        """
+        query = "select INDI, NAME, BIRT, fam.MARR from indi INNER JOIN fam ON INDI.INDI = FAM.HUSB OR INDI.INDI = " \
+                "FAM.WIFE "
+        for row in self.query_info(query):
+            birth = row[2]
+            marriage = row[3]
+            if not self.date_before(birth, marriage):
+                print("ERROR: US02: Birth {} occurs after marriage {} for {}"
+                      .format(birth, marriage, self.combine_id_name(row[0], row[1])))
+
+    def birth_before_death(self):
+        """
+        US03 - Birth before death
+        :rtype: None
+        """
+        query = "select INDI, NAME, BIRT, DEAT from indi"
+        for row in self.query_info(query):
+            birth = row[2]
+            death = row[3]
+            if not self.date_before(birth, death):
+                print("ERROR: US03: Birth {} occurs after death {} for {}"
+                      .format(birth, death, self.combine_id_name(row[0], row[1])))
+
+    def marriage_before_divorce(self):
+        """
+        US04 - Marriage before divorce
+        :rtype: None
+        """
+        query = "select INDI, NAME, fam.MARR, fam.DIV from indi INNER JOIN fam " \
+                "ON INDI.INDI = FAM.HUSB OR INDI.INDI = FAM.WIFE"
+        for row in self.query_info(query):
+            marry = row[2]
+            divorce = row[3]
+            if not self.date_before(marry, divorce):
+                print("ERROR: US04: Marriage {} occurs after divorce {} for {}"
+                      .format(marry, divorce, self.combine_id_name(row[0], row[1])))
+
+    def marriage_before_death(self):
+        """
+        US05 - Marriage before death
+        :rtype: None
+        """
+        query = "select INDI, NAME, DEAT, fam.MARR from indi INNER JOIN fam " \
+                "ON INDI.INDI = FAM.HUSB OR INDI.INDI = FAM.WIFE"
+
+        for row in self.query_info(query):
+            death = row[2]
+            marry = row[3]
+            if not self.date_before(marry, death):
+                print("ERROR: US05: Marriage {} occurs after death {} for {}"
+                      .format(marry, death, self.combine_id_name(row[0], row[1])))
+
+    def divorce_before_death(self):
+        """
+        US06 - Divorce before death
+        :rtype: None
+        """
+        query = "select INDI, NAME, DEAT, fam.DIV from indi INNER JOIN fam " \
+                "ON INDI.INDI = FAM.HUSB OR INDI.INDI = FAM.WIFE"
+
+        for row in self.query_info(query):
+            death = row[2]
+            divorce = row[3]
+            if not self.date_before(divorce, death):
+                print("ERROR: US06: Divorce {} occurs after death {} for {}"
+                      .format(divorce, death, self.combine_id_name(row[0], row[1])))
+
+    def less_than_150_years_old(self):
+        """
+        US07 - Less then 150 years old
+        :rtype: None
+        """
+        query = "select INDI, NAME, BIRT, DEAT from indi"
+        for row in self.query_info(query):
+            if self.get_age(row[2], row[3]) >= 150:
+                print("ERROR: US07: Age is greater than or equal to 150 years for {}"
+                      .format(self.combine_id_name(row[0], row[1])))
+
+    def birth_before_marriage_of_parents(self):
+        """
+        US08 - Birth before marriage of parents
+        :rtype: None
+        """
+        query = "select indi.INDI, indi.NAME, indi.BIRT, fam.MARR, fam.DIV from indi left join fam on indi.FAMC = " \
+                "fam.FAM "
+        for row in self.query_info(query):
+            birth = row[2]
+            marry = row[3]
+            divorce = row[4]
+            # if marry != "NA" and birth < marry:
+            if not self.date_before(marry, birth):
+                print("ERROR: US08: Parent marriage {} after birth {} of {}"
+                      .format(marry, birth, self.combine_id_name(row[0], row[1])))
+            if self.date_before(divorce, birth) and not self.dates_within(divorce, birth, 9, "months"):
+                print("ERROR: US08: {} was born {} after 9 months of parent divorce {}".format(
+                    self.combine_id_name(row[0], row[1]), birth, divorce))
+
+    def birth_before_death_of_parents(self):
+        """
+        US09
+        Child should be born before death of mother and before 9 months after death of father
+        :return: bool
+        """
+        status = True
+
+        return status
+
+    def parent_not_too_old(self):
+        """
+        US12
+        Mother should be less than 60 years older than her children and
+        father should be less than 80 years older than his children
+        :return: bool
+        """
+        status = True
+
+        return status
+
+    def siblings_spacing(self):
+        """
+        US13
+        Birth dates of siblings should be more than 8 months apart or less than 2 days apart
+        (twins may be born one day apart, e.g. 11:59 PM and 12:02 AM the following calendar day)
+        :return: bool
+        """
+        status = True
+
+        return status
+
+    def multiple_births_less_than_5(self):
+        """
+        US14
+        No more than five siblings should be born at the same time
+        :return: bool
+        """
+        status = True
+
+        return status
+
+    def fewer_than_15_siblings(self):
+        """
+        US15
+        There should be fewer than 15 siblings in a family
+        :return: bool
+        """
+        status = True
+
+        return status
+
+    def male_last_names(self):
+        """
+        US16
+        All male members of a family should have the same last name
+        :return: bool
+        """
+        status = True
+
+        return status
+
+    def no_marriage_to_desendants(self):
+        """
+        US17
+        Parents should not marry any of their descendants
+        :return: bool
+        """
+        status = True
+
+        return status
+
+    def siblings_should_not_marry(self):
+        """
+        US18
+        Siblings should not marry one another
+        :return: bool
+        """
+        status = True
+
+        return status
+
+    def query_info(self, query):
+        """
+        :type query: str
+        :rtype: List[List[str]]
+        """
+        self.c.execute("%s" % query)
+        return self.c.fetchall()
+
+    def disconnect(self):
+        """
+        :return: null
+        """
+        self.c.close()
+        self.conn.close()
+
+    def convert_to_datetime(self, date):
+        """
+        :param date: str
+        :return: datatime type or str "NA"
+        """
+        try:
+            res = datetime.strptime(date, '%Y-%m-%d').date()
+        except (TypeError, ValueError):
+            res = "NA"
+        return res
+
+    def combine_id_name(self, indi, name):
+        return indi + " " + name
+
+    def dates_within(self, date1, date2, limit, unit):
+        """
+        check the interval between two dates
+        :param date1: first date in '%Y-%m-%d' format
+        :param date2: second date in '%Y-%m-%d' format
+        :param limit: int
+        :param unit: str in ('days', 'months', 'years')
+        :return: bool
+        """
+        dt1 = self.convert_to_datetime(date1)
+        dt2 = self.convert_to_datetime(date2)
+        if dt1 == "NA" or dt2 == "NA":
+            return True
+        if unit not in self.conversion:
+            raise Exception("No such unit")
+        return (abs((dt1 - dt2).days) / self.conversion[unit]) <= limit
+
+    def date_before(self, before, after):
+        """
+        before happens first
+        after happens later
+        :param before: the date should happen first
+        :param after: the date should happen after
+        :return: bool
+        """
+        dt1 = self.convert_to_datetime(before)
+        dt2 = self.convert_to_datetime(after)
+        if dt1 == "NA" or dt2 == "NA":
+            return True
+        return dt1 < dt2  # after should be greater than before
+
+    def before_today(self, date):
+        dt = self.convert_to_datetime(date)
+        if dt == "NA":
+            return True
+        return dt < self.today
+
+    def get_age(self, birthday, deathday):
+        birth = self.convert_to_datetime(birthday)
+        death = self.convert_to_datetime(deathday)
+        if death != "NA":
+            return (death - birth).days / self.conversion["years"]
+        return (self.today - birth).days / self.conversion["years"]
+
+    def print_info(self):
+        indi_info = 'SELECT INDI, NAME, SEX, BIRT, DEAT, FAMC, FAMS FROM indi'
+        fam_info = 'SELECT FAM, MARR, DIV, HUSB, WIFE, CHIL FROM fam'
+        t_indi = PrettyTable(["ID", "Name", "Gender", "Birthday", "Age", "Alive", "Death", "Child", "Spouse"])
+        t_fam = PrettyTable(
+            ["ID", "Married", "Divorced", "Husband ID", "Husband Name", "Wife ID", "Wife Name", "Children"])
+        name_map = {}
+
+        for row in self.query_info(indi_info):
+            age = round(self.get_age(row[3], row[4]))
+
+            if row[4] == "NA":
+                alive = True
+            else:
+                alive = False
+
+            name_map[row[0]] = row[1]
+            lst = list(row)
+            lst.insert(4, age)
+            lst.insert(5, alive)
+            t_indi.add_row(lst)
+
+        for row in self.query_info(fam_info):
+            lst = list(row)
+            lst.insert(4, name_map[row[3]])
+            lst.insert(6, name_map[row[4]])
+            t_fam.add_row(lst)
+
+        print("People")
+        print(t_indi)
+        print("Families")
+        print(t_fam)
+        print()
+
+    def run_sprint1(self):
+        self.print_info()
+        self.dates_before_current_date()
+        self.birth_before_marriage()
+        self.birth_before_death()
+        self.marriage_before_divorce()
+        self.marriage_before_death()
+        self.divorce_before_death()
+        self.less_than_150_years_old()
+        self.birth_before_marriage_of_parents()
+        self.disconnect()
+
+class TestSprint2(unittest.TestCase):
+    # TODO: Add return value in methods for sprint2 for testing
+    def test_marriage_before_death(self):
+        pass
+
+def main():
+    demo = HW5()
+    demo.run_sprint1()
+
+
+if __name__ == '__main__':
+    main()
+    unittest.main()
