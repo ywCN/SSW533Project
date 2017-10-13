@@ -312,12 +312,10 @@ class Project6:
         name_map = {}
         for row in self.query_info(indi_info):
             age = round(self.get_age(row[3], row[4]))
-
             if row[4] == "NA":
                 alive = True
             else:
                 alive = False
-            print(name_map)
             if row[0] in name_map:
                 pass
             else:
@@ -329,9 +327,7 @@ class Project6:
 
         for row in self.query_info(fam_info):
             lst = list(row)
-            # print('before', lst)
             lst.insert(4, name_map[row[3]])
-            # print('after', lst)
             lst.insert(6, name_map[row[4]])
             t_fam.add_row(lst)
 
