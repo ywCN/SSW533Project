@@ -148,16 +148,31 @@ class Project6:
         :return: bool
         """
         status = True
-        query1 = 'select indi.INDI, indi.SEX, indi.DEAT from indi where indi.DEAT != "NA"'  # dead people
+        query1 = 'select indi.INDI, indi.SEX, indi.DEAT, indi.NAME from indi where indi.DEAT != "NA"'  # dead people
         deads = self.query_info(query1)
-        for dead in deads:
-            death = dead[2]
-            query2 = 'select fam.CHIL from fam where fam.HUSB == "{}"'.format(dead[0])
-            children = self.query_info(query2)
-            print(children)
-            # for child in children:
+        for person in deads:
+            death = person[2]
+            if person[1] == 'M':
+                query2 = 'select fam.CHIL from fam where fam.HUSB == "{}"'.format(person[0])  # list of children
+                children = self.query_info(query2)
+                for child in children[0]:
+                    query3 = 'select indi.BIRT, indi.NAME from indi where indi.INDI == "{}"'.format(child)  # birthday
+                    data = self.query_info(query3)
+                    birth = data[0][1]
+                    name = data[0][1]
+                    if self.date_before(death, birth) and self.dates_within(death, birth, 9, 'months'):
+                        status = False
+                        print("ERROR: US09: {} is born 9 months after death of father {}.".format(birth, name))
 
-
+            else:
+                query2 = 'select fam.CHIL from fam where fam.WIFT == "{}"'.format(person[0])
+                children = self.query_info(query2)
+                for child in children[0]:
+                    query3 = 'select indi.BIRT, indi.NAME from indi where indi.INDI == "{}"'.format(child)  # birthday
+                    birth = self.query_info(query3)
+                    if not self.date_before(death, birth):
+                        status = False
+                        print("ERROR: US09: {} is born after death of mother {}.".format(birth[1], person[3]))
 
 
         return status
@@ -361,7 +376,7 @@ class Project6:
         self.multiple_births_less_than_5()
         self.fewer_than_15_siblings()
         self.male_last_names()
-        self.no_marriage_to_descendants()
+        self.marriage_after_14()
         self.siblings_should_not_marry()
         self.disconnect()
 
@@ -391,9 +406,9 @@ class Project6:
 #         test = Project6()
 #         self.assertFalse(test.male_last_names)
 #
-#     def test_no_marriage_to_descendants(self):
+#     def test_marriage_after_14(self):
 #         test = Project6()
-#         self.assertFalse(test.no_marriage_to_descendants)
+#         self.assertFalse(test.marriage_after_14())
 #
 #     def test_siblings_should_not_marry(self):
 #         test = Project6()
