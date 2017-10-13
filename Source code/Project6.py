@@ -182,16 +182,20 @@ class Project6:
         :return: bool
         """
         status = True
-        query1 = 'select indi.INDI, indi.BIRT, indi.FAMC from indi where indi.FAMC != "NA"'
+        query1 = 'select indi.INDI, indi.BIRT, indi.FAMC, indi.NAME from indi where indi.FAMC != "NA"'
         children = self.query_info(query1)
         for child in children:
             birth = child[1]
-            # print(child)
             query2 = 'select fam.HUSB, fam.WIFE from fam where fam.FAM == "{}"'.format(child[2])
             parents = self.query_info(query2)  # parent ids (male, female)
-            father_birth = self.query_info('select indi.BIRT from indi where indi.INDI == "{}"'.format(parents[0][0]))
-            mother_birth = self.query_info('select indi.BIRT from indi where indi.INDI == "{}"'.format(parents[0][1]))
-            print(father_birth, mother_birth)
+            father_birth = self.query_info('select indi.BIRT from indi where indi.INDI == "{}"'.format(parents[0][0]))[0][0]
+            mother_birth = self.query_info('select indi.BIRT from indi where indi.INDI == "{}"'.format(parents[0][1]))[0][0]
+            if self.date_before(mother_birth, birth) and not self.dates_within(mother_birth, birth, 60, 'years'):
+                status = False
+                print("ERROR: US12: Mother is not less than 60 years older than her children {}.".format(child[3]))
+            if self.date_before(father_birth, birth) and not self.dates_within(father_birth, birth, 80, 'years'):
+                status = False
+                print("ERROR: US12: Father is not less than 80 years older than his children {}.".format(child[3]))
 
         return status
 
@@ -378,7 +382,7 @@ class Project6:
     def run_sprint2(self):
         self.print_info()
         # self.birth_before_death_of_parents()  # test case will run the method
-        self.parent_not_too_old()
+        # self.parent_not_too_old()
         self.siblings_spacing()
         self.multiple_births_less_than_5()
         self.fewer_than_15_siblings()
@@ -392,26 +396,26 @@ class TestSprint2(unittest.TestCase):
     def test_birth_before_death_of_parents(self):
         test = Project6()
         self.assertFalse(test.birth_before_death_of_parents())
-#
-#     def test_parent_not_too_old(self):
-#         test = Project6()
-#         self.assertFalse(test.parent_not_too_old)
+
+    def test_parent_not_too_old(self):
+        test = Project6()
+        self.assertFalse(test.parent_not_too_old())
 #
 #     def test_siblings_spacing(self):
 #         test = Project6()
-#         self.assertFalse(test.siblings_spacing)
+#         self.assertFalse(test.siblings_spacing())
 #
 #     def test_multiple_births_less_than_5(self):
 #         test = Project6()
-#         self.assertFalse(test.multiple_births_less_than_5)
+#         self.assertFalse(test.multiple_births_less_than_5())
 #
 #     def test_fewer_than_15_siblings(self):
 #         test = Project6()
-#         self.assertFalse(test.fewer_than_15_siblings)
+#         self.assertFalse(test.fewer_than_15_siblings())
 #
 #     def test_male_last_names(self):
 #         test = Project6()
-#         self.assertFalse(test.male_last_names)
+#         self.assertFalse(test.male_last_names())
 #
 #     def test_marriage_after_14(self):
 #         test = Project6()
@@ -419,7 +423,7 @@ class TestSprint2(unittest.TestCase):
 #
 #     def test_siblings_should_not_marry(self):
 #         test = Project6()
-#         self.assertFalse(test.siblings_should_not_marry)
+#         self.assertFalse(test.siblings_should_not_marry())
 
 
 def main():
