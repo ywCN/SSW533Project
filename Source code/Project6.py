@@ -163,9 +163,8 @@ class Project6:
                     if self.date_before(death, birth) and self.dates_within(death, birth, 9, 'months'):
                         status = False
                         print("ERROR: US09: {} is born 9 months after death of father {}.".format(birth, name))
-
-            else:
-                query2 = 'select fam.CHIL from fam where fam.WIFT == "{}"'.format(person[0])
+            if person[1] == 'F':
+                query2 = 'select fam.CHIL from fam where fam.WIFE == "{}"'.format(person[0])
                 children = self.query_info(query2)
                 for child in children[0]:
                     query3 = 'select indi.BIRT, indi.NAME from indi where indi.INDI == "{}"'.format(child)  # birthday
@@ -173,8 +172,6 @@ class Project6:
                     if not self.date_before(death, birth):
                         status = False
                         print("ERROR: US09: {} is born after death of mother {}.".format(birth[1], person[3]))
-
-
         return status
 
     def parent_not_too_old(self):
@@ -370,7 +367,7 @@ class Project6:
 
     def run_sprint2(self):
         self.print_info()
-        self.birth_before_death_of_parents()
+        # self.birth_before_death_of_parents()  # test case will run the method
         self.parent_not_too_old()
         self.siblings_spacing()
         self.multiple_births_less_than_5()
@@ -381,10 +378,10 @@ class Project6:
         self.disconnect()
 
 
-# class TestSprint2(unittest.TestCase):
-#     def test_birth_before_death_of_parents(self):
-#         test = Project6()
-#         self.assertFalse(test.birth_before_death_of_parents())
+class TestSprint2(unittest.TestCase):
+    def test_birth_before_death_of_parents(self):
+        test = Project6()
+        self.assertFalse(test.birth_before_death_of_parents())
 #
 #     def test_parent_not_too_old(self):
 #         test = Project6()
@@ -423,4 +420,4 @@ def main():
 
 if __name__ == '__main__':
     main()
-    # unittest.main()
+    unittest.main()
