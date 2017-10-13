@@ -11,7 +11,7 @@ Please put the .db file in the same path of this .py file.
 '''
 
 
-class HW5:
+class Project6:
     def __init__(self):
         self.db = r'project.db'
         self.today = datetime.today().date()
@@ -134,7 +134,6 @@ class HW5:
             birth = row[2]
             marry = row[3]
             divorce = row[4]
-            # if marry != "NA" and birth < marry:
             if not self.date_before(marry, birth):
                 print("ERROR: US08: Parent marriage {} after birth {} of {}"
                       .format(marry, birth, self.combine_id_name(row[0], row[1])))
@@ -204,7 +203,7 @@ class HW5:
 
         return status
 
-    def no_marriage_to_desendants(self):
+    def no_marriage_to_descendants(self):
         """
         US17
         Parents should not marry any of their descendants
@@ -343,13 +342,47 @@ class HW5:
         self.birth_before_marriage_of_parents()
         self.disconnect()
 
+    def run_sprint2(self):
+        self.print_info()
+        self.birth_before_death_of_parents()
+        self.parent_not_too_old()
+        self.siblings_spacing()
+        self.multiple_births_less_than_5()
+        self.fewer_than_15_siblings()
+        self.male_last_names()
+        self.no_marriage_to_descendants()
+        self.siblings_should_not_marry()
+        self.disconnect()
+
 class TestSprint2(unittest.TestCase):
-    # TODO: Add return value in methods for sprint2 for testing
-    def test_marriage_before_death(self):
+    # TODO: test returned boolean value
+    def test_birth_before_death_of_parents(self):
+        pass
+
+    def test_parent_not_too_old(self):
+        pass
+
+    def test_siblings_spacing(self):
+        pass
+
+    def test_multiple_births_less_than_5(self):
+        pass
+
+    def test_fewer_than_15_siblings(self):
+        pass
+
+    def test_male_last_names(self):
+        pass
+
+    def test_no_marriage_to_descendants(self):
+        pass
+
+    def test_siblings_should_not_marry(self):
         pass
 
 def main():
-    demo = HW5()
+    demo = Project6()
+    # demo.run_sprint1()
     demo.run_sprint1()
 
 
