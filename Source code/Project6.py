@@ -153,7 +153,10 @@ class Project6:
         for dead in deads:
             death = dead[2]
             query2 = 'select fam.CHIL from fam where fam.HUSB == "{}"'.format(dead[0])
-            print(self.query_info(query2))
+            children = self.query_info(query2)
+            print(children)
+            # for child in children:
+
 
 
 
@@ -211,10 +214,11 @@ class Project6:
 
         return status
 
-    def no_marriage_to_descendants(self):
+    def marriage_after_14(self):
         """
-        US17
-        Parents should not marry any of their descendants
+        US10
+        Marriage should be at least 14 years after birth of both spouses
+        (parents must be at least 14 years old)
         :return: bool
         """
         status = True
