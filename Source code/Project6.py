@@ -317,7 +317,19 @@ class Project6:
         :return: bool
         """
         status = True
-        # TODO: get all couples, use query LIKE %% in fam.CHILD to get fam_id, check if fam_id is same
+        query1 = 'select fam.CHIL from fam where fam.CHIL != "NA"'  # get sibling lists
+        sibling_lists = self.query_info(query1)
+        # print(len(sibling_lists))  # 5
+        query2 = 'select fam.HUSB, fam.WIFE from fam'  # get couples
+        couples = self.query_info(query2)
+        # print(len(couples))  # 6
+        for couple in couples:
+            p1 = couple[0]
+            p2 = couple[1]
+            for sibling_list in sibling_lists:
+                if p1 in sibling_list[0] and p2 in sibling_list[0]:
+                    status = False
+                    print("ERROR: US18: Siblings {} and {} married.".format(p1, p2))
 
         return status
 
@@ -454,7 +466,7 @@ class Project6:
         # self.fewer_than_15_siblings()
         # self.male_last_names()
         # self.marriage_after_14()
-        self.siblings_should_not_marry()
+        # self.siblings_should_not_marry()
         self.disconnect()
 
 
@@ -487,9 +499,9 @@ class TestSprint2(unittest.TestCase):
         test = Project6()
         self.assertFalse(test.marriage_after_14())
 
-#     def test_siblings_should_not_marry(self):
-#         test = Project6()
-#         self.assertFalse(test.siblings_should_not_marry())
+    def test_siblings_should_not_marry(self):
+        test = Project6()
+        self.assertFalse(test.siblings_should_not_marry())
 
 
 def main():
