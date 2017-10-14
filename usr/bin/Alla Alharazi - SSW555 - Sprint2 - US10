@@ -1,0 +1,70 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Sat Oct 14 06:20:39 2017
+
+@author: allo0o2a
+"""
+
+from datetime import date
+import sys
+import unittest
+
+# US10: Parents not too old
+# Mother should be less than 60 years older than her children 
+# Father should be less than 80 years older than his children
+def check_if_parent_are_not_too_old(F,M,CH):
+    today = date.today()
+    FAGE  =  today.year - F.year - ((today.month, today.day) < (F.month, F.day))
+    MAGE  =  today.year - M.year - ((today.month, today.day) < (M.month, M.day))
+    CHAGE  =  today.year - CH.year - ((today.month, today.day) < (CH.month, CH.day))
+    #print ("Father age =" , FAGE, ", Mother age =" ,MAGE,", Child age = " ,CHAGE)
+    FF = FAGE - CHAGE
+    MM = MAGE - CHAGE
+    #print ("difference between father and child:",FF, "and difference between mother and child:", MM)
+    
+    if FF < 80 and MM < 60:            
+        return('The parents are not too old')        
+    else:
+        return('The parents are too old')
+          
+class TestSprint2(unittest.TestCase):
+    
+    def test_check_if_parent_are_not_too_old(self):
+        F1 = date(1970,1,1)
+        M1 = date(1975,1,1)
+        CH1 = date(1989,8,18)
+        F2 = date(1670,1,1)
+        M2 = date(1675,1,1)
+        F3 = date(1670,1,1)
+        M3 = date(1675,1,1)
+        self.assertEqual(check_if_parent_are_not_too_old(F1,M1,CH1),"The parents are not too old")
+        self.assertEqual(check_if_parent_are_not_too_old(F2,M2,CH1),"The parents are too old")
+        self.assertEqual(check_if_parent_are_not_too_old(F1,M3,CH1),"The parents are too old")
+        self.assertEqual(check_if_parent_are_not_too_old(F3,M1,CH1),"The parents are too old")
+
+
+def main():
+    try:
+        print("You can just use: YYYY-MM-DD format")
+        
+        DOM0 = input('Please enter the DOB of the Father: ')
+        year0, month0, day0 = map(int, DOM0.split('-'))
+        
+        DOM1 = input('Please enter the DOB of the Mother: ')
+        year1, month1, day1 = map(int, DOM1.split('-'))
+        
+        DOM2 = input('Please enter the DOB of the Child: ')
+        year2, month2, day2 = map(int, DOM2.split('-'))
+        
+        check_if_parent_are_not_too_old(date(year0, month0, day0),date(year1, month1, day1),date(year2, month2, day2))
+        
+    except:
+        print ("Please enter a valid date.")
+        sys.exit()
+
+ 
+ 
+if __name__ == '__main__':
+    #main()
+    unittest.main(exit=False, verbosity=2) 
