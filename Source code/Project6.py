@@ -269,8 +269,8 @@ class Project6:
         :return: bool
         """
         status = True
-        query1 = 'select fam.HUSB, fam.CHIL, fam.FAM from fam where fam.CHIL != "NA"'  # all males in a family
-        males_fam = self.query_info(query1)
+        query = 'select fam.HUSB, fam.CHIL, fam.FAM from fam where fam.CHIL != "NA"'  # all males in a family
+        males_fam = self.query_info(query)
         for males in males_fam:
             # print(type(males[1]))  # string
             ids = (males[0] + " " + males[1]).split()
@@ -286,7 +286,6 @@ class Project6:
                         break
             if flag:
                 print("ERROR: US16: Not all male members of family {} have the same last name.".format(males[2]))
-        # TODO: make name lists, for each id in list, check if male
 
         return status
 
@@ -298,7 +297,17 @@ class Project6:
         :return: bool
         """
         status = True
-
+        query = 'select fam.HUSB, fam.WIFE, fam.MARR, fam.FAM from fam'  # husb, wife, fam
+        couples = self.query_info(query)
+        for couple in couples:
+            # print(len(couple))  # 3
+            birth_a = self.get_birthday(couple[0])
+            birth_b = self.get_birthday(couple[1])
+            marriage = couple[2]
+            if self.date_before(birth_a, marriage) and self.date_before(birth_b, marriage):
+                if self.dates_within(birth_a, marriage, 14, 'years') or self.dates_within(birth_b, marriage, 14, 'years'):
+                    status = False
+                    print("ERROR: US10: Marriage of family {} is within 14 years after birth of both spouses.".format(couple[3]))
         return status
 
     def siblings_should_not_marry(self):
