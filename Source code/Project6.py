@@ -187,9 +187,9 @@ class Project6:
         for child in children:
             birth = child[1]
             query2 = 'select fam.HUSB, fam.WIFE from fam where fam.FAM == "{}"'.format(child[2])
-            parents = self.query_info(query2)  # parent ids (male, female)
-            father_birth = self.query_info('select indi.BIRT from indi where indi.INDI == "{}"'.format(parents[0][0]))[0][0]
-            mother_birth = self.query_info('select indi.BIRT from indi where indi.INDI == "{}"'.format(parents[0][1]))[0][0]
+            parents = self.query_info(query2)[0]  # parent ids (male, female)
+            father_birth = self.get_birthday(parents[0])
+            mother_birth = self.get_birthday(parents[1])
             if self.date_before(mother_birth, birth) and not self.dates_within(mother_birth, birth, 60, 'years'):
                 status = False
                 print("ERROR: US12: Mother is not less than 60 years older than her children {}.".format(child[3]))
@@ -216,9 +216,11 @@ class Project6:
                     for b in sib:
                         birth_a = self.get_birthday(a)
                         birth_b = self.get_birthday(b)
-                        if not self.dates_within(birth_a, birth_b, 2, 'days') and self.dates_within(birth_a, birth_b, 8, 'months'):
+                        if not self.dates_within(birth_a, birth_b, 2, 'days') \
+                                and self.dates_within(birth_a, birth_b, 8, 'months'):
                             status = False
-                            print("ERROR: US13: Birthday of {} and {} is less than 8 months apart or more than 2 days apart.".format(self.get_name(a), self.get_name(b)))
+                            print("ERROR: US13: Birthday of {} and {} is less than 8 months apart or more than 2 days "
+                                  "apart.".format(self.get_name(a), self.get_name(b)))
         return status
 
     def multiple_births_less_than_5(self):
@@ -236,12 +238,13 @@ class Project6:
                 counter = 0
                 for i in range(len(sib) - 1):
                     prev = self.get_birthday(sib[i])
-                    next = self.get_birthday(sib[i + 1])
-                    if self.dates_within(prev, next, 1, 'days'):
+                    cur = self.get_birthday(sib[i + 1])
+                    if self.dates_within(prev, cur, 1, 'days'):
                         counter += 1
                         if counter > 5:
                             status = False
-                            print("ERROR: US14: There are more than five siblings born at the same time in family {}.".format(sibling[1]))
+                            print("ERROR: US14: There are more than five siblings born at the same time in family {}."
+                                  .format(sibling[1]))
                             break
         return status
 
@@ -305,9 +308,11 @@ class Project6:
             birth_b = self.get_birthday(couple[1])
             marriage = couple[2]
             if self.date_before(birth_a, marriage) and self.date_before(birth_b, marriage):
-                if self.dates_within(birth_a, marriage, 14, 'years') or self.dates_within(birth_b, marriage, 14, 'years'):
+                if self.dates_within(birth_a, marriage, 14, 'years') \
+                        or self.dates_within(birth_b, marriage, 14, 'years'):
                     status = False
-                    print("ERROR: US10: Marriage of family {} is within 14 years after birth of both spouses.".format(couple[3]))
+                    print("ERROR: US10: Marriage of family {} is within 14 years after birth of both spouses."
+                          .format(couple[3]))
         return status
 
     def siblings_should_not_marry(self):
