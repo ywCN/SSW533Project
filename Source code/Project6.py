@@ -442,7 +442,7 @@ class Project6:
         # self.siblings_spacing()
         # self.multiple_births_less_than_5()
         # self.fewer_than_15_siblings()
-        self.male_last_names()
+        # self.male_last_names()
         self.marriage_after_14()
         self.siblings_should_not_marry()
         self.disconnect()
@@ -469,10 +469,10 @@ class TestSprint2(unittest.TestCase):
         test = Project6()
         self.assertFalse(test.fewer_than_15_siblings())
 
-#     def test_male_last_names(self):
-#         test = Project6()
-#         self.assertFalse(test.male_last_names())
-#
+    def test_male_last_names(self):
+        test = Project6()
+        self.assertFalse(test.male_last_names())
+
 #     def test_marriage_after_14(self):
 #         test = Project6()
 #         self.assertFalse(test.marriage_after_14())
