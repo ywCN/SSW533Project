@@ -207,7 +207,22 @@ class Project6:
         :return: bool
         """
         status = True
+        query = 'select fam.CHIL from fam where fam.CHIL != "NA"'
+        siblings = self.query_info(query)
+        for sibling in siblings:
+            sib = sibling[0].split()
+            if len(sib) > 1:
+                for a in sib:
+                    for b in sib:
+                        birth_a = self.get_birthday(a)
+                        birth_b = self.get_birthday(b)
+                        if not self.dates_within(birth_a, birth_b, 2, 'days') and self.dates_within(birth_a, birth_b, 8, 'months'):
+                            status = False
+                            print("ERROR: US13: Birthday of {} and {} is less than 8 months apart or more than 2 days apart.".format(self.get_name(a), self.get_name(b)))
 
+
+
+        # TODO: first find if not within 2 days if not find if within 8 months
         return status
 
     def multiple_births_less_than_5(self):
@@ -260,6 +275,12 @@ class Project6:
         status = True
 
         return status
+
+    def get_name(self, indi):
+        return self.query_info('select indi.NAME from indi where indi.INDI == "{}"'.format(indi))[0][0]
+
+    def get_birthday(self, indi):
+        return self.query_info('select indi.BIRT from indi where indi.INDI == "{}"'.format(indi))[0][0]
 
     def query_info(self, query):
         """
@@ -383,7 +404,7 @@ class Project6:
         self.print_info()
         # self.birth_before_death_of_parents()  # test case will run the method
         # self.parent_not_too_old()
-        self.siblings_spacing()
+        # self.siblings_spacing()
         self.multiple_births_less_than_5()
         self.fewer_than_15_siblings()
         self.male_last_names()
@@ -400,10 +421,10 @@ class TestSprint2(unittest.TestCase):
     def test_parent_not_too_old(self):
         test = Project6()
         self.assertFalse(test.parent_not_too_old())
-#
-#     def test_siblings_spacing(self):
-#         test = Project6()
-#         self.assertFalse(test.siblings_spacing())
+
+    def test_siblings_spacing(self):
+        test = Project6()
+        self.assertFalse(test.siblings_spacing())
 #
 #     def test_multiple_births_less_than_5(self):
 #         test = Project6()
