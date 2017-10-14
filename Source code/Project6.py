@@ -275,13 +275,17 @@ class Project6:
             # print(type(males[1]))  # string
             ids = (males[0] + " " + males[1]).split()
             # print(self.get_name(ids[0]).split('/')[1])  # last name
-            flag = True
+            flag = False
             for a in ids:
                 for b in ids:
                     name_a = self.get_name(a).split('/')[1]
                     name_b = self.get_name(b).split('/')[1]
-                    print(name_a, name_b)
-                    if
+                    if name_a != name_b:
+                        flag = True
+                        status = False
+                        break
+            if flag:
+                print("ERROR: US16: Not all male members of family {} have the same last name.".format(males[2]))
         # TODO: make name lists, for each id in list, check if male
 
         return status
