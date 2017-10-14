@@ -252,7 +252,14 @@ class Project6:
         :return: bool
         """
         status = True
-
+        query = 'select fam.CHIL, fam.FAM from fam where fam.CHIL != "NA"'
+        siblings = self.query_info(query)
+        for sibling in siblings:
+            sib = sibling[0].split()
+            if len(sib) >= 15:
+                status = False
+                print("ERROR: US15: There are 15 or more than 15 siblings in family {}.".format(sibling[1]))
+                break
         return status
 
     def male_last_names(self):
@@ -416,7 +423,7 @@ class Project6:
         # self.parent_not_too_old()
         # self.siblings_spacing()
         # self.multiple_births_less_than_5()
-        self.fewer_than_15_siblings()
+        # self.fewer_than_15_siblings()
         self.male_last_names()
         self.marriage_after_14()
         self.siblings_should_not_marry()
@@ -439,11 +446,11 @@ class TestSprint2(unittest.TestCase):
     def test_multiple_births_less_than_5(self):
         test = Project6()
         self.assertFalse(test.multiple_births_less_than_5())
-#
-#     def test_fewer_than_15_siblings(self):
-#         test = Project6()
-#         self.assertFalse(test.fewer_than_15_siblings())
-#
+
+    def test_fewer_than_15_siblings(self):
+        test = Project6()
+        self.assertFalse(test.fewer_than_15_siblings())
+
 #     def test_male_last_names(self):
 #         test = Project6()
 #         self.assertFalse(test.male_last_names())
