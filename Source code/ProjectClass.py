@@ -1,19 +1,23 @@
 import sqlite3
 import os
-import unittest
+import GenFxns as gen
+import UScheckRows as us
 from datetime import datetime
 from prettytable import PrettyTable
 
-
 '''
+This py file contains the Database Management Class named 'Project'
+Use this class to retrieve data from this project's .db file
+    the .db file default is 'project.db' if no override is provided
+
 Our team is using database solution.
 Please put the .db file in the same path of this .py file.
 '''
 
-
-class Project6:
-    def __init__(self):
-        self.db = r'project.db'
+### Main Class ###
+class Project:
+    def __init__(self, filename=r'project.db'):
+        self.db = filename
         self.today = datetime.today().date()
         self.conversion = {'days': 1, 'months': 30.4, 'years': 365.25}
         if os.path.isfile(self.db):
@@ -37,9 +41,9 @@ class Project6:
         for row in self.query_info(query):
             dates = [row[2], row[3], row[4], row[5]]
             for date in dates:
-                if not self.before_today(date):
+                if not gen.before_today(date):
                     print("ERROR: US01: {} occurs after today {} for {}"
-                          .format(date, self.today, self.combine_id_name(row[0], row[1])))
+                          .format(date, self.today, gen.combine_id_name(row[0], row[1])))
 
     def birth_before_marriage(self):
         """
@@ -48,25 +52,34 @@ class Project6:
         """
         query = "select INDI, NAME, BIRT, fam.MARR from indi INNER JOIN fam ON INDI.INDI = FAM.HUSB OR INDI.INDI = " \
                 "FAM.WIFE "
+        count = 0
         for row in self.query_info(query):
-            birth = row[2]
-            marriage = row[3]
-            if not self.date_before(birth, marriage):
+            if(not us.checkRow_US02(row)):
+                birth = row[2]
+                marriage = row[3]
                 print("ERROR: US02: Birth {} occurs after marriage {} for {}"
-                      .format(birth, marriage, self.combine_id_name(row[0], row[1])))
-
+                    .format(birth, marriage, gen.combine_id_name(row[0], row[1])))
+                count = count + 1
+        if(count == 0):
+            print("No US03 Errors Found")
+        return 
+            
     def birth_before_death(self):
         """
         US03 - Birth before death
         :rtype: None
         """
         query = "select INDI, NAME, BIRT, DEAT from indi"
+        count = 0
         for row in self.query_info(query):
-            birth = row[2]
-            death = row[3]
-            if not self.date_before(birth, death):
-                print("ERROR: US03: Birth {} occurs after death {} for {}"
-                      .format(birth, death, self.combine_id_name(row[0], row[1])))
+            if(not us.checkRow_US03(row)):
+                birth = datetime.strptime(row[2], '%Y-%m-%d').date()
+                death = datetime.strptime(row[3], '%Y-%m-%d').date()
+                print("ERROR: US03: Birth {} occurs after death {} for {}".format(birth, death, row[0] + row[1]))
+                count = count + 1
+        if(count == 0):
+            print("No US03 Errors Found")
+        return 
 
     def marriage_before_divorce(self):
         """
@@ -75,13 +88,18 @@ class Project6:
         """
         query = "select INDI, NAME, fam.MARR, fam.DIV from indi INNER JOIN fam " \
                 "ON INDI.INDI = FAM.HUSB OR INDI.INDI = FAM.WIFE"
+        count = 0
         for row in self.query_info(query):
-            marry = row[2]
-            divorce = row[3]
-            if not self.date_before(marry, divorce):
+            if(not us.checkRow_US03(row)):
+                marry = row[2]
+                divorce = row[3]
                 print("ERROR: US04: Marriage {} occurs after divorce {} for {}"
-                      .format(marry, divorce, self.combine_id_name(row[0], row[1])))
-
+                .format(marry, divorce, gen.combine_id_name(row[0], row[1])))
+                count = count + 1
+        if(count == 0):
+            print("No US04 Errors Found")
+        return
+           
     def marriage_before_death(self):
         """
         US05 - Marriage before death
@@ -93,9 +111,9 @@ class Project6:
         for row in self.query_info(query):
             death = row[2]
             marry = row[3]
-            if not self.date_before(marry, death):
+            if not gen.date_before(marry, death):
                 print("ERROR: US05: Marriage {} occurs after death {} for {}"
-                      .format(marry, death, self.combine_id_name(row[0], row[1])))
+                      .format(marry, death, gen.combine_id_name(row[0], row[1])))
 
     def divorce_before_death(self):
         """
@@ -108,9 +126,9 @@ class Project6:
         for row in self.query_info(query):
             death = row[2]
             divorce = row[3]
-            if not self.date_before(divorce, death):
+            if not gen.date_before(divorce, death):
                 print("ERROR: US06: Divorce {} occurs after death {} for {}"
-                      .format(divorce, death, self.combine_id_name(row[0], row[1])))
+                      .format(divorce, death, gen.combine_id_name(row[0], row[1])))
 
     def less_than_150_years_old(self):
         """
@@ -121,7 +139,7 @@ class Project6:
         for row in self.query_info(query):
             if self.get_age(row[2], row[3]) >= 150:
                 print("ERROR: US07: Age is greater than or equal to 150 years for {}"
-                      .format(self.combine_id_name(row[0], row[1])))
+                      .format(gen.combine_id_name(row[0], row[1])))
 
     def birth_before_marriage_of_parents(self):
         """
@@ -134,12 +152,12 @@ class Project6:
             birth = row[2]
             marry = row[3]
             divorce = row[4]
-            if not self.date_before(marry, birth):
+            if not gen.date_before(marry, birth):
                 print("ERROR: US08: Parent marriage {} after birth {} of {}"
-                      .format(marry, birth, self.combine_id_name(row[0], row[1])))
-            if self.date_before(divorce, birth) and not self.dates_within(divorce, birth, 9, "months"):
+                      .format(marry, birth, gen.combine_id_name(row[0], row[1])))
+            if gen.date_before(divorce, birth) and not gen.dates_within(divorce, birth, 9, "months"):
                 print("ERROR: US08: {} was born {} after 9 months of parent divorce {}".format(
-                    self.combine_id_name(row[0], row[1]), birth, divorce))
+                    gen.combine_id_name(row[0], row[1]), birth, divorce))
 
     def birth_before_death_of_parents(self):
         """
@@ -160,7 +178,7 @@ class Project6:
                     data = self.query_info(query3)
                     birth = data[0][1]
                     name = data[0][1]
-                    if self.date_before(death, birth) and self.dates_within(death, birth, 9, 'months'):
+                    if gen.date_before(death, birth) and gen.dates_within(death, birth, 9, 'months'):
                         status = False
                         print("ERROR: US09: {} is born 9 months after death of father {}.".format(birth, name))
             if person[1] == 'F':
@@ -169,7 +187,7 @@ class Project6:
                 for child in children[0]:
                     query3 = 'select indi.BIRT, indi.NAME from indi where indi.INDI == "{}"'.format(child)  # birthday
                     birth = self.query_info(query3)
-                    if not self.date_before(death, birth):
+                    if not gen.date_before(death, birth):
                         status = False
                         print("ERROR: US09: {} is born after death of mother {}.".format(birth[1], person[3]))
         return status
@@ -190,10 +208,10 @@ class Project6:
             parents = self.query_info(query2)[0]  # parent ids (male, female)
             father_birth = self.get_birthday(parents[0])
             mother_birth = self.get_birthday(parents[1])
-            if self.date_before(mother_birth, birth) and not self.dates_within(mother_birth, birth, 60, 'years'):
+            if gen.date_before(mother_birth, birth) and not gen.dates_within(mother_birth, birth, 60, 'years'):
                 status = False
                 print("ERROR: US12: Mother is not less than 60 years older than her children {}.".format(child[3]))
-            if self.date_before(father_birth, birth) and not self.dates_within(father_birth, birth, 80, 'years'):
+            if gen.date_before(father_birth, birth) and not gen.dates_within(father_birth, birth, 80, 'years'):
                 status = False
                 print("ERROR: US12: Father is not less than 80 years older than his children {}.".format(child[3]))
 
@@ -216,8 +234,8 @@ class Project6:
                     for b in sib:
                         birth_a = self.get_birthday(a)
                         birth_b = self.get_birthday(b)
-                        if not self.dates_within(birth_a, birth_b, 2, 'days') \
-                                and self.dates_within(birth_a, birth_b, 8, 'months'):
+                        if not gen.dates_within(birth_a, birth_b, 2, 'days') \
+                                and gen.dates_within(birth_a, birth_b, 8, 'months'):
                             status = False
                             print("ERROR: US13: Birthday of {} and {} is less than 8 months apart or more than 2 days "
                                   "apart.".format(self.get_name(a), self.get_name(b)))
@@ -239,7 +257,7 @@ class Project6:
                 for i in range(len(sib) - 1):
                     prev = self.get_birthday(sib[i])
                     cur = self.get_birthday(sib[i + 1])
-                    if self.dates_within(prev, cur, 1, 'days'):
+                    if gen.dates_within(prev, cur, 1, 'days'):
                         counter += 1
                         if counter > 5:
                             status = False
@@ -307,9 +325,9 @@ class Project6:
             birth_a = self.get_birthday(couple[0])
             birth_b = self.get_birthday(couple[1])
             marriage = couple[2]
-            if self.date_before(birth_a, marriage) and self.date_before(birth_b, marriage):
-                if self.dates_within(birth_a, marriage, 14, 'years') \
-                        or self.dates_within(birth_b, marriage, 14, 'years'):
+            if gen.date_before(birth_a, marriage) and gen.date_before(birth_b, marriage):
+                if gen.dates_within(birth_a, marriage, 14, 'years') \
+                        or gen.dates_within(birth_b, marriage, 14, 'years'):
                     status = False
                     print("ERROR: US10: Marriage of family {} is within 14 years after birth of both spouses."
                           .format(couple[3]))
@@ -359,60 +377,9 @@ class Project6:
         self.c.close()
         self.conn.close()
 
-    def convert_to_datetime(self, date):
-        """
-        :param date: str
-        :return: datatime type or str "NA"
-        """
-        try:
-            res = datetime.strptime(date, '%Y-%m-%d').date()
-        except (TypeError, ValueError):
-            res = "NA"
-        return res
-
-    def combine_id_name(self, indi, name):
-        return indi + " " + name
-
-    def dates_within(self, date1, date2, limit, unit):
-        """
-        check the interval between two dates
-        :param date1: first date in '%Y-%m-%d' format
-        :param date2: second date in '%Y-%m-%d' format
-        :param limit: int
-        :param unit: str in ('days', 'months', 'years')
-        :return: bool
-        """
-        dt1 = self.convert_to_datetime(date1)
-        dt2 = self.convert_to_datetime(date2)
-        if dt1 == "NA" or dt2 == "NA":
-            return True
-        if unit not in self.conversion:
-            raise Exception("No such unit")
-        return (abs((dt1 - dt2).days) / self.conversion[unit]) <= limit
-
-    def date_before(self, before, after):
-        """
-        before happens first
-        after happens later
-        :param before: the date should happen first
-        :param after: the date should happen after
-        :return: bool
-        """
-        dt1 = self.convert_to_datetime(before)
-        dt2 = self.convert_to_datetime(after)
-        if dt1 == "NA" or dt2 == "NA":
-            return True
-        return dt1 < dt2  # after should be greater than before
-
-    def before_today(self, date):
-        dt = self.convert_to_datetime(date)
-        if dt == "NA":
-            return True
-        return dt < self.today
-
     def get_age(self, birthday, deathday):
-        birth = self.convert_to_datetime(birthday)
-        death = self.convert_to_datetime(deathday)
+        birth = gen.convert_to_datetime(birthday)
+        death = gen.convert_to_datetime(deathday)
         if death != "NA":
             return (death - birth).days / self.conversion["years"]
         return (self.today - birth).days / self.conversion["years"]
@@ -475,42 +442,8 @@ class Project6:
         self.disconnect()
 
 
-class TestSprint2(unittest.TestCase):
-    def test_birth_before_death_of_parents(self):
-        test = Project6()
-        self.assertFalse(test.birth_before_death_of_parents())
-
-    def test_parent_not_too_old(self):
-        test = Project6()
-        self.assertFalse(test.parent_not_too_old())
-
-    def test_siblings_spacing(self):
-        test = Project6()
-        self.assertFalse(test.siblings_spacing())
-
-    def test_multiple_births_less_than_5(self):
-        test = Project6()
-        self.assertFalse(test.multiple_births_less_than_5())
-
-    def test_fewer_than_15_siblings(self):
-        test = Project6()
-        self.assertFalse(test.fewer_than_15_siblings())
-
-    def test_male_last_names(self):
-        test = Project6()
-        self.assertFalse(test.male_last_names())
-
-    def test_marriage_after_14(self):
-        test = Project6()
-        self.assertFalse(test.marriage_after_14())
-
-    def test_siblings_should_not_marry(self):
-        test = Project6()
-        self.assertFalse(test.siblings_should_not_marry())
-
-
 def main():
-    demo = Project6()
+    demo = Project()
     # demo.run_sprint1()
     demo.run_sprint2()
 
