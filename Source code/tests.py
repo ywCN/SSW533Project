@@ -1,10 +1,10 @@
 import unittest
 import ProjectClass as db
-import UScheckRows as us
+import USLogic as us
 
 '''
 This py file contains the Test Classes
-Use these Classes to test the functionality of UScheckRows and GenFxns
+Use these Classes to test the functionality of USLogic and GenFxns
 '''
 
 class TestUS(unittest.TestCase):
@@ -25,6 +25,28 @@ class TestUS(unittest.TestCase):
     def testUS03_Incorrect(self):
         row = ["I2", "San /Wang/", "1967-06-04", "1008-11-18"]
         self.assertFalse(us.checkRow_US03(row))
+        return
+
+    def testUS15_Correct(self):
+        self.assertTrue(us.checkSiblings_US15('I1'))
+        self.assertTrue(us.checkSiblings_US15('I1, I2'))
+        self.assertTrue(us.checkSiblings_US15('I1, I2, I3'))
+        self.assertTrue(us.checkSiblings_US15('I1, I2, I3, I4'))
+        self.assertTrue(us.checkSiblings_US15('I1, I2, I3, I4, I5'))
+        self.assertTrue(us.checkSiblings_US15('I1, I2, I3, I4, I5, I6'))
+        self.assertTrue(us.checkSiblings_US15('I1, I2, I3, I4, I5, I6, I7'))
+        self.assertTrue(us.checkSiblings_US15('I1, I2, I3, I4, I5, I6, I7, I8'))
+        self.assertTrue(us.checkSiblings_US15('I1, I2, I3, I4, I5, I6, I7, I8, I9'))
+        self.assertTrue(us.checkSiblings_US15('I1, I2, I3, I4, I5, I6, I7, I8, I9, I10'))
+        self.assertTrue(us.checkSiblings_US15('I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11'))
+        self.assertTrue(us.checkSiblings_US15('I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12'))
+        self.assertTrue(us.checkSiblings_US15('I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13'))
+        self.assertTrue(us.checkSiblings_US15('I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14'))
+        return
+    
+    def testUS15_Incorrect(self):
+        self.assertFalse(us.checkSiblings_US15('I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15'))
+        self.assertFalse(us.checkSiblings_US15('I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16'))
         return
 
     def tearDown(self):
