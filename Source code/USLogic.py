@@ -9,7 +9,18 @@ These are separated from the 'Project' class in order to increase testability
 
 Note: 'checkRow' functions are written for processes that check UserStory logic on a row x row basis
 '''
-
+#NOTE - the most basic tesable logic for US01 is in GenFxns as the date_before function
+def checkRow_US01(row):
+    #returns a list of errors
+    #an empty list is the desired output of no errors being detected
+    dates = [row[2], row[3], row[4], row[5]]
+    errorList = []
+    for date in dates:
+        if (not gen.before_today(date)):
+            errorStr = "ERROR: US01: {" + date + "} occurs after today {" + datetime.today().date()  + "} for { " + gen.combine_id_name(row[0], row[1]) +  "}"
+            errorList.append(errorStr)
+    return errorList    
+    
 def checkRow_US02(row):
     birth = row[2]
     marriage = row[3]
@@ -44,13 +55,12 @@ def checkSiblings_US15(siblingStr):
 
 def checkMaleLastNames_US16(db, familyInfo):
     #Checks that the last name of each son matches the last name of the father
-    #Note: checkMaleLastNames returns false if all last names match, and a string (that reads as true in python) of mismatched names
-    for family in queryInfo:
-            fatherID = family[0]
-            maleFamilyMembers = family[1].split(" ")
-            familyID = family[2]
-            fatherLN = self.get_name(fatherID).split('/')[1]
-            for son in maleFamilyMembers:
-                sonLN = self.get_name(son).split('/')[1]
-                if flag:
-                    print("ERROR: US16: Not all male members of family {} have the same last name.".format(males[2]))
+    fatherID = familyInfo[0]
+    maleFamilyMembers = familyInfo[1].split(" ")
+    familyID = familyInfo[2]
+    fatherLN = db.get_name(fatherID).split('/')[1]
+    for son in maleFamilyMembers:
+        sonLN = db.get_name(son).split('/')[1]
+        if sonLN != fatherLN:
+            return False
+    return True
