@@ -1,7 +1,7 @@
 import sqlite3
 import os
 import GenFxns as gen
-import UScheckRows as us
+import USLogic as us
 from datetime import datetime
 from prettytable import PrettyTable
 
@@ -273,14 +273,15 @@ class Project:
         :return: bool
         """
         status = True
+        count = 0
         query = 'select fam.CHIL, fam.FAM from fam where fam.CHIL != "NA"'
-        siblings = self.query_info(query)
-        for sibling in siblings:
-            sib = sibling[0].split()
-            if len(sib) >= 15:
-                status = False
-                print("ERROR: US15: There are 15 or more than 15 siblings in family {}.".format(sibling[1]))
-                break
+        families = self.query_info(query)
+        for family in families:       
+            if(not us.checkSiblings_US15(family[0])):
+                print("ERROR: US15: There are 15 or more than 15 siblings in family {}.".format(family[1]))
+                count = count + 1
+        if(count == 0):
+            print("No US15 Errors Found")
         return status
 
     def male_last_names(self):
@@ -291,23 +292,10 @@ class Project:
         """
         status = True
         query = 'select fam.HUSB, fam.CHIL, fam.FAM from fam where fam.CHIL != "NA"'  # all males in a family
-        males_fam = self.query_info(query)
-        for males in males_fam:
-            # print(type(males[1]))  # string
-            ids = (males[0] + " " + males[1]).split()
-            # print(self.get_name(ids[0]).split('/')[1])  # last name
-            flag = False
-            for a in ids:
-                for b in ids:
-                    name_a = self.get_name(a).split('/')[1]
-                    name_b = self.get_name(b).split('/')[1]
-                    if name_a != name_b:
-                        flag = True
-                        status = False
-                        break
-            if flag:
-                print("ERROR: US16: Not all male members of family {} have the same last name.".format(males[2]))
-
+        queryInfo = self.query_info(query)
+        for family in queryInfo:
+            #Note: checkMaleLastNames returns false if no sons have different last names from the father
+            if(us.checkMaleLastNames_US16(self, family)
         return status
 
     def marriage_after_14(self):
