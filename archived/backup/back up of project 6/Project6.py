@@ -462,20 +462,22 @@ class Project6:
         self.birth_before_marriage_of_parents()
         self.disconnect()
 
-    def run_sprint2(self):
-        self.print_info()
-        # self.birth_before_death_of_parents()  # test case will run the method
-        # self.parent_not_too_old()
-        # self.siblings_spacing()
-        # self.multiple_births_less_than_5()
-        # self.fewer_than_15_siblings()
-        # self.male_last_names()
-        # self.marriage_after_14()
-        # self.siblings_should_not_marry()
-        self.disconnect()
+    # def run_sprint2(self):
+    #     self.print_info()
+    #     # self.birth_before_death_of_parents()  # test case will run the method
+    #     # self.parent_not_too_old()
+    #     # self.siblings_spacing()
+    #     # self.multiple_births_less_than_5()
+    #     # self.fewer_than_15_siblings()
+    #     # self.male_last_names()
+    #     # self.marriage_after_14()
+    #     # self.siblings_should_not_marry()
+    #     self.disconnect()
 
 
 class TestSprint2(unittest.TestCase):
+    Project6().print_info()
+
     def test_birth_before_death_of_parents(self):
         test = Project6()
         self.assertFalse(test.birth_before_death_of_parents())
@@ -508,13 +510,15 @@ class TestSprint2(unittest.TestCase):
         test = Project6()
         self.assertFalse(test.siblings_should_not_marry())
 
+    Project6().disconnect()
 
-def main():
-    demo = Project6()
-    # demo.run_sprint1()
-    demo.run_sprint2()
+
+# def main():
+#     demo = Project6()
+#     demo.run_sprint1()
+#     demo.run_sprint2()  # no need to run because unittest will run all methods.
 
 
 if __name__ == '__main__':
-    main()
+    # main()
     unittest.main()
