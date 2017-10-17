@@ -65,8 +65,9 @@ class TestGenFxn(unittest.TestCase):
         return
 
 
+'''
 #This class is not for general unit testing, but as a basic check on the functionality of the current Sprint
-class TestSprint2(unittest.TestCase):
+class OUTDATED(unittest.TestCase):
     def setUp(self):
         self.test = db.Project()
 
@@ -97,6 +98,7 @@ class TestSprint2(unittest.TestCase):
     def tearDown(self):
         self.test.disconnect()
         return
+'''
 
 if __name__ == "__main__":
     unittest.main()

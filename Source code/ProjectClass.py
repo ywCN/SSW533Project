@@ -25,7 +25,7 @@ class Project:
             self.c = self.conn.cursor()
         else:
             print("\n"
-                  "--------------------------------------------------------------------\n"
+                  "---------------------------dates = [row[2], row[3], row[4], row[5]]"
                   "| Please put the 'project.db' in the same path of this python file!|\n"
                   "--------------------------------------------------------------------")
             exit()
@@ -37,13 +37,16 @@ class Project:
         """
         query = "select INDI, NAME, BIRT, DEAT, fam.MARR, fam.DIV from indi LEFT JOIN fam ON INDI.INDI = FAM.HUSB OR " \
                 "INDI.INDI = FAM.WIFE "
-
+        count = 0
         for row in self.query_info(query):
-            dates = [row[2], row[3], row[4], row[5]]
-            for date in dates:
-                if not gen.before_today(date):
-                    print("ERROR: US01: {} occurs after today {} for {}"
-                          .format(date, self.today, gen.combine_id_name(row[0], row[1])))
+            for error in checkRow_US01(row):
+                print(error)
+                count = count + 1
+            
+        if(count == 0):
+            print("No US01 Errors Found")
+        return
+
 
     def birth_before_marriage(self):
         """
@@ -61,7 +64,7 @@ class Project:
                     .format(birth, marriage, gen.combine_id_name(row[0], row[1])))
                 count = count + 1
         if(count == 0):
-            print("No US03 Errors Found")
+            print("No US02 Errors Found")
         return 
             
     def birth_before_death(self):
@@ -293,9 +296,14 @@ class Project:
         status = True
         query = 'select fam.HUSB, fam.CHIL, fam.FAM from fam where fam.CHIL != "NA"'  # all males in a family
         queryInfo = self.query_info(query)
-        for family in queryInfo:
-            #Note: checkMaleLastNames returns false if no sons have different last names from the father
-            if(us.checkMaleLastNames_US16(self, family)
+        count = 0
+        for familyInfo in queryInfo:
+            if(not us.checkMaleLastNames_US16(self, familyInfo)):
+                familyID = familyInfo[2]
+                print("ERROR: US16: Not all male members of family {} have the same last name.".format(familyID))
+                count = count + 1
+        if(count == 0):
+            print("No US16 Errors Found")
         return status
 
     def marriage_after_14(self):
@@ -419,14 +427,14 @@ class Project:
 
     def run_sprint2(self):
         self.print_info()
-        # self.birth_before_death_of_parents()  # test case will run the method
-        # self.parent_not_too_old()
-        # self.siblings_spacing()
-        # self.multiple_births_less_than_5()
-        # self.fewer_than_15_siblings()
-        # self.male_last_names()
-        # self.marriage_after_14()
-        # self.siblings_should_not_marry()
+        self.birth_before_death_of_parents()  # test case will run the method
+        self.parent_not_too_old()
+        self.siblings_spacing()
+        self.multiple_births_less_than_5()
+        self.fewer_than_15_siblings()
+        self.male_last_names()
+        self.marriage_after_14()
+        self.siblings_should_not_marry()
         self.disconnect()
 
 
@@ -438,4 +446,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-    unittest.main()
