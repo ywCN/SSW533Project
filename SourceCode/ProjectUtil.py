@@ -8,7 +8,7 @@ This class contains all utility methods.
 """
 
 
-class Util:
+class ProjectUtil:
 
     def __init__(self):
         self.db = r'project.db'

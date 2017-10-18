@@ -1,5 +1,5 @@
 import unittest
-from Util import Util
+from SourceCode.ProjectUtil import ProjectUtil
 
 
 '''
@@ -10,7 +10,7 @@ Please put the .db file in the same path of this .py file.
 
 class Sprint2:
     def __init__(self):
-        self.tool = Util()  # get tools ready
+        self.tool = ProjectUtil()  # get tools ready
 
     def birth_before_death_of_parents(self):
         """
@@ -223,7 +223,7 @@ class Sprint2:
 
 
 class TestSprint2(unittest.TestCase):
-    Util().print_info()
+    ProjectUtil().print_info()
 
     def setUp(self):
         self.test = Sprint2()
@@ -252,7 +252,7 @@ class TestSprint2(unittest.TestCase):
     def test_siblings_should_not_marry(self):
         self.assertFalse(self.test.siblings_should_not_marry())
 
-    Util().disconnect()
+    ProjectUtil().disconnect()
 
 
 # def main():

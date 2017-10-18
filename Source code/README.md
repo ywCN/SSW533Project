@@ -1,1 +1,0 @@
-# Download the `project.db` and run `Project4.py` to test Sprint 1 of Project.

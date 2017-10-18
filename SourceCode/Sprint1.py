@@ -1,9 +1,9 @@
-from Util import Util
+from SourceCode.ProjectUtil import ProjectUtil
 
 
 class Sprint1:
     def __init__(self):
-        self.tool = Util()  # get tools ready
+        self.tool = ProjectUtil()  # get tools ready
 
     def dates_before_current_date(self):
         """
