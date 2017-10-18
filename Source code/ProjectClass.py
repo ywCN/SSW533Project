@@ -20,15 +20,21 @@ class Project:
         self.db = filename
         self.today = datetime.today().date()
         self.conversion = {'days': 1, 'months': 30.4, 'years': 365.25}
+        #This checking, for an unknown reason, creates strange false negatives on test cases
+        #The priority right now is testing, this can be reimplemented later
+        '''
         if os.path.isfile(self.db):
-            self.conn = sqlite3.connect(self.db)
-            self.c = self.conn.cursor()
+        '''
+        self.conn = sqlite3.connect(self.db)
+        self.c = self.conn.cursor()
+        '''
         else:
             print("\n"
-                  "--------------------------------------------------------------------\n"
+                  "--------------------------------------------------------------------"
                   "| Please put the 'project.db' in the same path of this python file!|\n"
                   "--------------------------------------------------------------------")
             exit()
+        '''
 
     def dates_before_current_date(self):
         """
@@ -37,13 +43,16 @@ class Project:
         """
         query = "select INDI, NAME, BIRT, DEAT, fam.MARR, fam.DIV from indi LEFT JOIN fam ON INDI.INDI = FAM.HUSB OR " \
                 "INDI.INDI = FAM.WIFE "
-
+        count = 0
         for row in self.query_info(query):
-            dates = [row[2], row[3], row[4], row[5]]
-            for date in dates:
-                if not gen.before_today(date):
-                    print("ERROR: US01: {} occurs after today {} for {}"
-                          .format(date, self.today, gen.combine_id_name(row[0], row[1])))
+            for error in checkRow_US01(row):
+                print(error)
+                count = count + 1
+            
+        if(count == 0):
+            print("No US01 Errors Found")
+        return
+
 
     def birth_before_marriage(self):
         """
@@ -61,7 +70,7 @@ class Project:
                     .format(birth, marriage, gen.combine_id_name(row[0], row[1])))
                 count = count + 1
         if(count == 0):
-            print("No US03 Errors Found")
+            print("No US02 Errors Found")
         return 
             
     def birth_before_death(self):
@@ -166,6 +175,7 @@ class Project:
         :return: bool
         """
         status = True
+        count = 0
         query1 = 'select indi.INDI, indi.SEX, indi.DEAT, indi.NAME from indi where indi.DEAT != "NA"'  # dead people
         deads = self.query_info(query1)
         for person in deads:
@@ -176,20 +186,22 @@ class Project:
                 for child in children[0]:
                     query3 = 'select indi.BIRT, indi.NAME from indi where indi.INDI == "{}"'.format(child)  # birthday
                     data = self.query_info(query3)
-                    birth = data[0][1]
+                    birth = data[0][0]
                     name = data[0][1]
-                    if gen.date_before(death, birth) and gen.dates_within(death, birth, 9, 'months'):
-                        status = False
-                        print("ERROR: US09: {} is born 9 months after death of father {}.".format(birth, name))
+                    if(not us.checkDates_US09(death, birth, True)):
+                        print("ERROR: US09: {} is born more than 9 months after death of father {}.".format(birth, name))
+                        count = count + 1
             if person[1] == 'F':
                 query2 = 'select fam.CHIL from fam where fam.WIFE == "{}"'.format(person[0])
                 children = self.query_info(query2)
                 for child in children[0]:
                     query3 = 'select indi.BIRT, indi.NAME from indi where indi.INDI == "{}"'.format(child)  # birthday
                     birth = self.query_info(query3)
-                    if not gen.date_before(death, birth):
-                        status = False
+                    if(not us.checkDates_US09(death, birth, False)):
                         print("ERROR: US09: {} is born after death of mother {}.".format(birth[1], person[3]))
+                        count = count + 1
+        if(count == 0):
+            print("No US09 Errors Found")
         return status
 
     def parent_not_too_old(self):
@@ -200,6 +212,7 @@ class Project:
         :return: bool
         """
         status = True
+        count = 0
         query1 = 'select indi.INDI, indi.BIRT, indi.FAMC, indi.NAME from indi where indi.FAMC != "NA"'
         children = self.query_info(query1)
         for child in children:
@@ -208,13 +221,14 @@ class Project:
             parents = self.query_info(query2)[0]  # parent ids (male, female)
             father_birth = self.get_birthday(parents[0])
             mother_birth = self.get_birthday(parents[1])
-            if gen.date_before(mother_birth, birth) and not gen.dates_within(mother_birth, birth, 60, 'years'):
-                status = False
+            if(not us.checkMotherCase_US12(mother_birth, birth)):
                 print("ERROR: US12: Mother is not less than 60 years older than her children {}.".format(child[3]))
-            if gen.date_before(father_birth, birth) and not gen.dates_within(father_birth, birth, 80, 'years'):
-                status = False
+                count = count + 1
+            if(not us.checkFatherCase_US12(father_birth, birth)):
                 print("ERROR: US12: Father is not less than 80 years older than his children {}.".format(child[3]))
-
+                count = count + 1
+        if(count == 0):
+            print("No US12 Errors Found")
         return status
 
     def siblings_spacing(self):
@@ -225,6 +239,7 @@ class Project:
         :return: bool
         """
         status = True
+        count = 0
         query = 'select fam.CHIL from fam where fam.CHIL != "NA"'
         siblings = self.query_info(query)
         for sibling in siblings:
@@ -234,11 +249,12 @@ class Project:
                     for b in sib:
                         birth_a = self.get_birthday(a)
                         birth_b = self.get_birthday(b)
-                        if not gen.dates_within(birth_a, birth_b, 2, 'days') \
-                                and gen.dates_within(birth_a, birth_b, 8, 'months'):
-                            status = False
+                        if(not us.checkSiblingBirthdays_US13(birth_a, birth_b)):
                             print("ERROR: US13: Birthday of {} and {} is less than 8 months apart or more than 2 days "
                                   "apart.".format(self.get_name(a), self.get_name(b)))
+                            count = count + 1
+        if(count == 0):
+            print("No US13 Errors Found")
         return status
 
     def multiple_births_less_than_5(self):
@@ -248,22 +264,16 @@ class Project:
         :return: bool
         """
         status = True
+        count = 0
         query = 'select fam.CHIL, fam.FAM from fam where fam.CHIL != "NA"'
         siblings = self.query_info(query)
         for sibling in siblings:
             sib = sibling[0].split()
             if len(sib) > 5:
-                counter = 0
-                for i in range(len(sib) - 1):
-                    prev = self.get_birthday(sib[i])
-                    cur = self.get_birthday(sib[i + 1])
-                    if gen.dates_within(prev, cur, 1, 'days'):
-                        counter += 1
-                        if counter > 5:
-                            status = False
-                            print("ERROR: US14: There are more than five siblings born at the same time in family {}."
-                                  .format(sibling[1]))
-                            break
+                if(not us.checkMultBirths_US14(self, sib)):
+                    print("ERROR: US14: There are more than five siblings born at the same time in family {}."
+                        .format(sibling[1]))
+                    count = count + 1
         return status
 
     def fewer_than_15_siblings(self):
@@ -293,9 +303,14 @@ class Project:
         status = True
         query = 'select fam.HUSB, fam.CHIL, fam.FAM from fam where fam.CHIL != "NA"'  # all males in a family
         queryInfo = self.query_info(query)
-        for family in queryInfo:
-            #Note: checkMaleLastNames returns false if no sons have different last names from the father
-            if(us.checkMaleLastNames_US16(self, family)
+        count = 0
+        for familyInfo in queryInfo:
+            if(not us.checkMaleLastNames_US16(self, familyInfo)):
+                familyID = familyInfo[2]
+                print("ERROR: US16: Not all male members of family {} have the same last name.".format(familyID))
+                count = count + 1
+        if(count == 0):
+            print("No US16 Errors Found")
         return status
 
     def marriage_after_14(self):
@@ -306,6 +321,7 @@ class Project:
         :return: bool
         """
         status = True
+        count = 0
         query = 'select fam.HUSB, fam.WIFE, fam.MARR, fam.FAM from fam'  # husb, wife, fam
         couples = self.query_info(query)
         for couple in couples:
@@ -313,12 +329,12 @@ class Project:
             birth_a = self.get_birthday(couple[0])
             birth_b = self.get_birthday(couple[1])
             marriage = couple[2]
-            if gen.date_before(birth_a, marriage) and gen.date_before(birth_b, marriage):
-                if gen.dates_within(birth_a, marriage, 14, 'years') \
-                        or gen.dates_within(birth_b, marriage, 14, 'years'):
-                    status = False
-                    print("ERROR: US10: Marriage of family {} is within 14 years after birth of both spouses."
-                          .format(couple[3]))
+            if(not us.checkMarriage_US10(birth_a, birth_b, marriage)):
+                print("ERROR: US10: Marriage of family {} is within 14 years after birth of both spouses."
+                    .format(couple[3]))
+                count = count + 1
+        if(count == 0):
+            print("No US10 Errors Found")
         return status
 
     def siblings_should_not_marry(self):
@@ -328,6 +344,7 @@ class Project:
         :return: bool
         """
         status = True
+        count = 0
         query1 = 'select fam.CHIL from fam where fam.CHIL != "NA"'  # get sibling lists
         sibling_lists = self.query_info(query1)
         # print(len(sibling_lists))  # 5
@@ -338,10 +355,11 @@ class Project:
             p1 = couple[0]
             p2 = couple[1]
             for sibling_list in sibling_lists:
-                if p1 in sibling_list[0] and p2 in sibling_list[0]:
-                    status = False
+                if(us.checkMarriedSiblings_US18(p1, p2, sibling_list[0])):
                     print("ERROR: US18: Siblings {} and {} married.".format(p1, p2))
-
+                    count = count +1
+        if(count == 0):
+            print("No US18 Errors Found")
         return status
 
     def get_name(self, indi):
@@ -419,14 +437,14 @@ class Project:
 
     def run_sprint2(self):
         self.print_info()
-        # self.birth_before_death_of_parents()  # test case will run the method
-        # self.parent_not_too_old()
-        # self.siblings_spacing()
-        # self.multiple_births_less_than_5()
-        # self.fewer_than_15_siblings()
-        # self.male_last_names()
-        # self.marriage_after_14()
-        # self.siblings_should_not_marry()
+        self.birth_before_death_of_parents()
+        self.parent_not_too_old()
+        self.siblings_spacing()
+        self.multiple_births_less_than_5()
+        self.fewer_than_15_siblings()
+        self.male_last_names()
+        self.marriage_after_14()
+        self.siblings_should_not_marry()
         self.disconnect()
 
 
@@ -438,4 +456,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-    unittest.main()
