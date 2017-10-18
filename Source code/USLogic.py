@@ -45,6 +45,48 @@ def checkRow_US04(row):
         return False
     return True
 
+def checkDates_US09(death, birth, father = True):
+    #print(death, birth, father)
+    #print(gen.date_before(birth, death) )
+    #print(not gen.dates_within(death, birth, 9, 'months'))
+    if father == True:
+        if gen.date_before(birth, death) and not gen.dates_within(death, birth, 9, 'months'):
+            return False
+    else:
+        if gen.date_before(death, birth):
+            return False
+    #print(death, birth, father)
+    #print(birth)
+    return True
+
+def checkFatherCase_US12(father_birth, birth):
+    if gen.date_before(father_birth, birth) and not gen.dates_within(father_birth, birth, 80, 'years'):
+        return False
+    return True
+
+def checkMotherCase_US12(mother_birth, birth):
+    if gen.date_before(mother_birth, birth) and not gen.dates_within(mother_birth, birth, 60, 'years'):
+       return False
+    return True
+
+def checkSiblingBirthdays_US13(birth_a, birth_b):
+    if not gen.dates_within(birth_a, birth_b, 2, 'days') and gen.dates_within(birth_a, birth_b, 8, 'months'):
+        return False
+    return True
+
+def checkMultBirths_US14(db, sib):
+    counter = 0
+    #print(sib)
+    for i in range(len(sib) - 1):
+        prev = db.get_birthday(sib[i])
+        cur = db.get_birthday(sib[i + 1])
+        if gen.dates_within(prev, cur, 1, 'days'):
+            counter += 1
+            if counter > 5:
+                return False
+    return True
+    
+
 def checkSiblings_US15(siblingStr):
     #This function should be passed the sibling list given by the parent's queryinfo call
     #siblingstr should be queryinfo[4][0] <- for later reference
@@ -59,8 +101,26 @@ def checkMaleLastNames_US16(db, familyInfo):
     maleFamilyMembers = familyInfo[1].split(" ")
     familyID = familyInfo[2]
     fatherLN = db.get_name(fatherID).split('/')[1]
+    #print(familyInfo)
     for son in maleFamilyMembers:
         sonLN = db.get_name(son).split('/')[1]
         if sonLN != fatherLN:
+            #print(sonLN)
+            #print(fatherLN)
             return False
     return True
+
+def checkMarriage_US10(birth_a, birth_b, marriage):
+    if gen.date_before(birth_a, marriage) and gen.date_before(birth_b, marriage):
+        if gen.dates_within(birth_a, marriage, 14, 'years') \
+                or gen.dates_within(birth_b, marriage, 14, 'years'):
+            return False
+    #print(birth_a, birth_b, marriage)
+    return True
+
+def checkMarriedSiblings_US18(p1, p2, sibling_list):
+    #returns true if siblings are married
+    if p1 in sibling_list and p2 in sibling_list:
+        #print(sibling_list)
+        return True
+    return False
