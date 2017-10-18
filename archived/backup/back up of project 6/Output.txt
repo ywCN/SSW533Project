@@ -1,3 +1,7 @@
+"C:\Program Files (x86)\Python36\python.exe" "C:\Program Files\JetBrains\PyCharm Community Edition 2017.2.3\helpers\pycharm\_jb_unittest_runner.py" --target Project6.TestSprint2
+Testing started at 8:57 PM ...
+Launching unittests with arguments python -m unittest Project6.TestSprint2 in D:\Dropbox\HomeworkTextbooksClassNotes\Homework\SSW555\SSW555Project\archived\backup\back up of project 6
+
 People
 +-----+---------------+--------+------------+------+-------+------------+-------+--------+
 |  ID |      Name     | Gender |  Birthday  | Age  | Alive |   Death    | Child | Spouse |
@@ -41,22 +45,21 @@ Families
 | F5 | 1903-07-08 | 1903-07-09 |     I1     |   Wa /Gu/    |    I9   |  Gu /Tian/  | I11 I12 I13 I14 I15 I16 I17 I18 I19 I20 I21 I22 I23 I24 I25 I26 I27 |
 | F6 | 1703-07-08 |     NA     |    I24     | Ersi /Wang/  |   I25   | Erwu /Wang/ |                                  NA                                 |
 +----+------------+------------+------------+--------------+---------+-------------+---------------------------------------------------------------------+
-
 ERROR: US09: Wa /Gu/ is born 9 months after death of father Wa /Gu/.
 ERROR: US09: Gu /Tian/ is born 9 months after death of father Gu /Tian/.
 ERROR: US15: There are 15 or more than 15 siblings in family F5.
-..ERROR: US16: Not all male members of family F1 have the same last name.
+ERROR: US16: Not all male members of family F1 have the same last name.
 ERROR: US16: Not all male members of family F5 have the same last name.
-.ERROR: US10: Marriage of family F2 is within 14 years after birth of both spouses.
-.ERROR: US14: There are more than five siblings born at the same time in family F5.
-...ERROR: US12: Mother is not less than 60 years older than her children Ersi /Wang/.
+ERROR: US10: Marriage of family F2 is within 14 years after birth of both spouses.
+ERROR: US14: There are more than five siblings born at the same time in family F5.
+ERROR: US12: Mother is not less than 60 years older than her children Ersi /Wang/.
 ERROR: US12: Father is not less than 80 years older than his children Ersi /Wang/.
 ERROR: US18: Siblings I24 and I25 married.
 ERROR: US13: Birthday of San /Wang/ and Nan /Wang/ is less than 8 months apart or more than 2 days apart.
 ERROR: US13: Birthday of Nan /Wang/ and San /Wang/ is less than 8 months apart or more than 2 days apart.
-.
-----------------------------------------------------------------------
-Ran 8 tests in 0.077s
+
+
+Ran 8 tests in 0.152s
 
 OK
 
