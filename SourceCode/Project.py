@@ -257,7 +257,8 @@ class Sprint1:
                 print("ERROR: US08: Parent marriage {} after birth {} of {}"
                       .format(marry, birth, self.tool.combine_id_name(row[0], row[1])))
             if self.tool.date_before(divorce, birth) and not self.tool.dates_within(divorce, birth, 9, "months"):
-                print("ERROR: US08: {} was born {} after 9 months of parent divorce {}".format(self.tool.combine_id_name(row[0], row[1]), birth, divorce))
+                print("ERROR: US08: {} was born {} after 9 months of parent divorce {}"
+                      .format(self.tool.combine_id_name(row[0], row[1]), birth, divorce))
 
     def run_sprint1(self):
         # self.tool.print_info()
@@ -329,10 +330,12 @@ class Sprint2:
             parents = self.tool.query_info(query2)[0]  # parent ids (male, female)
             father_birth = self.tool.get_birthday(parents[0])
             mother_birth = self.tool.get_birthday(parents[1])
-            if self.tool.date_before(mother_birth, birth) and not self.tool.dates_within(mother_birth, birth, 60, 'years'):
+            if self.tool.date_before(mother_birth, birth) \
+                    and not self.tool.dates_within(mother_birth, birth, 60, 'years'):
                 status = False
                 print("ERROR: US12: Mother is not less than 60 years older than her children {}.".format(child[3]))
-            if self.tool.date_before(father_birth, birth) and not self.tool.dates_within(father_birth, birth, 80, 'years'):
+            if self.tool.date_before(father_birth, birth) \
+                    and not self.tool.dates_within(father_birth, birth, 80, 'years'):
                 status = False
                 print("ERROR: US12: Father is not less than 80 years older than his children {}.".format(child[3]))
 
