@@ -526,6 +526,129 @@ class TestSprint2(unittest.TestCase):
         self.assertFalse(self.test.siblings_should_not_marry())
 
 
+class Sprint3:
+    """
+    This class contains methods for sprint3.
+    All test cases are created.
+    """
+    def __init__(self):
+        self.tool = ProjectUtil()  # get tools ready
+
+
+    def unique_name_and_birth_date(self):
+        """
+        US23
+        author: Alla
+        :return: bool
+        """
+        status = True
+        # TODO: fill in your logic here to detect wrong data. Set status False when detecting one.
+        return status
+
+    def correct_gender_for_role(self):
+        """
+        US21
+        author: Alla
+        :return: bool
+        """
+        status = True
+        # TODO: fill in your logic here to detect wrong data. Set status False when detecting one.
+        return status
+
+    def unique_ids(self):
+        """
+        US22
+        author: Mutni
+        :return: bool
+        """
+        status = True
+        # TODO: fill in your logic here to detect wrong data. Set status False when detecting one.
+        return status
+
+    def unique_first_names_in_families(self):
+        """
+        US25
+        author: Mutni
+        :return: bool
+        """
+        status = True
+        # TODO: fill in your logic here to detect wrong data. Set status False when detecting one.
+        return status
+
+    def include_individual_ages(self):
+        """
+        US27
+        author: Robyn
+        :return: bool
+        """
+        status = True
+        # TODO: fill in your logic here to detect wrong data. Set status False when detecting one.
+        return status
+
+    def order_siblings_by_age(self):
+        """
+        US28
+        author: Robyn
+        :return: bool
+        """
+        status = True
+        # TODO: fill in your logic here to detect wrong data. Set status False when detecting one.
+        return status
+
+    def list_deceased(self):
+        """
+        US29
+        author: Youhao
+        :return: bool
+        """
+        status = True
+        # TODO: fill in your logic here to detect wrong data. Set status False when detecting one.
+        return status
+
+    def list_living_married(self):
+        """
+        US30
+        author: Youhao
+        :return: bool
+        """
+        status = True
+        # TODO: fill in your logic here to detect wrong data. Set status False when detecting one.
+        return status
+
+
+# class TestSprint3(unittest.TestCase):
+#     """
+#     Unittest for Sprint 3.
+#     """
+# 
+#     def setUp(self):
+#         self.test = Sprint3()
+#
+#     def test_unique_name_and_birth_date(self):
+#         self.assertFalse(self.test.unique_name_and_birth_date())
+#
+#     def test_correct_gender_for_role(self):
+#         self.assertFalse(self.test.correct_gender_for_role())
+#
+#     def test_unique_ids(self):
+#         self.assertFalse(self.test.unique_ids())
+#
+#     def test_unique_first_names_in_families(self):
+#         self.assertFalse(self.test.unique_first_names_in_families())
+#
+#     def test_include_individual_ages(self):
+#         self.assertFalse(self.test.include_individual_ages())
+#
+#     def test_order_siblings_by_age(self):
+#         self.assertFalse(self.test.order_siblings_by_age())
+#
+#     def test_list_deceased(self):
+#         self.assertFalse(self.test.list_deceased())
+#
+#     def test_list_living_married(self):
+#         self.assertFalse(self.test.list_living_married())
+
+
 class RunSprints:
     """
     Wrapper class for Sprint 1 and Sprint 2.
