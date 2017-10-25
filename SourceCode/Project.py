@@ -537,9 +537,8 @@ class Sprint3:
 
     def unique_name_and_birth_date(self):
         """
-        US23
-        author: Alla
-        :return: bool
+        US23 (ALLA)
+        Each individual has to have a unique name and birth date in GEDCOM file
         """
         status = True
         # TODO: fill in your logic here to detect wrong data. Set status False when detecting one.
