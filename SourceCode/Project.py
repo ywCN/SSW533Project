@@ -541,7 +541,13 @@ class Sprint3:
         Each individual has to have a unique name and birth date in GEDCOM file
         """
         status = True
-        # TODO: fill in your logic here to detect wrong data. Set status False when detecting one.
+        query = 'select NAME, BIRT from indi group by NAME, BIRT having COUNT(*) > 1'
+        duplicated = self.tool.query_info(query)
+        dup_name = duplicated[0][0]
+        dup_birt = duplicated[0][1]
+        if len(dup_name) > 3:
+            status = False
+            print("ERROR: US23")                
         return status
 
     def correct_gender_for_role(self):
