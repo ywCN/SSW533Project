@@ -620,18 +620,17 @@ class Sprint3:
         # TODO: fill in your logic here to detect wrong data. Set status False when detecting one.
         return status
 
+class TestSprint3(unittest.TestCase):
+    """
+    Unittest for Sprint 3.
+    """
+                  
+    def setUp(self):
+        self.test = Sprint3()
 
-# class TestSprint3(unittest.TestCase):
-#     """
-#     Unittest for Sprint 3.
-#     """
-#
-#     def setUp(self):
-#         self.test = Sprint3()
-#
-#     def test_unique_name_and_birth_date(self):
-#         self.assertFalse(self.test.unique_name_and_birth_date())
-#
+    def test_unique_name_and_birth_date(self):
+        self.assertFalse(self.test.unique_name_and_birth_date())
+
 #     def test_correct_gender_for_role(self):
 #         self.assertFalse(self.test.correct_gender_for_role())
 #
@@ -662,11 +661,13 @@ class RunSprints:
         self.util = ProjectUtil()
         self.sprint1 = Sprint1()
         self.sprint2 = Sprint2()
+        self.sprint3 = Sprint3()
 
     def run(self):
         self.util.print_info()
-        self.sprint1.run_sprint1()
-        # self.sprint2.run_sprint2()  # no need to run because unittest will run all methods
+        #self.sprint1.run_sprint1()
+        #self.sprint2.run_sprint2()  # no need to run because unittest will run all methods
+        #self.sprint3.run_sprint3()
         self.util.disconnect()
 
 
