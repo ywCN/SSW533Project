@@ -547,7 +547,7 @@ class Sprint3:
         dup_birt = duplicated[0][1]
         if len(dup_name) > 3:
             status = False
-            print("ERROR: US23")                
+            print("ERROR: US23: More than one individual has the same name and birthday")                
         return status
 
     def correct_gender_for_role(self):
