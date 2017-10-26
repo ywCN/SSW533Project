@@ -493,37 +493,37 @@ class Sprint2:
         # self.tool.disconnect()
 
 
-class TestSprint2(unittest.TestCase):
-    """
-    Unittest for Sprint 2.
-    """
-
-    def setUp(self):
-        self.test = Sprint2()
-
-    def test_birth_before_death_of_parents(self):
-        self.assertFalse(self.test.birth_before_death_of_parents())
-
-    def test_parent_not_too_old(self):
-        self.assertFalse(self.test.parent_not_too_old())
-
-    def test_siblings_spacing(self):
-        self.assertFalse(self.test.siblings_spacing())
-
-    def test_multiple_births_less_than_5(self):
-        self.assertFalse(self.test.multiple_births_less_than_5())
-
-    def test_fewer_than_15_siblings(self):
-        self.assertFalse(self.test.fewer_than_15_siblings())
-
-    def test_male_last_names(self):
-        self.assertFalse(self.test.male_last_names())
-
-    def test_marriage_after_14(self):
-        self.assertFalse(self.test.marriage_after_14())
-
-    def test_siblings_should_not_marry(self):
-        self.assertFalse(self.test.siblings_should_not_marry())
+# class TestSprint2(unittest.TestCase):  #TODO: uncomment this after finishing Sprint3
+#     """
+#     Unittest for Sprint 2.
+#     """
+#
+#     def setUp(self):
+#         self.test = Sprint2()
+#
+#     def test_birth_before_death_of_parents(self):
+#         self.assertFalse(self.test.birth_before_death_of_parents())
+#
+#     def test_parent_not_too_old(self):
+#         self.assertFalse(self.test.parent_not_too_old())
+#
+#     def test_siblings_spacing(self):
+#         self.assertFalse(self.test.siblings_spacing())
+#
+#     def test_multiple_births_less_than_5(self):
+#         self.assertFalse(self.test.multiple_births_less_than_5())
+#
+#     def test_fewer_than_15_siblings(self):
+#         self.assertFalse(self.test.fewer_than_15_siblings())
+#
+#     def test_male_last_names(self):
+#         self.assertFalse(self.test.male_last_names())
+#
+#     def test_marriage_after_14(self):
+#         self.assertFalse(self.test.marriage_after_14())
+#
+#     def test_siblings_should_not_marry(self):
+#         self.assertFalse(self.test.siblings_should_not_marry())
 
 
 class Sprint3:
@@ -631,17 +631,18 @@ class Sprint3:
 
     def run_sprint3(self):
         # self.tool.print_info()
-        self.unique_name_and_birth_date()  # test case will run the method
+        # self.unique_name_and_birth_date()  # test case will run the method
         self.correct_gender_for_role()
         self.unique_ids()
         self.unique_first_names_in_families()
         self.include_individual_ages()
         self.order_siblings_by_age()
-        self.list_deceased()
-        self.list_living_married()
+        # self.list_deceased()
+        # self.list_living_married()
         # self.tool.disconnect()
 
-class TestSprint3(unittest.TestCase):
+
+class TestSprint3(unittest.TestCase):  # TODO: uncomment your test case when you finished your US
     """
     Unittest for Sprint 3.
     """
@@ -667,11 +668,11 @@ class TestSprint3(unittest.TestCase):
 #     def test_order_siblings_by_age(self):
 #         self.assertFalse(self.test.order_siblings_by_age())
 #
-#     def test_list_deceased(self):
-#         self.assertFalse(self.test.list_deceased())
-#
-#     def test_list_living_married(self):
-#         self.assertFalse(self.test.list_living_married())
+    def test_list_deceased(self):
+        self.assertFalse(self.test.list_deceased())
+
+    def test_list_living_married(self):
+        self.assertFalse(self.test.list_living_married())
 
 
 class RunSprints:
@@ -686,8 +687,8 @@ class RunSprints:
 
     def run(self):
         self.util.print_info()
-        #self.sprint1.run_sprint1()
-        #self.sprint2.run_sprint2()  # no need to run because unittest will run all methods
+        # self.sprint1.run_sprint1() # TODO: uncomment this after finishing Sprint3
+        # self.sprint2.run_sprint2()  # no need to run because unittest will run all methods
         self.sprint3.run_sprint3()
         self.util.disconnect()
 
@@ -699,4 +700,4 @@ def main():
 
 if __name__ == '__main__':
     main()
-    # unittest.main()
+    unittest.main()
