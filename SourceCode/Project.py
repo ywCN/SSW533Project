@@ -629,9 +629,9 @@ class Sprint3:
                 print("US30: Found living married person {} {}.".format(person[0], person[1]))
         return status
 
-    def run_sprint3(self):
+    def run_sprint3(self):  # TODO: delete this method after finishing Sprint 3 as test case will run all the methods
         # self.tool.print_info()
-        # self.unique_name_and_birth_date()  # test case will run the method
+        # self.unique_name_and_birth_date()
         self.correct_gender_for_role()
         self.unique_ids()
         self.unique_first_names_in_families()
