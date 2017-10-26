@@ -552,12 +552,13 @@ class Sprint3:
 
     def correct_gender_for_role(self):
         """
-        US21
-        author: Alla
-        :return: bool
+        US21 (ALLA)
+        The husband have to be male and wife have to be female
         """
         status = True
         # TODO: fill in your logic here to detect wrong data. Set status False when detecting one.
+        query = 'select HUSB, WIFE from fam'
+        #HERE
         return status
 
     def unique_ids(self):
