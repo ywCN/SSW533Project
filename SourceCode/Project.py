@@ -534,7 +534,6 @@ class Sprint3:
     def __init__(self):
         self.tool = ProjectUtil()  # get tools ready
 
-
     def unique_name_and_birth_date(self):
         """
         US23 (ALLA)
@@ -547,7 +546,7 @@ class Sprint3:
         dup_birt = duplicated[0][1]
         if len(dup_name) > 3:
             status = False
-            print("ERROR: US23: More than one individual has the name {} and birthday {}.".format(dup_name, dup_birt)")                
+            print("ERROR: US23: More than one individual has the name {} and birthday {}.".format(dup_name, dup_birt))
         return status
 
     def correct_gender_for_role(self):
@@ -607,8 +606,13 @@ class Sprint3:
         author: Youhao
         :return: bool
         """
-        status = True
-        # TODO: fill in your logic here to detect wrong data. Set status False when detecting one.
+        status = True  # note: expected to return True for successfully displaying all deceased
+        deads = self.tool.query_info('select INDI, NAME, DEAT from indi where DEAT != "NA"')
+        if len(deads) != 0:
+            status = False
+            for dead in deads:
+                print("US29: Found deceased person {} {} who died on {}.".format(dead[0], dead[1], dead[2]))
+
         return status
 
     def list_living_married(self):
@@ -618,8 +622,19 @@ class Sprint3:
         :return: bool
         """
         status = True
-        # TODO: fill in your logic here to detect wrong data. Set status False when detecting one.
         return status
+
+    def run_sprint3(self):
+        # self.tool.print_info()
+        self.unique_name_and_birth_date()  # test case will run the method
+        self.correct_gender_for_role()
+        self.unique_ids()
+        self.unique_first_names_in_families()
+        self.include_individual_ages()
+        self.order_siblings_by_age()
+        self.list_deceased()
+        self.list_living_married()
+        # self.tool.disconnect()
 
 class TestSprint3(unittest.TestCase):
     """
@@ -668,7 +683,7 @@ class RunSprints:
         self.util.print_info()
         #self.sprint1.run_sprint1()
         #self.sprint2.run_sprint2()  # no need to run because unittest will run all methods
-        #self.sprint3.run_sprint3()
+        self.sprint3.run_sprint3()
         self.util.disconnect()
 
 
@@ -679,4 +694,4 @@ def main():
 
 if __name__ == '__main__':
     main()
-    unittest.main()
+    # unittest.main()
