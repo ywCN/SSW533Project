@@ -622,6 +622,11 @@ class Sprint3:
         :return: bool
         """
         status = True
+        living_marries = self.tool.query_info('select INDI, NAME from indi where DEAT == "NA" and FAMS != "NA"')
+        if len(living_marries) != 0:
+            status = False
+            for person in living_marries:
+                print("US30: Found living married person {} {}.".format(person[0], person[1]))
         return status
 
     def run_sprint3(self):
