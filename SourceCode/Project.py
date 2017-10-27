@@ -541,9 +541,9 @@ class Sprint3:
         """
         status = True
         query = 'select NAME, BIRT from indi group by NAME, BIRT having COUNT(*) > 1'
-        duplicated = self.tool.query_info(query)
-        dup_name = duplicated[0][0]
-        dup_birt = duplicated[0][1]
+        NB = self.tool.query_info(query)
+        dup_name = NB[0][0]
+        dup_birt = NB[0][1]
         if len(dup_name) > 3:
             status = False
             print("ERROR: US23: More than one individual has the name {} and birthday {}.".format(dup_name, dup_birt))
@@ -552,12 +552,20 @@ class Sprint3:
     def correct_gender_for_role(self):
         """
         US21 (ALLA)
-        The husband have to be male and wife have to be female
+        The husbands have to be male and wives have to be female
         """
         status = True
-        # TODO: fill in your logic here to detect wrong data. Set status False when detecting one.
         query = 'select HUSB, WIFE from fam'
-        #HERE
+        HW = self.tool.query_info(query)
+        for correct in HW:
+            husband = self.tool.query_info('select INDI, NAME, SEX from indi where INDI == "{}"'.format(correct[0]))[0]
+            wife = self.tool.query_info('select INDI, NAME, SEX from indi where INDI == "{}"'.format(correct[1]))[0]
+            if husband[2] != 'M':
+                status = False
+                print("ERROR: US21: Husband {} {} is not male.".format(husband[0], husband[1]))
+            if wife[2] != 'F':
+                status = False
+                print("ERROR: US21: Wife {} {} is not female.".format(wife[0], wife[1]))
         return status
 
     def unique_ids(self):
@@ -632,7 +640,7 @@ class Sprint3:
     def run_sprint3(self):  # TODO: delete this method after finishing Sprint 3 as test case will run all the methods
         # self.tool.print_info()
         # self.unique_name_and_birth_date()
-        self.correct_gender_for_role()
+        # self.correct_gender_for_role()
         self.unique_ids()
         self.unique_first_names_in_families()
         self.include_individual_ages()
@@ -653,9 +661,9 @@ class TestSprint3(unittest.TestCase):  # TODO: uncomment your test case when you
     def test_unique_name_and_birth_date(self):
         self.assertFalse(self.test.unique_name_and_birth_date())
 
-#     def test_correct_gender_for_role(self):
-#         self.assertFalse(self.test.correct_gender_for_role())
-#
+    def test_correct_gender_for_role(self):
+        self.assertFalse(self.test.correct_gender_for_role())
+        
 #     def test_unique_ids(self):
 #         self.assertFalse(self.test.unique_ids())
 #
