@@ -570,7 +570,7 @@ class Sprint3:
 
     def unique_ids(self):
         """
-        US22
+        US22 All individual IDs should be unique and all family IDs should be unique
         author: Mutni
         :return: bool
         """
@@ -589,7 +589,7 @@ class Sprint3:
 
     def unique_first_names_in_families(self):
         """
-        US25
+        US25 No more than one child with the same name and birth date should appear in a family
         author: Mutni
         :return: bool
         """
