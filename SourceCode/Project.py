@@ -575,7 +575,16 @@ class Sprint3:
         :return: bool
         """
         status = True
-        # TODO: fill in your logic here to detect wrong data. Set status False when detecting one.
+        query1 = 'select INDI from indi group by INDI having COUNT(*) > 1'
+        query2 = 'select FAM from fam group by FAM having COUNT(*) > 1'
+        indi_id = self.tool.query_info(query1)
+        fam_id = self.tool.query_info(query2)
+        if len(indi_id) > 0:
+            status = False
+            print("ERROR: US22: Individual ID {} is not unique.".format(indi_id[0][0]))
+        if len(fam_id) > 0:
+            status = False
+            print("ERROR: US22: Family ID {} is not unique.".format(fam_id[0][0]))
         return status
 
     def unique_first_names_in_families(self):
@@ -585,7 +594,27 @@ class Sprint3:
         :return: bool
         """
         status = True
-        # TODO: fill in your logic here to detect wrong data. Set status False when detecting one.
+        query = 'select fam.CHIL, fam.FAM from fam where fam.CHIL != "NA"'
+        siblings = self.tool.query_info(query)
+        dups = set()
+        for sibling in siblings:
+            sib = sibling[0].split()
+            if len(sib) > 1:
+                for a in sib:
+                    for b in sib:
+                        if a != b:
+                            name_a = self.tool.get_name(a)
+                            birth_a = self.tool.get_birthday(a)
+                            name_b = self.tool.get_name(b)
+                            birth_b = self.tool.get_birthday(b)
+                            if name_a == name_b and birth_a == birth_b:
+                                dups.add((name_a, birth_a, sibling[1]))
+        if len(dups) != 0:
+            status = False
+            for dup in dups:
+                print("ERROR: US25: More than one child with the same name {} and birth date {} in family {}."
+                      .format(dup[0], dup[1], dup[2]))
+
         return status
 
     def include_individual_ages(self):
