@@ -9,8 +9,9 @@ class ProjectUtil:
     """
     This class contains all utility methods.
     """
-    def __init__(self):
-        self.db = r'project.db'
+    def __init__(self, dbName = r'project.db'):
+        #dbName is now overrideable and can be run on different Databases for testing
+        self.db = dbName
         self.today = datetime.today().date()
         self.conversion = {'days': 1, 'months': 30.4, 'years': 365.25}
         if os.path.isfile(self.db):
@@ -101,6 +102,12 @@ class ProjectUtil:
         if death != "NA":
             return (death - birth).days / self.conversion["years"]
         return (self.today - birth).days / self.conversion["years"]
+
+    def get_Indiage2(self, indi):
+        #alternative get_age call that gathers the individual's bith and death data
+        #DOES NOT FACTOR IN DEATHS as it is meant to determine birthorder-based 'age'
+        age = self.get_age(self.get_birthday(indi), "NA")
+        return age
 
     def print_info(self):
         indi_info = 'SELECT INDI, NAME, SEX, BIRT, DEAT, FAMC, FAMS FROM indi'
@@ -618,17 +625,49 @@ class Sprint3:
         :return: bool
         """
         status = True
-        # TODO: fill in your logic here to detect wrong data. Set status False when detecting one.
+        indis = self.tool.query_info('select INDI, NAME, BIRT, DEAT from indi')
+        if len(indis) != 0:
+            status = False
+            for indi in indis:
+                truncAge = int(self.tool.get_age(indi[2],indi[3]))
+                if(indi[3] != "NA"):
+                    print("US27: Individual with ID = {} was named {} and died at Age {}.".format(indi[0], indi[1], truncAge))
+                else:
+                    print("US27: Individual with ID = {} is named {} and is Aged {}.".format(indi[0], indi[1], truncAge))
         return status
 
     def order_siblings_by_age(self):
+        #returns false when it detects siblings
+        #this is the most useful use of a boolean output for this function
         """
-        US28
+        US28 prints individuals
         author: Robyn
         :return: bool
         """
         status = True
-        # TODO: fill in your logic here to detect wrong data. Set status False when detecting one.
+        query = 'select fam.CHIL, fam.FAM from fam where fam.CHIL != "NA"'
+        families = self.tool.query_info(query)
+        #print ("US:28 SIBLINGS TEST" )
+        for family in families:
+            sibDict = {}
+            siblings = family[0].split(" ")
+            twinscount = 1
+            sibString = ""
+            for sibling in siblings:
+                status = False
+                sibAge = self.tool.get_Indiage2(sibling)
+                #If there are twins, they will be listed in order they appear in the table
+                #This is done by subtracting .0000001 from each subsequent twin's age
+                if(sibAge in sibDict):
+                    sibAge = sibAge - (.0000001 * twinscount)
+                    twinscount = twinscount + 1
+                sibDict[sibAge] = sibling
+            for key in sibDict:
+                if(sibString == ""):
+                    sibString = sibDict[key]
+                else:
+                    sibString = sibString + ", " + sibDict[key]
+            print ("US28: - The siblings, by birth order, in family " + family[1] + " are " + sibString)
         return status
 
     def list_deceased(self):
@@ -695,8 +734,8 @@ class TestSprint3(unittest.TestCase):
 #     def test_include_individual_ages(self):
 #         self.assertFalse(self.test.include_individual_ages())
 #
-#     def test_order_siblings_by_age(self):
-#         self.assertFalse(self.test.order_siblings_by_age())
+    def test_order_siblings_by_age(self):
+         self.assertFalse(self.test.order_siblings_by_age())
 
     def test_list_deceased(self):
         self.assertFalse(self.test.list_deceased())
