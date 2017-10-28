@@ -614,7 +614,6 @@ class Sprint3:
             for dup in dups:
                 print("ERROR: US25: More than one child with the same name {} and birth date {} in family {}."
                       .format(dup[0], dup[1], dup[2]))
-
         return status
 
     def include_individual_ages(self):
@@ -649,7 +648,6 @@ class Sprint3:
             status = False
             for dead in deads:
                 print("US29: Found deceased person {} {} who died on {}.".format(dead[0], dead[1], dead[2]))
-
         return status
 
     def list_living_married(self):
@@ -670,8 +668,8 @@ class Sprint3:
         # self.tool.print_info()
         # self.unique_name_and_birth_date()
         # self.correct_gender_for_role()
-        self.unique_ids()
-        self.unique_first_names_in_families()
+        # self.unique_ids()
+        # self.unique_first_names_in_families()
         self.include_individual_ages()
         self.order_siblings_by_age()
         # self.list_deceased()
@@ -693,18 +691,18 @@ class TestSprint3(unittest.TestCase):  # TODO: uncomment your test case when you
     def test_correct_gender_for_role(self):
         self.assertFalse(self.test.correct_gender_for_role())
         
-#     def test_unique_ids(self):
-#         self.assertFalse(self.test.unique_ids())
-#
-#     def test_unique_first_names_in_families(self):
-#         self.assertFalse(self.test.unique_first_names_in_families())
+    def test_unique_ids(self):
+        self.assertFalse(self.test.unique_ids())
+
+    def test_unique_first_names_in_families(self):
+        self.assertFalse(self.test.unique_first_names_in_families())
 #
 #     def test_include_individual_ages(self):
 #         self.assertFalse(self.test.include_individual_ages())
 #
 #     def test_order_siblings_by_age(self):
 #         self.assertFalse(self.test.order_siblings_by_age())
-#
+
     def test_list_deceased(self):
         self.assertFalse(self.test.list_deceased())
 
