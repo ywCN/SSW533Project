@@ -417,9 +417,7 @@ class Sprint2:
         query = 'select fam.HUSB, fam.CHIL, fam.FAM from fam where fam.CHIL != "NA"'  # all males in a family
         males_fam = self.tool.query_info(query)
         for males in males_fam:
-            # print(type(males[1]))  # string
             ids = (males[0] + " " + males[1]).split()
-            # print(self.get_name(ids[0]).split('/')[1])  # last name
             flag = False
             for a in ids:
                 for b in ids:
@@ -445,7 +443,6 @@ class Sprint2:
         query = 'select fam.HUSB, fam.WIFE, fam.MARR, fam.FAM from fam'  # husb, wife, fam
         couples = self.tool.query_info(query)
         for couple in couples:
-            # print(len(couple))  # 3
             birth_a = self.tool.get_birthday(couple[0])
             birth_b = self.tool.get_birthday(couple[1])
             marriage = couple[2]
@@ -466,10 +463,8 @@ class Sprint2:
         status = True
         query1 = 'select fam.CHIL from fam where fam.CHIL != "NA"'  # get sibling lists
         sibling_lists = self.tool.query_info(query1)
-        # print(len(sibling_lists))  # 5
         query2 = 'select fam.HUSB, fam.WIFE from fam'  # get couples
         couples = self.tool.query_info(query2)
-        # print(len(couples))  # 6
         for couple in couples:
             p1 = couple[0]
             p2 = couple[1]
@@ -677,7 +672,7 @@ class Sprint3:
         # self.tool.disconnect()
 
 
-class TestSprint3(unittest.TestCase):  # TODO: uncomment your test case when you finished your US
+class TestSprint3(unittest.TestCase):
     """
     Unittest for Sprint 3.
     """
@@ -712,7 +707,7 @@ class TestSprint3(unittest.TestCase):  # TODO: uncomment your test case when you
 
 class RunSprints:
     """
-    Wrapper class for Sprint 1 and Sprint 2.
+    Wrapper class for all Sprints.
     """
     def __init__(self):
         self.util = ProjectUtil()
