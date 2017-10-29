@@ -10,7 +10,7 @@ class ProjectUtil:
     This class contains all utility methods.
     """
     def __init__(self, dbName = r'project.db'):
-        #dbName is now overrideable and can be run on different Databases for testing
+        # dbName is now overrideable and can be run on different Databases for testing
         self.db = dbName
         self.today = datetime.today().date()
         self.conversion = {'days': 1, 'months': 30.4, 'years': 365.25}
@@ -104,8 +104,8 @@ class ProjectUtil:
         return (self.today - birth).days / self.conversion["years"]
 
     def get_Indiage2(self, indi):
-        #alternative get_age call that gathers the individual's bith and death data
-        #DOES NOT FACTOR IN DEATHS as it is meant to determine birthorder-based 'age'
+        # alternative get_age call that gathers the individual's bith and death data
+        # DOES NOT FACTOR IN DEATHS as it is meant to determine birthorder-based 'age'
         age = self.get_age(self.get_birthday(indi), "NA")
         return age
 
@@ -495,37 +495,37 @@ class Sprint2:
         # self.tool.disconnect()
 
 
-# class TestSprint2(unittest.TestCase):  #TODO: uncomment this after finishing Sprint3
-#     """
-#     Unittest for Sprint 2.
-#     """
-#
-#     def setUp(self):
-#         self.test = Sprint2()
-#
-#     def test_birth_before_death_of_parents(self):
-#         self.assertFalse(self.test.birth_before_death_of_parents())
-#
-#     def test_parent_not_too_old(self):
-#         self.assertFalse(self.test.parent_not_too_old())
-#
-#     def test_siblings_spacing(self):
-#         self.assertFalse(self.test.siblings_spacing())
-#
-#     def test_multiple_births_less_than_5(self):
-#         self.assertFalse(self.test.multiple_births_less_than_5())
-#
-#     def test_fewer_than_15_siblings(self):
-#         self.assertFalse(self.test.fewer_than_15_siblings())
-#
-#     def test_male_last_names(self):
-#         self.assertFalse(self.test.male_last_names())
-#
-#     def test_marriage_after_14(self):
-#         self.assertFalse(self.test.marriage_after_14())
-#
-#     def test_siblings_should_not_marry(self):
-#         self.assertFalse(self.test.siblings_should_not_marry())
+class TestSprint2(unittest.TestCase):
+    """
+    Unittest for Sprint 2.
+    """
+
+    def setUp(self):
+        self.test = Sprint2()
+
+    def test_birth_before_death_of_parents(self):
+        self.assertFalse(self.test.birth_before_death_of_parents())
+
+    def test_parent_not_too_old(self):
+        self.assertFalse(self.test.parent_not_too_old())
+
+    def test_siblings_spacing(self):
+        self.assertFalse(self.test.siblings_spacing())
+
+    def test_multiple_births_less_than_5(self):
+        self.assertFalse(self.test.multiple_births_less_than_5())
+
+    def test_fewer_than_15_siblings(self):
+        self.assertFalse(self.test.fewer_than_15_siblings())
+
+    def test_male_last_names(self):
+        self.assertFalse(self.test.male_last_names())
+
+    def test_marriage_after_14(self):
+        self.assertFalse(self.test.marriage_after_14())
+
+    def test_siblings_should_not_marry(self):
+        self.assertFalse(self.test.siblings_should_not_marry())
 
 
 class Sprint3:
@@ -631,14 +631,16 @@ class Sprint3:
             for indi in indis:
                 truncAge = int(self.tool.get_age(indi[2],indi[3]))
                 if(indi[3] != "NA"):
-                    print("US27: Individual with ID = {} was named {} and died at Age {}.".format(indi[0], indi[1], truncAge))
+                    print("US27: Individual with ID = {} was named {} and died at Age {}."
+                          .format(indi[0], indi[1], truncAge))
                 else:
-                    print("US27: Individual with ID = {} is named {} and is Aged {}.".format(indi[0], indi[1], truncAge))
+                    print("US27: Individual with ID = {} is named {} and is Aged {}."
+                          .format(indi[0], indi[1], truncAge))
         return status
 
     def order_siblings_by_age(self):
-        #returns false when it detects siblings
-        #this is the most useful use of a boolean output for this function
+        # returns false when it detects siblings
+        # this is the most useful use of a boolean output for this function
         """
         US28 prints individuals
         author: Robyn
@@ -647,7 +649,7 @@ class Sprint3:
         status = True
         query = 'select fam.CHIL, fam.FAM from fam where fam.CHIL != "NA"'
         families = self.tool.query_info(query)
-        #print ("US:28 SIBLINGS TEST" )
+        # print ("US:28 SIBLINGS TEST" )
         for family in families:
             sibDict = {}
             siblings = family[0].split(" ")
@@ -656,8 +658,8 @@ class Sprint3:
             for sibling in siblings:
                 status = False
                 sibAge = self.tool.get_Indiage2(sibling)
-                #If there are twins, they will be listed in order they appear in the table
-                #This is done by subtracting .0000001 from each subsequent twin's age
+                # If there are twins, they will be listed in order they appear in the table
+                # This is done by subtracting .0000001 from each subsequent twin's age
                 if(sibAge in sibDict):
                     sibAge = sibAge - (.0000001 * twinscount)
                     twinscount = twinscount + 1
@@ -667,7 +669,8 @@ class Sprint3:
                     sibString = sibDict[key]
                 else:
                     sibString = sibString + ", " + sibDict[key]
-            print ("US28: - The siblings, by birth order, in family " + family[1] + " are " + sibString)
+            print("US28: The siblings, by birth order, in family " + family[1] + " are " + sibString)
+            print("US28: The siblings, by birth order, in family " + family[1] + " are " + sibString)
         return status
 
     def list_deceased(self):
@@ -698,18 +701,6 @@ class Sprint3:
                 print("US30: Found living married person {} {}.".format(person[0], person[1]))
         return status
 
-    def run_sprint3(self):  # TODO: delete this method after finishing Sprint 3 as test case will run all the methods
-        # self.tool.print_info()
-        # self.unique_name_and_birth_date()
-        # self.correct_gender_for_role()
-        # self.unique_ids()
-        # self.unique_first_names_in_families()
-        self.include_individual_ages()
-        self.order_siblings_by_age()
-        # self.list_deceased()
-        # self.list_living_married()
-        # self.tool.disconnect()
-
 
 class TestSprint3(unittest.TestCase):
     """
@@ -730,12 +721,12 @@ class TestSprint3(unittest.TestCase):
 
     def test_unique_first_names_in_families(self):
         self.assertFalse(self.test.unique_first_names_in_families())
-#
-#     def test_include_individual_ages(self):
-#         self.assertFalse(self.test.include_individual_ages())
-#
+
+    def test_include_individual_ages(self):
+        self.assertFalse(self.test.include_individual_ages())
+
     def test_order_siblings_by_age(self):
-         self.assertFalse(self.test.order_siblings_by_age())
+        self.assertFalse(self.test.order_siblings_by_age())
 
     def test_list_deceased(self):
         self.assertFalse(self.test.list_deceased())
@@ -756,9 +747,7 @@ class RunSprints:
 
     def run(self):
         self.util.print_info()
-        # self.sprint1.run_sprint1() # TODO: uncomment this after finishing Sprint3
-        # self.sprint2.run_sprint2()  # no need to run because unittest will run all methods
-        self.sprint3.run_sprint3()
+        self.sprint1.run_sprint1()
         self.util.disconnect()
 
 
