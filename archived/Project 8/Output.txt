@@ -1,0 +1,174 @@
+People
++-----+---------------+--------+------------+------+-------+------------+-------+--------+
+|  ID |      Name     | Gender |  Birthday  | Age  | Alive |   Death    | Child | Spouse |
++-----+---------------+--------+------------+------+-------+------------+-------+--------+
+|  I1 |    Wa /Gu/    |   M    | 2010-08-04 |  7   |  True |     NA     |   F1  |   F5   |
+|  I2 |   San /Wang/  |   M    | 1967-06-04 | -959 | False | 1008-11-18 |   F2  |   F1   |
+|  I3 |   Er /Fang/   |   F    | 1970-02-04 | -961 | False | 1008-11-18 |   NA  |   F1   |
+|  I4 |   Wu /Wang/   |   M    | 1948-07-11 |  69  |  True |     NA     |   NA  |   F2   |
+|  I5 |   Ping /Ju/   |   F    | 1950-06-23 |  67  |  True |     NA     |   NA  |   F2   |
+|  I6 |   Nan /Wang/  |   F    | 1967-08-04 |  50  |  True |     NA     |   F2  |   F4   |
+|  I7 |   Fu /Tian/   |   M    | 1965-07-15 | 1043 | False | 3008-11-18 |   NA  |   F4   |
+|  I8 |   Jiu /Liu/   |   M    | 1964-06-07 |  53  |  True |     NA     |   NA  |   F3   |
+|  I9 |   Gu /Tian/   |   M    | 1995-04-07 |  23  |  True |     NA     |   F4  |   F5   |
+| I10 |   Wei /Liu/   |   F    | 2010-04-09 |  8   |  True |     NA     |   F3  |   NA   |
+| I11 |  Shiyi /Wang/ |   M    | 1666-06-06 | 351  |  True |     NA     |   F5  |   NA   |
+| I12 |  Shiyi /Wang/ |   M    | 1666-06-06 | 351  |  True |     NA     |   F5  |   NA   |
+| I13 | Shisan /Wang/ |   M    | 1666-06-06 | 351  |  True |     NA     |   F5  |   NA   |
+| I14 |  Shisi /Wang/ |   F    | 1666-06-06 | 351  |  True |     NA     |   F5  |   NA   |
+| I15 |  Shiwu /Wang/ |   M    | 1666-06-06 | 351  |  True |     NA     |   F5  |   NA   |
+| I16 | Shiliu /Wang/ |   M    | 1666-06-06 | 351  |  True |     NA     |   F5  |   NA   |
+| I17 |  Shiqi /Wang/ |   M    | 1666-06-06 | 351  |  True |     NA     |   F5  |   NA   |
+| I18 |  Shiba /Wang/ |   F    | 1666-06-06 | 351  |  True |     NA     |   F5  |   NA   |
+| I19 | Shijiu /Wang/ |   M    | 1666-06-06 | 351  |  True |     NA     |   F5  |   NA   |
+| I20 |  Ershi /Wang/ |   M    | 1666-06-06 | 351  |  True |     NA     |   F5  |   NA   |
+| I21 |  Eryi /Wang/  |   M    | 1666-06-06 | 351  |  True |     NA     |   F5  |   NA   |
+| I22 |  Erer /Wang/  |   F    | 1666-06-06 | 351  |  True |     NA     |   F5  |   NA   |
+| I23 |  Ersan /Wang/ |   M    | 1666-06-06 | 351  |  True |     NA     |   F5  |   NA   |
+| I24 |  Ersi /Wang/  |   M    | 2666-08-06 | -649 |  True |     NA     |   F5  |   F6   |
+| I25 |  Erwu /Wang/  |   M    | 1666-06-06 | 351  |  True |     NA     |   F5  |   F6   |
+| I26 |  Erliu /Wang/ |   F    | 1666-06-06 | 351  |  True |     NA     |   F5  |   NA   |
+| I27 |  Erqi /Wang/  |   F    | 1666-06-06 | 351  |  True |     NA     |   F5  |   NA   |
+| I28 |   Rua /Rua/   |   M    | 1999-08-04 |  18  |  True |     NA     |   NA  |   NA   |
+| I28 |   Rua /Rua/   |   M    | 1999-08-04 |  18  |  True |     NA     |   NA  |   NA   |
++-----+---------------+--------+------------+------+-------+------------+-------+--------+
+Families
++----+------------+------------+------------+--------------+---------+-------------+---------------------------------------------------------------------+
+| ID |  Married   |  Divorced  | Husband ID | Husband Name | Wife ID |  Wife Name  |                               Children                              |
++----+------------+------------+------------+--------------+---------+-------------+---------------------------------------------------------------------+
+| F1 | 1089-03-09 | 1088-03-09 |     I2     |  San /Wang/  |    I3   |  Er /Fang/  |                                  I1                                 |
+| F2 | 1952-08-13 |     NA     |     I4     |  Wu /Wang/   |    I5   |  Ping /Ju/  |                                I2 I6                                |
+| F3 | 2010-06-10 |     NA     |     I8     |  Jiu /Liu/   |    I6   |  Nan /Wang/ |                                 I10                                 |
+| F4 | 1993-07-08 | 1992-07-08 |     I7     |  Fu /Tian/   |    I6   |  Nan /Wang/ |                                  I9                                 |
+| F5 | 1903-07-08 | 1903-07-09 |     I1     |   Wa /Gu/    |    I9   |  Gu /Tian/  | I11 I12 I13 I14 I15 I16 I17 I18 I19 I20 I21 I22 I23 I24 I25 I26 I27 |
+| F6 | 1703-07-08 |     NA     |    I24     | Ersi /Wang/  |   I25   | Erwu /Wang/ |                                  NA                                 |
++----+------------+------------+------------+--------------+---------+-------------+---------------------------------------------------------------------+
+
+ERROR: US01: 3008-11-18 occurs after today 2017-10-29 for I7 Fu /Tian/
+ERROR: US01: 2666-08-06 occurs after today 2017-10-29 for I24 Ersi /Wang/
+ERROR: US02: Birth 2010-08-04 occurs after marriage 1903-07-08 for I1 Wa /Gu/
+ERROR: US02: Birth 1967-06-04 occurs after marriage 1089-03-09 for I2 San /Wang/
+ERROR: US02: Birth 1970-02-04 occurs after marriage 1089-03-09 for I3 Er /Fang/
+ERROR: US02: Birth 1995-04-07 occurs after marriage 1903-07-08 for I9 Gu /Tian/
+ERROR: US02: Birth 2666-08-06 occurs after marriage 1703-07-08 for I24 Ersi /Wang/
+ERROR: US03: Birth 1967-06-04 occurs after death 1008-11-18 for I2 San /Wang/
+ERROR: US03: Birth 1970-02-04 occurs after death 1008-11-18 for I3 Er /Fang/
+ERROR: US04: Marriage 1089-03-09 occurs after divorce 1088-03-09 for I2 San /Wang/
+ERROR: US04: Marriage 1089-03-09 occurs after divorce 1088-03-09 for I3 Er /Fang/
+ERROR: US04: Marriage 1993-07-08 occurs after divorce 1992-07-08 for I6 Nan /Wang/
+ERROR: US04: Marriage 1993-07-08 occurs after divorce 1992-07-08 for I7 Fu /Tian/
+ERROR: US05: Marriage 1089-03-09 occurs after death 1008-11-18 for I2 San /Wang/
+ERROR: US05: Marriage 1089-03-09 occurs after death 1008-11-18 for I3 Er /Fang/
+ERROR: US06: Divorce 1088-03-09 occurs after death 1008-11-18 for I2 San /Wang/
+ERROR: US06: Divorce 1088-03-09 occurs after death 1008-11-18 for I3 Er /Fang/
+ERROR: US07: Age is greater than or equal to 150 years for I7 Fu /Tian/
+ERROR: US07: Age is greater than or equal to 150 years for I11 Shiyi /Wang/
+ERROR: US07: Age is greater than or equal to 150 years for I12 Shiyi /Wang/
+ERROR: US07: Age is greater than or equal to 150 years for I13 Shisan /Wang/
+ERROR: US07: Age is greater than or equal to 150 years for I14 Shisi /Wang/
+ERROR: US07: Age is greater than or equal to 150 years for I15 Shiwu /Wang/
+ERROR: US07: Age is greater than or equal to 150 years for I16 Shiliu /Wang/
+ERROR: US07: Age is greater than or equal to 150 years for I17 Shiqi /Wang/
+ERROR: US07: Age is greater than or equal to 150 years for I18 Shiba /Wang/
+ERROR: US07: Age is greater than or equal to 150 years for I19 Shijiu /Wang/
+ERROR: US07: Age is greater than or equal to 150 years for I20 Ershi /Wang/
+ERROR: US07: Age is greater than or equal to 150 years for I21 Eryi /Wang/
+ERROR: US07: Age is greater than or equal to 150 years for I22 Erer /Wang/
+ERROR: US07: Age is greater than or equal to 150 years for I23 Ersan /Wang/
+ERROR: US07: Age is greater than or equal to 150 years for I25 Erwu /Wang/
+ERROR: US07: Age is greater than or equal to 150 years for I26 Erliu /Wang/
+ERROR: US07: Age is greater than or equal to 150 years for I27 Erqi /Wang/
+ERROR: US08: I1 Wa /Gu/ was born 2010-08-04 after 9 months of parent divorce 1088-03-09
+ERROR: US08: I9 Gu /Tian/ was born 1995-04-07 after 9 months of parent divorce 1992-07-08
+ERROR: US08: Parent marriage 2010-06-10 after birth 2010-04-09 of I10 Wei /Liu/
+ERROR: US08: Parent marriage 1903-07-08 after birth 1666-06-06 of I11 Shiyi /Wang/
+ERROR: US08: Parent marriage 1903-07-08 after birth 1666-06-06 of I12 Shiyi /Wang/
+ERROR: US08: Parent marriage 1903-07-08 after birth 1666-06-06 of I13 Shisan /Wang/
+ERROR: US08: Parent marriage 1903-07-08 after birth 1666-06-06 of I14 Shisi /Wang/
+ERROR: US08: Parent marriage 1903-07-08 after birth 1666-06-06 of I15 Shiwu /Wang/
+ERROR: US08: Parent marriage 1903-07-08 after birth 1666-06-06 of I16 Shiliu /Wang/
+ERROR: US08: Parent marriage 1903-07-08 after birth 1666-06-06 of I17 Shiqi /Wang/
+ERROR: US08: Parent marriage 1903-07-08 after birth 1666-06-06 of I18 Shiba /Wang/
+ERROR: US08: Parent marriage 1903-07-08 after birth 1666-06-06 of I19 Shijiu /Wang/
+ERROR: US08: Parent marriage 1903-07-08 after birth 1666-06-06 of I20 Ershi /Wang/
+ERROR: US08: Parent marriage 1903-07-08 after birth 1666-06-06 of I21 Eryi /Wang/
+ERROR: US08: Parent marriage 1903-07-08 after birth 1666-06-06 of I22 Erer /Wang/
+ERROR: US08: Parent marriage 1903-07-08 after birth 1666-06-06 of I23 Ersan /Wang/
+ERROR: US08: I24 Ersi /Wang/ was born 2666-08-06 after 9 months of parent divorce 1903-07-09
+ERROR: US08: Parent marriage 1903-07-08 after birth 1666-06-06 of I25 Erwu /Wang/
+ERROR: US08: Parent marriage 1903-07-08 after birth 1666-06-06 of I26 Erliu /Wang/
+ERROR: US08: Parent marriage 1903-07-08 after birth 1666-06-06 of I27 Erqi /Wang/
+..ERROR: US09: Wa /Gu/ is born 9 months after death of father Wa /Gu/.
+ERROR: US09: Gu /Tian/ is born 9 months after death of father Gu /Tian/.
+ERROR: US15: There are 15 or more than 15 siblings in family F5.
+ERROR: US16: Not all male members of family F1 have the same last name.
+...ERROR: US16: Not all male members of family F5 have the same last name.
+ERROR: US10: Marriage of family F2 is within 14 years after birth of both spouses.
+ERROR: US14: There are more than five siblings born at the same time in family F5.
+..ERROR: US12: Mother is not less than 60 years older than her children Ersi /Wang/.
+ERROR: US12: Father is not less than 80 years older than his children Ersi /Wang/.
+ERROR: US18: Siblings I24 and I25 married.
+ERROR: US13: Birthday of San /Wang/ and Nan /Wang/ is less than 8 months apart or more than 2 days apart.
+ERROR: US13: Birthday of Nan /Wang/ and San /Wang/ is less than 8 months apart or more than 2 days apart.
+.....ERROR: US21: Wife I9 Gu /Tian/ is not female.
+ERROR: US21: Wife I25 Erwu /Wang/ is not female.
+US27: Individual with ID = I1 is named Wa /Gu/ and is Aged 7.
+US27: Individual with ID = I2 was named San /Wang/ and died at Age -958.
+US27: Individual with ID = I3 was named Er /Fang/ and died at Age -961.
+US27: Individual with ID = I4 is named Wu /Wang/ and is Aged 69.
+US27: Individual with ID = I5 is named Ping /Ju/ and is Aged 67.
+US27: Individual with ID = I6 is named Nan /Wang/ and is Aged 50.
+US27: Individual with ID = I7 was named Fu /Tian/ and died at Age 1043.
+US27: Individual with ID = I8 is named Jiu /Liu/ and is Aged 53.
+US27: Individual with ID = I9 is named Gu /Tian/ and is Aged 22.
+US27: Individual with ID = I10 is named Wei /Liu/ and is Aged 7.
+US27: Individual with ID = I11 is named Shiyi /Wang/ and is Aged 351.
+US27: Individual with ID = I12 is named Shiyi /Wang/ and is Aged 351.
+US27: Individual with ID = I13 is named Shisan /Wang/ and is Aged 351.
+US27: Individual with ID = I14 is named Shisi /Wang/ and is Aged 351.
+US27: Individual with ID = I15 is named Shiwu /Wang/ and is Aged 351.
+US27: Individual with ID = I16 is named Shiliu /Wang/ and is Aged 351.
+US27: Individual with ID = I17 is named Shiqi /Wang/ and is Aged 351.
+US27: Individual with ID = I18 is named Shiba /Wang/ and is Aged 351.
+US27: Individual with ID = I19 is named Shijiu /Wang/ and is Aged 351.
+US27: Individual with ID = I20 is named Ershi /Wang/ and is Aged 351.
+US27: Individual with ID = I21 is named Eryi /Wang/ and is Aged 351.
+US27: Individual with ID = I22 is named Erer /Wang/ and is Aged 351.
+US27: Individual with ID = I23 is named Ersan /Wang/ and is Aged 351.
+US27: Individual with ID = I24 is named Ersi /Wang/ and is Aged -648.
+US27: Individual with ID = I25 is named Erwu /Wang/ and is Aged 351.
+US27: Individual with ID = I26 is named Erliu /Wang/ and is Aged 351.
+US27: Individual with ID = I27 is named Erqi /Wang/ and is Aged 351.
+US27: Individual with ID = I28 is named Rua /Rua/ and is Aged 18.
+US27: Individual with ID = I28 is named Rua /Rua/ and is Aged 18.
+US29: Found deceased person I2 San /Wang/ who died on 1008-11-18.
+US29: Found deceased person I3 Er /Fang/ who died on 1008-11-18.
+US29: Found deceased person I7 Fu /Tian/ who died on 3008-11-18.
+US30: Found living married person I1 Wa /Gu/.
+US30: Found living married person I4 Wu /Wang/.
+US30: Found living married person I5 Ping /Ju/.
+US30: Found living married person I6 Nan /Wang/.
+US30: Found living married person I8 Jiu /Liu/.
+US30: Found living married person I9 Gu /Tian/.
+US30: Found living married person I24 Ersi /Wang/.
+US30: Found living married person I25 Erwu /Wang/.
+US28: The siblings, by birth order, in family F1 are I1
+US28: The siblings, by birth order, in family F1 are I1
+US28: The siblings, by birth order, in family F2 are I2, I6
+US28: The siblings, by birth order, in family F2 are I2, I6
+US28: The siblings, by birth order, in family F3 are I10
+US28: The siblings, by birth order, in family F3 are I10
+US28: The siblings, by birth order, in family F4 are I9
+US28: The siblings, by birth order, in family F4 are I9
+.US28: The siblings, by birth order, in family F5 are I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27
+US28: The siblings, by birth order, in family F5 are I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27
+...ERROR: US25: More than one child with the same name Shiyi /Wang/ and birth date 1666-06-06 in family F5.
+ERROR: US22: Individual ID I28 is not unique.
+ERROR: US23: More than one individual has the name Rua /Rua/ and birthday 1999-08-04.
+
+----------------------------------------------------------------------
+Ran 16 tests in 0.095s
+
+OK
+
+Process finished with exit code 0
