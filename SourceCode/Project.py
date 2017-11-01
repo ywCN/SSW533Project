@@ -297,28 +297,31 @@ class Sprint2:
         status = True
         query1 = 'select indi.INDI, indi.SEX, indi.DEAT, indi.NAME from indi where indi.DEAT != "NA"'  # dead people
         deads = self.tool.query_info(query1)
-        for person in deads:
-            death = person[2]
-            if person[1] == 'M':
-                query2 = 'select fam.CHIL from fam where fam.HUSB == "{}"'.format(person[0])  # list of children
-                children = self.tool.query_info(query2)
-                for child in children[0]:
-                    query3 = 'select indi.BIRT, indi.NAME from indi where indi.INDI == "{}"'.format(child)  # birthday
-                    data = self.tool.query_info(query3)
-                    birth = data[0][1]
-                    name = data[0][1]
-                    if self.tool.date_before(death, birth) and self.tool.dates_within(death, birth, 9, 'months'):
-                        status = False
-                        print("ERROR: US09: {} is born 9 months after death of father {}.".format(birth, name))
-            if person[1] == 'F':
-                query2 = 'select fam.CHIL from fam where fam.WIFE == "{}"'.format(person[0])
-                children = self.tool.query_info(query2)
-                for child in children[0]:
-                    query3 = 'select indi.BIRT, indi.NAME from indi where indi.INDI == "{}"'.format(child)  # birthday
-                    birth = self.tool.query_info(query3)
-                    if not self.tool.date_before(death, birth):
-                        status = False
-                        print("ERROR: US09: {} is born after death of mother {}.".format(birth[1], person[3]))
+        try:
+            for person in deads:
+                death = person[2]
+                if person[1] == 'M':
+                    query2 = 'select fam.CHIL from fam where fam.HUSB == "{}"'.format(person[0])  # list of children
+                    children = self.tool.query_info(query2)
+                    for child in children[0]:
+                        query3 = 'select indi.BIRT, indi.NAME from indi where indi.INDI == "{}"'.format(child)  # birthday
+                        data = self.tool.query_info(query3)
+                        birth = data[0][1]
+                        name = data[0][1]
+                        if self.tool.date_before(death, birth) and self.tool.dates_within(death, birth, 9, 'months'):
+                            status = False
+                            print("ERROR: US09: {} is born 9 months after death of father {}.".format(birth, name))
+                if person[1] == 'F':
+                    query2 = 'select fam.CHIL from fam where fam.WIFE == "{}"'.format(person[0])
+                    children = self.tool.query_info(query2)
+                    for child in children[0]:
+                        query3 = 'select indi.BIRT, indi.NAME from indi where indi.INDI == "{}"'.format(child)  # birthday
+                        birth = self.tool.query_info(query3)
+                        if not self.tool.date_before(death, birth):
+                            status = False
+                            print("ERROR: US09: {} is born after death of mother {}.".format(birth[1], person[3]))
+        except IndexError:
+            pass  # caused by bad data, but not part of the US
         return status
 
     def parent_not_too_old(self):
@@ -733,6 +736,104 @@ class TestSprint3(unittest.TestCase):
 
     def test_list_living_married(self):
         self.assertFalse(self.test.list_living_married())
+
+
+class Sprint4:
+    """
+    This class contains methods for sprint4.
+    All test cases are created.
+    """
+    def __init__(self):
+        self.tool = ProjectUtil()  # get tools ready
+
+    def list_living_single(self):
+        """
+        US31
+        :return:
+        """
+        pass
+
+    def list_multiple_births(self):
+        """
+        US32
+        :return:
+        """
+        pass
+
+    def list_orphans(self):
+        """
+        US33
+        :return:
+        """
+        pass
+
+    def list_large_age_differences(self):
+        """
+        US34
+        :return:
+        """
+        pass
+
+    def list_recent_births(self):
+        """
+        US35
+        :return:
+        """
+        pass
+
+    def list_recent_deaths(self):
+        """
+        US36
+        :return:
+        """
+        pass
+
+    def list_upcoming_birthdays(self):
+        """
+        US38
+        :return:
+        """
+        pass
+
+    def list_upcoming_anniversaries(self):
+        """
+        US39
+        :return:
+        """
+        pass
+
+
+class TestSprint4(unittest.TestCase):  # TODO: uncomment your test case to test your US
+    """
+    Unittest for Sprint 4.
+    """
+
+    def setUp(self):
+        self.test = Sprint4()
+
+    # def test_list_living_single(self):
+    #     self.assertFalse(self.test.list_living_single())
+    #
+    # def test_list_multiple_births(self):
+    #     self.assertFalse(self.test.list_multiple_births())
+    #
+    # def test_list_orphans(self):
+    #     self.assertFalse(self.test.list_orphans())
+    #
+    # def test_list_large_age_differences(self):
+    #     self.assertFalse(self.test.list_large_age_differences())
+    #
+    # def test_list_recent_births(self):
+    #     self.assertFalse(self.test.list_recent_births())
+    #
+    # def test_list_recent_deaths(self):
+    #     self.assertFalse(self.test.list_recent_deaths())
+    #
+    # def test_list_upcoming_birthdays(self):
+    #     self.assertFalse(self.test.list_upcoming_birthdays())
+    #
+    # def test_list_upcoming_anniversaries(self):
+    #     self.assertFalse(self.test.list_upcoming_anniversaries())
 
 
 class RunSprints:
