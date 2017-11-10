@@ -103,7 +103,7 @@ class ProjectUtil:
             return (death - birth).days / self.conversion["years"]
         return (self.today - birth).days / self.conversion["years"]
 
-    def get_Indiage2(self, indi):
+    def get_indi_age2(self, indi):
         # alternative get_age call that gathers the individual's bith and death data
         # DOES NOT FACTOR IN DEATHS as it is meant to determine birthorder-based 'age'
         age = self.get_age(self.get_birthday(indi), "NA")
@@ -304,7 +304,8 @@ class Sprint2:
                     query2 = 'select fam.CHIL from fam where fam.HUSB == "{}"'.format(person[0])  # list of children
                     children = self.tool.query_info(query2)
                     for child in children[0]:
-                        query3 = 'select indi.BIRT, indi.NAME from indi where indi.INDI == "{}"'.format(child)  # birthday
+                        query3 = 'select indi.BIRT, indi.NAME from indi where indi.INDI == "{}"'\
+                            .format(child)  # birthday
                         data = self.tool.query_info(query3)
                         birth = data[0][1]
                         name = data[0][1]
@@ -315,7 +316,8 @@ class Sprint2:
                     query2 = 'select fam.CHIL from fam where fam.WIFE == "{}"'.format(person[0])
                     children = self.tool.query_info(query2)
                     for child in children[0]:
-                        query3 = 'select indi.BIRT, indi.NAME from indi where indi.INDI == "{}"'.format(child)  # birthday
+                        query3 = 'select indi.BIRT, indi.NAME from indi where indi.INDI == "{}"'\
+                            .format(child)  # birthday
                         birth = self.tool.query_info(query3)
                         if not self.tool.date_before(death, birth):
                             status = False
@@ -546,9 +548,9 @@ class Sprint3:
         """
         status = True
         query = 'select NAME, BIRT from indi group by NAME, BIRT having COUNT(*) > 1'
-        NB = self.tool.query_info(query)
-        dup_name = NB[0][0]
-        dup_birt = NB[0][1]
+        new_birth = self.tool.query_info(query)
+        dup_name = new_birth[0][0]
+        dup_birt = new_birth[0][1]
         if len(dup_name) > 3:
             status = False
             print("ERROR: US23: More than one individual has the name {} and birthday {}.".format(dup_name, dup_birt))
@@ -561,10 +563,10 @@ class Sprint3:
         """
         status = True
         query = 'select HUSB, WIFE from fam'
-        HW = self.tool.query_info(query)
-        for correct in HW:
-            husband = self.tool.query_info('select INDI, NAME, SEX from indi where INDI == "{}"'.format(correct[0]))[0]
-            wife = self.tool.query_info('select INDI, NAME, SEX from indi where INDI == "{}"'.format(correct[1]))[0]
+        couples = self.tool.query_info(query)
+        for couple in couples:
+            husband = self.tool.query_info('select INDI, NAME, SEX from indi where INDI == "{}"'.format(couple[0]))[0]
+            wife = self.tool.query_info('select INDI, NAME, SEX from indi where INDI == "{}"'.format(couple[1]))[0]
             if husband[2] != 'M':
                 status = False
                 print("ERROR: US21: Husband {} {} is not male.".format(husband[0], husband[1]))
@@ -628,17 +630,17 @@ class Sprint3:
         :return: bool
         """
         status = True
-        indis = self.tool.query_info('select INDI, NAME, BIRT, DEAT from indi')
-        if len(indis) != 0:
+        individuals = self.tool.query_info('select INDI, NAME, BIRT, DEAT from indi')
+        if len(individuals) != 0:
             status = False
-            for indi in indis:
-                truncAge = int(self.tool.get_age(indi[2],indi[3]))
-                if(indi[3] != "NA"):
+            for individual in individuals:
+                trunc_age = int(self.tool.get_age(individual[2], individual[3]))
+                if individual[3] != "NA":
                     print("US27: Individual with ID = {} was named {} and died at Age {}."
-                          .format(indi[0], indi[1], truncAge))
+                          .format(individual[0], individual[1], trunc_age))
                 else:
                     print("US27: Individual with ID = {} is named {} and is Aged {}."
-                          .format(indi[0], indi[1], truncAge))
+                          .format(individual[0], individual[1], trunc_age))
         return status
 
     def order_siblings_by_age(self):
@@ -654,26 +656,26 @@ class Sprint3:
         families = self.tool.query_info(query)
         # print ("US:28 SIBLINGS TEST" )
         for family in families:
-            sibDict = {}
+            sib_dict = {}
             siblings = family[0].split(" ")
-            twinscount = 1
-            sibString = ""
+            twins_count = 1
+            sib_string = ""
             for sibling in siblings:
                 status = False
-                sibAge = self.tool.get_Indiage2(sibling)
+                sib_age = self.tool.get_indi_age2(sibling)
                 # If there are twins, they will be listed in order they appear in the table
                 # This is done by subtracting .0000001 from each subsequent twin's age
-                if(sibAge in sibDict):
-                    sibAge = sibAge - (.0000001 * twinscount)
-                    twinscount = twinscount + 1
-                sibDict[sibAge] = sibling
-            for key in sibDict:
-                if(sibString == ""):
-                    sibString = sibDict[key]
+                if sib_age in sib_dict:
+                    sib_age = sib_age - (.0000001 * twins_count)
+                    twins_count = twins_count + 1
+                sib_dict[sib_age] = sibling
+            for key in sib_dict:
+                if sib_string == "":
+                    sib_string = sib_dict[key]
                 else:
-                    sibString = sibString + ", " + sibDict[key]
-            print("US28: The siblings, by birth order, in family " + family[1] + " are " + sibString)
-            print("US28: The siblings, by birth order, in family " + family[1] + " are " + sibString)
+                    sib_string = sib_string + ", " + sib_dict[key]
+            print("US28: The siblings, by birth order, in family " + family[1] + " are " + sib_string)
+            print("US28: The siblings, by birth order, in family " + family[1] + " are " + sib_string)
         return status
 
     def list_deceased(self):
