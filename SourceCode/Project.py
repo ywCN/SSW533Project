@@ -9,9 +9,9 @@ class ProjectUtil:
     """
     This class contains all utility methods.
     """
-    def __init__(self, dbName = r'project.db'):
-        # dbName is now overrideable and can be run on different Databases for testing
-        self.db = dbName
+    def __init__(self, db_name=r'project.db'):
+        # dbName is now overridable and can be run on different Databases for testing
+        self.db = db_name
         self.today = datetime.today().date()
         self.conversion = {'days': 1, 'months': 30.4, 'years': 365.25}
         if os.path.isfile(self.db):
@@ -675,7 +675,6 @@ class Sprint3:
                 else:
                     sib_string = sib_string + ", " + sib_dict[key]
             print("US28: The siblings, by birth order, in family " + family[1] + " are " + sib_string)
-            print("US28: The siblings, by birth order, in family " + family[1] + " are " + sib_string)
         return status
 
     def list_deceased(self):
@@ -795,14 +794,28 @@ class Sprint4:
         US38
         :return:
         """
-        pass
+        status = True
 
     def list_upcoming_anniversaries(self):
         """
         US39
         :return:
         """
-        pass
+        status = True
+        query = 'select fam.HUSB, fam.WIFE, fam.MARR from fam'  # get couples
+        couples = self.tool.query_info(query)
+        for couple in couples:
+            # print(couple)
+            dead1 = self.tool.query_info('select NAME from indi where DEAT == "NA" and INDI == "{}"'.format(couple[0]))
+            dead2 = self.tool.query_info('select NAME from indi where DEAT == "NA" and INDI == "{}"'.format(couple[1]))
+            # print(dead1, dead2)
+            if len(dead1) != 0 and len(dead2) != 0:
+                status = False
+                print("US39: {} and {} will have their marriage anniversary in the next 30 days on {}."
+                      .format(dead1[0][0], dead2[0][0], couple[2][-5:]))
+        return status
+
+
 
 
 class TestSprint4(unittest.TestCase):  # TODO: uncomment your test case to test your US
@@ -834,8 +847,8 @@ class TestSprint4(unittest.TestCase):  # TODO: uncomment your test case to test 
     # def test_list_upcoming_birthdays(self):
     #     self.assertFalse(self.test.list_upcoming_birthdays())
     #
-    # def test_list_upcoming_anniversaries(self):
-    #     self.assertFalse(self.test.list_upcoming_anniversaries())
+    def test_list_upcoming_anniversaries(self):
+        self.assertFalse(self.test.list_upcoming_anniversaries())
 
 
 class RunSprints:
