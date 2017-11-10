@@ -797,8 +797,15 @@ class Sprint4:
         :return:
         """
         status = True
-        query = ''  # get living people
+        query = 'select INDI, NAME, BIRT from indi where DEAT == "NA"'  # get living people
+        thirty_days = relativedelta(days=30)
         people = self.tool.query_info(query)
+        for person in people:
+            if self.tool.dates_within(str(self.tool.current_year + person[2][-6:]),
+                                      str(self.tool.today + thirty_days), 30, 'days'):
+                status = False
+                print("US38: {} {}'s birthday will occur in the next 30 days on {}."
+                      .format(person[0], person[1], person[2]))
         return status
 
     def list_upcoming_anniversaries(self):
@@ -814,8 +821,6 @@ class Sprint4:
             dead1 = self.tool.query_info('select NAME from indi where DEAT == "NA" and INDI == "{}"'.format(couple[0]))
             dead2 = self.tool.query_info('select NAME from indi where DEAT == "NA" and INDI == "{}"'.format(couple[1]))
             if len(dead1) != 0 and len(dead2) != 0:
-                print(self.tool.current_year + couple[2][-6:])
-                print(self.tool.today + thirty_days)
                 if self.tool.dates_within(str(self.tool.current_year + couple[2][-6:]),
                                           str(self.tool.today + thirty_days), 30, 'days'):
                     status = False
@@ -850,9 +855,9 @@ class TestSprint4(unittest.TestCase):  # TODO: uncomment your test case to test 
     # def test_list_recent_deaths(self):
     #     self.assertFalse(self.test.list_recent_deaths())
     #
-    # def test_list_upcoming_birthdays(self):
-    #     self.assertFalse(self.test.list_upcoming_birthdays())
-    #
+    def test_list_upcoming_birthdays(self):
+        self.assertFalse(self.test.list_upcoming_birthdays())
+
     def test_list_upcoming_anniversaries(self):
         self.assertFalse(self.test.list_upcoming_anniversaries())
 
