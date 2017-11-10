@@ -3,6 +3,7 @@ import os
 import unittest
 from datetime import datetime
 from prettytable import PrettyTable
+from dateutil.relativedelta import relativedelta
 
 
 class ProjectUtil:
@@ -14,6 +15,7 @@ class ProjectUtil:
         self.db = db_name
         self.today = datetime.today().date()
         self.conversion = {'days': 1, 'months': 30.4, 'years': 365.25}
+        self.current_year = "2017"
         if os.path.isfile(self.db):
             self.conn = sqlite3.connect(self.db)
             self.c = self.conn.cursor()
@@ -795,6 +797,9 @@ class Sprint4:
         :return:
         """
         status = True
+        query = ''  # get living people
+        people = self.tool.query_info(query)
+        return status
 
     def list_upcoming_anniversaries(self):
         """
@@ -802,20 +807,21 @@ class Sprint4:
         :return:
         """
         status = True
+        thirty_days = relativedelta(days=30)
         query = 'select fam.HUSB, fam.WIFE, fam.MARR from fam'  # get couples
         couples = self.tool.query_info(query)
         for couple in couples:
-            # print(couple)
             dead1 = self.tool.query_info('select NAME from indi where DEAT == "NA" and INDI == "{}"'.format(couple[0]))
             dead2 = self.tool.query_info('select NAME from indi where DEAT == "NA" and INDI == "{}"'.format(couple[1]))
-            # print(dead1, dead2)
             if len(dead1) != 0 and len(dead2) != 0:
-                status = False
-                print("US39: {} and {} will have their marriage anniversary in the next 30 days on {}."
-                      .format(dead1[0][0], dead2[0][0], couple[2][-5:]))
+                print(self.tool.current_year + couple[2][-6:])
+                print(self.tool.today + thirty_days)
+                if self.tool.dates_within(str(self.tool.current_year + couple[2][-6:]),
+                                          str(self.tool.today + thirty_days), 30, 'days'):
+                    status = False
+                    print("US39: {} and {} will have their marriage anniversary in the next 30 days on {}."
+                          .format(dead1[0][0], dead2[0][0], couple[2][-5:]))
         return status
-
-
 
 
 class TestSprint4(unittest.TestCase):  # TODO: uncomment your test case to test your US
