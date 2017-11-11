@@ -46,7 +46,8 @@ class ProjectUtil:
         self.c.close()
         self.conn.close()
 
-    def convert_to_datetime(self, date):
+    @staticmethod
+    def convert_to_datetime(date):
         """
         :param date: str
         :return: datatime type or str "NA"
@@ -57,7 +58,8 @@ class ProjectUtil:
             res = "NA"
         return res
 
-    def combine_id_name(self, indi, name):
+    @staticmethod
+    def combine_id_name(indi, name):
         return indi + " " + name
 
     def dates_within(self, date1, date2, limit, unit):
@@ -754,12 +756,12 @@ class Sprint4:
         List all living people over 30 who have never been married in a GEDCOM file
         """
         status = True
-        living_singles = self.tool.query_info('select INDI, NAME, BIRT, DEAT from indi where DEAT == "NA" and FAMS == "NA"')
-        for row in self.tool.query_info(living_singles):
-            if self.tool.get_age (row[2], row[3]) > 30 and len(living_singles) != 0:
-            status = False
-            for person in living_singles:
-                print("US31: Found living single person {} {}.".format(person[0], person[1]))
+        living_singles = self.tool.query_info(
+            'select INDI, NAME, BIRT, DEAT from indi where DEAT == "NA" and FAMS == "NA"')
+        for single in living_singles:
+            if self.tool.get_age(single[2], single[3]) > 30:
+                status = False
+                print("US31: Found living single person {} {}.".format(single[0], single[1]))
         return status
         
     def list_multiple_births(self):
@@ -860,7 +862,7 @@ class TestSprint4(unittest.TestCase):  # TODO: uncomment your test case to test 
     #
     # def test_list_recent_deaths(self):
     #     self.assertFalse(self.test.list_recent_deaths())
-    #
+
     def test_list_upcoming_birthdays(self):
         self.assertFalse(self.test.list_upcoming_birthdays())
 
