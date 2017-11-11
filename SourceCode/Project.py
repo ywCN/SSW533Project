@@ -802,18 +802,15 @@ class Sprint4:
         :return:
         """
         status = True
+        query = 'select INDI, NAME, BIRT from indi where DEAT == "NA"'  # get living people
         thirty_days = relativedelta(days=30)
-        query = 'select fam.HUSB, fam.WIFE, fam.MARR from fam'  # get couples
-        couples = self.tool.query_info(query)
-        for couple in couples:
-            dead1 = self.tool.query_info('select NAME from indi where DEAT == "NA" and INDI == "{}"'.format(couple[0]))
-            dead2 = self.tool.query_info('select NAME from indi where DEAT == "NA" and INDI == "{}"'.format(couple[1]))
-            if len(dead1) != 0 and len(dead2) != 0:
-                if self.tool.dates_within(str(self.tool.today.year) + couple[2][-6:],
-                                          str(self.tool.today + thirty_days), 30, 'days'):
-                    status = False
-                    print("US39: {} and {} will have their marriage anniversary in the next 30 days on {}."
-                          .format(dead1[0][0], dead2[0][0], couple[2][-5:]))
+        people = self.tool.query_info(query)
+        for person in people:
+            if self.tool.dates_within(str(self.tool.today.year) + person[2][-6:],
+                                      str(self.tool.today + thirty_days), 30, 'days'):
+                status = False
+                print("US38: {} {}'s birthday will occur in the next 30 days on {}."
+                      .format(person[0], person[1], person[2]))
         return status
 
     def list_upcoming_anniversaries(self):
