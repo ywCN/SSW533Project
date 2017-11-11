@@ -780,11 +780,15 @@ class Sprint4:
         return status
 
     def list_orphans(self):
-
+        """
+        US33 List all orphaned children (both parents dead and child < 18 years old) in a GEDCOM file
+        :return:
+        """
+        pass
 
     def list_large_age_differences(self):
         """
-        US34
+        US34 List all couples who were married when the older spouse was more than twice as old as the younger spouse
         :return:
         """
         pass
@@ -855,12 +859,12 @@ class TestSprint4(unittest.TestCase):  # TODO: uncomment your test case to test 
     def test_list_multiple_births(self):
         self.assertFalse(self.test.list_multiple_births())
 
-    def test_list_orphans(self):
-        self.assertFalse(self.test.list_orphans())
-
+    # def test_list_orphans(self):
+    #     self.assertFalse(self.test.list_orphans())
+    #
     # def test_list_large_age_differences(self):
     #     self.assertFalse(self.test.list_large_age_differences())
-    #
+
     # def test_list_recent_births(self):
     #     self.assertFalse(self.test.list_recent_births())
     #
