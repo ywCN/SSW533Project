@@ -775,15 +775,12 @@ class Sprint4:
         for sibling in siblings:
             sib = sibling[0].split()
             if len(sib) > 1:
-                print("US32: There are more than one sibling in the family")
+                status = False
+                print("US32: There are multiple births in the family {}.".format(sibling[1]))
         return status
 
     def list_orphans(self):
-        """
-        US33
-        :return:
-        """
-        pass
+
 
     def list_large_age_differences(self):
         """
@@ -808,8 +805,8 @@ class Sprint4:
 
     def list_upcoming_birthdays(self):
         """
-        US38
-        :return:
+        US38 List all living people in a GEDCOM file whose birthdays occur in the next 30 days
+        :return:bool
         """
         status = True
         query = 'select INDI, NAME, BIRT from indi where DEAT == "NA"'  # get living people
@@ -825,8 +822,8 @@ class Sprint4:
 
     def list_upcoming_anniversaries(self):
         """
-        US39
-        :return:
+        US39 List all living couples in a GEDCOM file whose marriage anniversaries occur in the next 30 days
+        :return:bool
         """
         status = True
         thirty_days = relativedelta(days=30)
@@ -857,10 +854,10 @@ class TestSprint4(unittest.TestCase):  # TODO: uncomment your test case to test 
     
     def test_list_multiple_births(self):
         self.assertFalse(self.test.list_multiple_births())
-    #
-    # def test_list_orphans(self):
-    #     self.assertFalse(self.test.list_orphans())
-    #
+
+    def test_list_orphans(self):
+        self.assertFalse(self.test.list_orphans())
+
     # def test_list_large_age_differences(self):
     #     self.assertFalse(self.test.list_large_age_differences())
     #
