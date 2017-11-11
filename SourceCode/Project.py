@@ -769,7 +769,14 @@ class Sprint4:
         US32 (ALLA)
         List all multiple births in a GEDCOM file
         """
-        pass
+        status = True
+        query = 'select CHIL, FAM from fam where fam.CHIL != "NA"'
+        siblings = self.tool.query_info(query)
+        for sibling in siblings:
+            sib = sibling[0].split()
+            if len(sib) > 1:
+                print("US32: There are more than one sibling in the family")
+        return status
 
     def list_orphans(self):
         """
@@ -847,9 +854,9 @@ class TestSprint4(unittest.TestCase):  # TODO: uncomment your test case to test 
 
     def test_list_living_single(self):
         self.assertFalse(self.test.list_living_single())
-    #
-    # def test_list_multiple_births(self):
-    #     self.assertFalse(self.test.list_multiple_births())
+    
+    def test_list_multiple_births(self):
+        self.assertFalse(self.test.list_multiple_births())
     #
     # def test_list_orphans(self):
     #     self.assertFalse(self.test.list_orphans())
