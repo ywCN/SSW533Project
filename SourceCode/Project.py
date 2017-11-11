@@ -751,15 +751,21 @@ class Sprint4:
 
     def list_living_single(self):
         """
-        US31
-        :return:
+        US31 (ALLA)
+        Each individual has to be single and still alive in GEDCOM file
         """
-        pass
-
+        status = True
+        living_singles = self.tool.query_info('select INDI, NAME from indi where DEAT == "NA" and FAMS == "NA"')
+        if len(living_singles) != 0:
+            status = False
+            for person in living_singles:
+                print("US31: Found living single person {} {}.".format(person[0], person[1]))
+        return status
+        
     def list_multiple_births(self):
         """
-        US32
-        :return:
+        US32 (ALLA)
+        List all multiple births in a GEDCOM file
         """
         pass
 
@@ -797,15 +803,18 @@ class Sprint4:
         :return:
         """
         status = True
-        query = 'select INDI, NAME, BIRT from indi where DEAT == "NA"'  # get living people
         thirty_days = relativedelta(days=30)
-        people = self.tool.query_info(query)
-        for person in people:
-            if self.tool.dates_within(str(self.tool.current_year + person[2][-6:]),
-                                      str(self.tool.today + thirty_days), 30, 'days'):
-                status = False
-                print("US38: {} {}'s birthday will occur in the next 30 days on {}."
-                      .format(person[0], person[1], person[2]))
+        query = 'select fam.HUSB, fam.WIFE, fam.MARR from fam'  # get couples
+        couples = self.tool.query_info(query)
+        for couple in couples:
+            dead1 = self.tool.query_info('select NAME from indi where DEAT == "NA" and INDI == "{}"'.format(couple[0]))
+            dead2 = self.tool.query_info('select NAME from indi where DEAT == "NA" and INDI == "{}"'.format(couple[1]))
+            if len(dead1) != 0 and len(dead2) != 0:
+                if self.tool.dates_within(str(self.tool.current_year + couple[2][-6:]),
+                                          str(self.tool.today + thirty_days), 30, 'days'):
+                    status = False
+                    print("US39: {} and {} will have their marriage anniversary in the next 30 days on {}."
+                          .format(dead1[0][0], dead2[0][0], couple[2][-5:]))
         return status
 
     def list_upcoming_anniversaries(self):
@@ -837,8 +846,8 @@ class TestSprint4(unittest.TestCase):  # TODO: uncomment your test case to test 
     def setUp(self):
         self.test = Sprint4()
 
-    # def test_list_living_single(self):
-    #     self.assertFalse(self.test.list_living_single())
+    def test_list_living_single(self):
+        self.assertFalse(self.test.list_living_single())
     #
     # def test_list_multiple_births(self):
     #     self.assertFalse(self.test.list_multiple_births())
