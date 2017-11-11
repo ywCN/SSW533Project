@@ -751,11 +751,12 @@ class Sprint4:
     def list_living_single(self):
         """
         US31 (ALLA)
-        Each individual has to be single and still alive in GEDCOM file
+        List all living people over 30 who have never been married in a GEDCOM file
         """
         status = True
-        living_singles = self.tool.query_info('select INDI, NAME from indi where DEAT == "NA" and FAMS == "NA"')
-        if len(living_singles) != 0:
+        living_singles = self.tool.query_info('select INDI, NAME, BIRT, DEAT from indi where DEAT == "NA" and FAMS == "NA"')
+        for row in self.tool.query_info(living_singles):
+            if self.tool.get_age (row[2], row[3]) > 30 and len(living_singles) != 0:
             status = False
             for person in living_singles:
                 print("US31: Found living single person {} {}.".format(person[0], person[1]))
