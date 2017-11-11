@@ -15,7 +15,6 @@ class ProjectUtil:
         self.db = db_name
         self.today = datetime.today().date()
         self.conversion = {'days': 1, 'months': 30.4, 'years': 365.25}
-        self.current_year = "2017"
         if os.path.isfile(self.db):
             self.conn = sqlite3.connect(self.db)
             self.c = self.conn.cursor()
@@ -810,7 +809,7 @@ class Sprint4:
             dead1 = self.tool.query_info('select NAME from indi where DEAT == "NA" and INDI == "{}"'.format(couple[0]))
             dead2 = self.tool.query_info('select NAME from indi where DEAT == "NA" and INDI == "{}"'.format(couple[1]))
             if len(dead1) != 0 and len(dead2) != 0:
-                if self.tool.dates_within(str(self.tool.current_year + couple[2][-6:]),
+                if self.tool.dates_within(str(self.tool.today.year) + couple[2][-6:],
                                           str(self.tool.today + thirty_days), 30, 'days'):
                     status = False
                     print("US39: {} and {} will have their marriage anniversary in the next 30 days on {}."
@@ -830,7 +829,7 @@ class Sprint4:
             dead1 = self.tool.query_info('select NAME from indi where DEAT == "NA" and INDI == "{}"'.format(couple[0]))
             dead2 = self.tool.query_info('select NAME from indi where DEAT == "NA" and INDI == "{}"'.format(couple[1]))
             if len(dead1) != 0 and len(dead2) != 0:
-                if self.tool.dates_within(str(self.tool.current_year + couple[2][-6:]),
+                if self.tool.dates_within(str(self.tool.today.year) + couple[2][-6:],
                                           str(self.tool.today + thirty_days), 30, 'days'):
                     status = False
                     print("US39: {} and {} will have their marriage anniversary in the next 30 days on {}."
