@@ -778,20 +778,47 @@ class Sprint4:
                 status = False
                 print("US32: There are multiple births in the family {}.".format(sibling[1]))
         return status
-
+    
     def list_orphans(self):
-        """
-        US33 List all orphaned children (both parents dead and child < 18 years old) in a GEDCOM file
-        :return:
-        """
-        pass
+    """
+    Author: Mutni
+    US33 List all orphaned children (both parents dead and child < 18 years old) in a GEDCOM file
+    :return:
+    """
+    status = True
+    people = self.tool.query_info('select INDI, BIRT, DEAT, FAMC, NAME from indi')
+    for person in people:
+        if self.tool.get_age(person[1], person[2]) < 18:
+            parent = self.tool.query_info('select HUSB, WIFE from fam where FAM == "{}"'.format(person[3]))
+            if len(parent) > 0:
+                alive1 = self.tool.query_info('select DEAT from indi where INDI == "{}"'.format(parent[0][0]))
+                alive2 = self.tool.query_info('select DEAT from indi where INDI == "{}"'.format(parent[0][1]))
+                if alive1[0][0] != 'NA' and alive2[0][0] != 'NA':
+                    status = False
+                    print("US33: Orphan {} {} found in family {}.".format(person[0], person[4], person[3]))
+
+    return status
 
     def list_large_age_differences(self):
-        """
-        US34 List all couples who were married when the older spouse was more than twice as old as the younger spouse
-        :return:
-        """
-        pass
+    """
+    Author: Mutni
+    US34 List all couples who were married when the older spouse was more than twice as old as the younger spouse
+    :return:
+    """
+    status = True
+    query = 'select fam.HUSB, fam.WIFE, fam.MARR from fam'  # get couples
+    couples = self.tool.query_info(query)
+    for couple in couples:
+        husband_birth = self.tool.query_info('select BIRT, NAME from indi where indi == "{}"'.format(couple[0]))
+        husband_marry_age = self.tool.get_age(husband_birth[0][0], couple[2])
+        wife_birth = self.tool.query_info('select BIRT, NAME from indi where indi == "{}"'.format(couple[1]))
+        wife_marry_age = self.tool.get_age(wife_birth[0][0], couple[2])
+        if husband_marry_age > 0 and wife_marry_age > 0:  # validate
+            if husband_marry_age / wife_marry_age > 2 or wife_marry_age / husband_marry_age > 2:
+                status = False
+                print("US34: {} and {} married when the older spouse was more than twice as old as the younger."
+                      .format(husband_birth[0][1], wife_birth[0][1]))
+    return status
 
     def list_recent_births(self):
         """
