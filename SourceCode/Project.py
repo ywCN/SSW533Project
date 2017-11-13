@@ -822,16 +822,39 @@ class Sprint4:
 
     def list_recent_births(self):
         """
+        Author Robyn
         US35
         :return:
+
         """
+        status = True
+        individuals = self.tool.query_info('select INDI, NAME, BIRT from indi')
+        thirty_days = relativedelta(days=30)
+        for indi in list(individuals):
+            print(indi)
+            birth = indi[2]
+            if self.tool.dates_within(person[2], str(self.tool.today - thirty_days), 30, 'days'):
+                status = False
+                print("US35: {} {} was born within the last 30 days on {}."
+                      .format(indi[0], indi[1], indi[2]))
         pass
 
     def list_recent_deaths(self):
         """
+        Author Robyn
         US36
         :return:
         """
+        status = True
+        individuals = self.tool.query_info('select INDI, NAME, DEAT from indi')
+        thirty_days = relativedelta(days=30)
+        for indi in list(individuals):
+            print(indi)
+            birth = indi[2]
+            if self.tool.dates_within(person[2], str(self.tool.today - thirty_days), 30, 'days'):
+                status = False
+                print("US35: {} {} was died within the last 30 days on {}."
+                      .format(indi[0], indi[1], indi[2]))
         pass
 
     def list_upcoming_birthdays(self):
@@ -892,11 +915,11 @@ class TestSprint4(unittest.TestCase):  # TODO: uncomment your test case to test 
     def test_list_large_age_differences(self):
         self.assertFalse(self.test.list_large_age_differences())
 
-    # def test_list_recent_births(self):
-    #     self.assertFalse(self.test.list_recent_births())
-    #
-    # def test_list_recent_deaths(self):
-    #     self.assertFalse(self.test.list_recent_deaths())
+    def test_list_recent_births(self):
+        self.assertFalse(self.test.list_recent_births())
+    
+    def test_list_recent_deaths(self):
+        self.assertFalse(self.test.list_recent_deaths())
 
     def test_list_upcoming_birthdays(self):
         self.assertFalse(self.test.list_upcoming_birthdays())
