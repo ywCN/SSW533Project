@@ -828,16 +828,14 @@ class Sprint4:
 
         """
         status = True
-        individuals = self.tool.query_info('select INDI, NAME, BIRT from indi')
+        individuals = self.tool.query_info('select INDI, NAME, BIRT from indi where DEAT == "NA"')
         thirty_days = relativedelta(days=30)
-        for indi in list(individuals):
-            print(indi)
-            birth = indi[2]
+        for person in list(individuals):
             if self.tool.dates_within(person[2], str(self.tool.today - thirty_days), 30, 'days'):
                 status = False
                 print("US35: {} {} was born within the last 30 days on {}."
-                      .format(indi[0], indi[1], indi[2]))
-        pass
+                      .format(person[0], person[1], person[2]))
+        return status
 
     def list_recent_deaths(self):
         """
@@ -846,19 +844,18 @@ class Sprint4:
         :return:
         """
         status = True
-        individuals = self.tool.query_info('select INDI, NAME, DEAT from indi')
+        individuals = self.tool.query_info('select INDI, NAME, DEAT from indi where DEAT != "NA"')
         thirty_days = relativedelta(days=30)
-        for indi in list(individuals):
-            print(indi)
-            birth = indi[2]
+        for person in list(individuals):
             if self.tool.dates_within(person[2], str(self.tool.today - thirty_days), 30, 'days'):
                 status = False
-                print("US35: {} {} was died within the last 30 days on {}."
-                      .format(indi[0], indi[1], indi[2]))
-        pass
+                print("US36: {} {} was died within the last 30 days on {}."
+                      .format(person[0], person[1], person[2]))
+        return status
 
     def list_upcoming_birthdays(self):
         """
+        Author Youhao
         US38 List all living people in a GEDCOM file whose birthdays occur in the next 30 days
         :return:bool
         """
@@ -876,6 +873,7 @@ class Sprint4:
 
     def list_upcoming_anniversaries(self):
         """
+        Author Youhao
         US39 List all living couples in a GEDCOM file whose marriage anniversaries occur in the next 30 days
         :return:bool
         """
@@ -895,7 +893,7 @@ class Sprint4:
         return status
 
 
-class TestSprint4(unittest.TestCase):  # TODO: uncomment your test case to test your US
+class TestSprint4(unittest.TestCase):
     """
     Unittest for Sprint 4.
     """
@@ -935,12 +933,12 @@ class RunSprints:
     def __init__(self):
         self.util = ProjectUtil()
         self.sprint1 = Sprint1()
-        self.sprint2 = Sprint2()
-        self.sprint3 = Sprint3()
+        # self.sprint2 = Sprint2()  # test cases will call the methods, no need to run them in main()
+        # self.sprint3 = Sprint3()
 
     def run(self):
         self.util.print_info()
-        self.sprint1.run_sprint1()
+        self.sprint1.run_sprint1()  # need to call this because of no test cases for Sprint 1
         self.util.disconnect()
 
 
